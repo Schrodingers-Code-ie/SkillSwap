@@ -40,6 +40,6 @@ Maven is using an older Java. Check which one with:
 If it shows a version below 21, point `JAVA_HOME` at Java 21 or newer:
 
 - **Windows:** `setx JAVA_HOME "C:\path\to\jdk-21"`, then open a new terminal
-- **Linux:** `sudo apt install openjdk-21-jdk`, then add `export JAVA_HOME=/usr/lib/jvm/    java-21-openjdk-amd64` to `~/.bashrc` and open a new terminal
+- **Linux:** `sudo apt install openjdk-21-jdk`, then add `export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64` to `~/.bashrc` and open a new terminal
 - **macOS:** add `export JAVA_HOME=$(/usr/libexec/java_home -v 21)` to `~/.zshrc`
 - **IntelliJ:** File → Project Structure → SDK → select 21 or newer
