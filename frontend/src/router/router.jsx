@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router";
 
 import AppLayout from "../components/AppLayout";
 import RootLayout from "../components/RootLayout";
-import ProtectedRouter, { protectedLoader } from "./protectedRouter";
+import { homeLoader, protectedLoader } from "./loaders";
 
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
@@ -14,6 +14,12 @@ const router = createBrowserRouter([
   {
     element: <RootLayout />,
     children: [
+        // Home route
+        {
+            path: "/",
+            loader: homeLoader, // load authentication, if authenticated redirects to /matches, otherwise to /login
+            ErrorBoundary: ErrorPage,
+        },
         // Public routes
         {
             path: "/login",
@@ -44,8 +50,7 @@ const router = createBrowserRouter([
 
         // Protected routes
         {
-            element: <ProtectedRouter />,
-            loader: protectedLoader,
+            loader: protectedLoader, // loads authentications, if not authenticated redirects to /login
             ErrorBoundary: ErrorPage,
             children: [
             {
@@ -65,7 +70,6 @@ const router = createBrowserRouter([
                 {
                     path: "/matches",
                     lazy: async () => {
-                        await new Promise((resolve) => setTimeout(resolve, 9000));
                         const module = await import("../pages/Matches");
                         return { Component: module.default, };
                     },

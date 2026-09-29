@@ -1,4 +1,6 @@
-import { api } from "./api/client.js";
+import { api } from "../api/client.js";
+import { useEffect, useState } from "react";
+
 export default function Login() {
 	const [health, setHealth] = useState("checking...");
 
