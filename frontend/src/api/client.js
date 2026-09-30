@@ -11,38 +11,40 @@
 // Paths are relative to /api, and Vite forwards them to the backend.
 
 async function request(path, options = {}) {
-    const response = await fetch(`/api${path}`, options)
+	const response = await fetch(`/api${path}`, options);
 
-    // Some responses (e.g. 204 No Content) have no body.
-    const body = await response.json().catch(() => null)
+	// Some responses (e.g. 204 No Content) have no body.
+	const body = await response.json().catch(() => null);
 
-    if (!response.ok) {
-        const error = new Error(body?.message ?? `Request failed with status ${response.status}`)
-        error.status = response.status
-        error.body = body
-        throw error
-    }
+	if (!response.ok) {
+		const error = new Error(
+			body?.message ?? `Request failed with status ${response.status}`,
+		);
+		error.status = response.status;
+		error.body = body;
+		throw error;
+	}
 
-    return body
+	return body;
 }
 
 // Turns data into the right request body.
 // FormData (files) is sent as-is so the browser can set the correct headers.
 // Everything else is sent as JSON.
 function withBody(method, data) {
-    if (data instanceof FormData) {
-        return { method, body: data }
-    }
-    return {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-    }
+	if (data instanceof FormData) {
+		return { method, body: data };
+	}
+	return {
+		method,
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(data),
+	};
 }
 
 export const api = {
-    get: (path) => request(path),
-    post: (path, data) => request(path, withBody('POST', data)),
-    put: (path, data) => request(path, withBody('PUT', data)),
-    delete: (path) => request(path, { method: 'DELETE' }),
-}
+	get: (path) => request(path),
+	post: (path, data) => request(path, withBody('POST', data)),
+	put: (path, data) => request(path, withBody('PUT', data)),
+	delete: (path) => request(path, { method: 'DELETE' }),
+};
