@@ -26,6 +26,13 @@ npm run dev
 
 Runs on http://localhost:5173
 
+## Run in a dev container (no Java/Node install needed)
+
+- **Codespaces:** Code → Codespaces → Create codespace on main
+- **Locally:** install Docker Desktop and VS Code with the Dev Containers extension, open the repo, then "Reopen in Container"
+
+Then run the backend and frontend as above, from the container's terminal.
+
 ## Common issues
 
 **Backend fails with "release version 21 not supported"**
