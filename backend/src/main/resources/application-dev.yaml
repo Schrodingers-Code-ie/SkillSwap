@@ -1,0 +1,9 @@
+spring:
+    datasource:
+        url: jdbc:postgresql://${DB_HOST:localhost}:5432/skillswap
+        username: skillswap
+        password: skillswap
+    jpa:
+        hibernate:
+            ddl-auto: validate
+        open-in-view: false
