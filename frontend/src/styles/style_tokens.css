@@ -1,0 +1,51 @@
+@theme {
+	/* Everything for text: ------------------------------*/
+	/* --color prefix is replaced with "text", e.g. className="text-title" */
+	--color-title: var(--raw-brown);
+	--color-title-faded: var(--raw-grey);
+	--color-input-placeholder: var(--raw-grey);
+	--color-main-content: var(--raw-light-brown);
+	--color-subtitle: var(--raw-light-brown);
+	--color-error: var(--raw-light-red);
+	--color-correct: var(--raw-light-green);
+	--color-orange-bubble: var(--raw-muddy);
+	--color-green-bubble: var(--raw-dark-green);
+	--color-grey-bubble: var(--raw-light-brown);
+	--color-dark-button-text: var(--raw-button-text-cream);
+	--color-light-button-text: var(--raw-brown);
+	--color-inactive-text-button: var(--raw-inactive-grey);
+
+	/* --font prefix stays the same, e.g. className="font-main" */
+	--font-main: 'Geist', sans-serif;
+	--font-project-name: 'Newsreader', serif;
+	--font-subtitle: 'Geist Mono', monospace;
+	/* --font-weight prefix is replaced with just "font", e.g. className="font-g-regular" */
+	--font-weight-g-regular: 400;
+	--font-weight-g-medium: 500;
+	--font-weight-g-semibold: 600;
+	--font-weight-g-bold: 700;
+	--font-weight-gm-bold: 700;
+	--font-weight-n-medium: 500;
+
+	/* Everything for buttons: ------------------------------ */
+	--color-dark-button-bg: var(--raw-brown);
+	--color-light-button-bg: var(--raw-bg-dark-grey);
+	--color-dark-button-text: var(--raw-button-text-cream);
+	--color-light-button-text: var(--raw-brown);
+	--color-dark-button-pressed-bg: var(--raw-dark-brown);
+	--color-light-button-pressed-bg: var(--raw-dark-grey);
+	--shadow-dark-button-hover: 0 6px 16px rgba(77, 70, 56, 0.35);
+
+	/* Inputs, cards and border radius: ------------------------------ */
+	--color-input-bg: var(--raw-input-bg-cream);
+	--color-border: var(--raw-border-light-grey);
+	--color-active-input-border: var(--raw-active-border-light-grey);
+
+	--radius-input: 12px; /* Use as "rounded-input" */
+	--radius-card: 16px;
+	--radius-message: 18px;
+	--radius-container-card: 25px;
+
+	--color-card-bg: var(--raw-container-cream);
+	--color-card-border: var(--raw-border-light-grey);
+}
