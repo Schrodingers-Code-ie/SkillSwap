@@ -91,3 +91,5 @@ If it shows a version below 21, point `JAVA_HOME` at Java 21 or newer:
 The backend started without the `dev` profile, so it doesn't know where the database is. Check the second line of the startup log. It should say `The following 1 profile is active: "dev"`. If it says `No active profile set`, start it with the command from [Run the backend](#run-the-backend).
 
 In a test, the same error means the test class is missing `@Import(TestcontainersConfiguration.class)`.
+
+See [Backend Structure](docs/STRUCTURE.md) for where files go.
