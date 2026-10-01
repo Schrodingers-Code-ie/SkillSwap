@@ -1,5 +1,5 @@
 @import 'tailwindcss';
-@import './styles/style_tokens.css';
+@import './style_tokens.css';
 @import '@fontsource/geist/400.css'; /* Regular */
 @import '@fontsource/geist/500.css'; /* Medium */
 @import '@fontsource/geist/600.css'; /* Semi Bold */

@@ -33,15 +33,10 @@ export default function Login() {
 				className="w-110 my-5"
 				onClick={() => console.log('clicked')}
 				type="submit"
-				disabled
 			>
 				Sign in
 			</Button>
-			<Button
-				onClick={() => console.log('clicked')}
-				type="submit"
-				disabled
-			>
+			<Button onClick={() => console.log('clicked')} type="submit">
 				Decline
 			</Button>
 
@@ -53,7 +48,7 @@ export default function Login() {
 				placeholderText="Your email"
 			></Input>
 			<Input
-				type="test"
+				type="text"
 				id="fullName"
 				name="userFullName"
 				titleText="Full name"
