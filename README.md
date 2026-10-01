@@ -53,4 +53,3 @@ If it shows a version below 21, point `JAVA_HOME` at Java 21 or newer:
 
 
 See [Backend Structure](docs/STRUCTURE.md) for where files go.
-```

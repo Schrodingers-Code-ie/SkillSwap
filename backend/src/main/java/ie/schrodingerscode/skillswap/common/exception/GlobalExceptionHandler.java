@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong");
     }
 
-    //buids the response- status code and apiError body
+    //builds the response- status code and apiError body
     private ResponseEntity<ApiError> build(HttpStatus status, String message) {
         return ResponseEntity.status(status).body(new ApiError(status.value(), message));
     }
