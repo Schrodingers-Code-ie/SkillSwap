@@ -50,3 +50,7 @@ If it shows a version below 21, point `JAVA_HOME` at Java 21 or newer:
 - **Linux:** `sudo apt install openjdk-21-jdk`, then add `export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64` to `~/.bashrc` and open a new terminal
 - **macOS:** add `export JAVA_HOME=$(/usr/libexec/java_home -v 21)` to `~/.zshrc`
 - **IntelliJ:** File → Project Structure → SDK → select 21 or newer
+
+
+See [Backend Structure](docs/STRUCTURE.md) for where files go.
+```
