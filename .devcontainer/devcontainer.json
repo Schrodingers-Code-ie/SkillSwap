@@ -1,11 +1,16 @@
 {
 	"name": "SkillSwap",
-	"image": "mcr.microsoft.com/devcontainers/java:21",
+	"dockerComposeFile": ["../compose.yaml", "compose.devcontainer.yaml"],
+	"service": "app",
+	"workspaceFolder": "/workspaces/SkillSwap",
 	"features": {
-		"ghcr.io/devcontainers/features/node:1": { "version": "22" }
+		"ghcr.io/devcontainers/features/node:1": { "version": "22" },
+		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+			"moby": false
+		}
 	},
 	"forwardPorts": [8080, 5173],
-	"postCreateCommand": "cd frontend && npm ci",
+	"postCreateCommand": "git config --global --add safe.directory /workspaces/SkillSwap && cd frontend && npm ci",
 	"customizations": {
 		"vscode": {
 			"extensions": [
@@ -17,7 +22,9 @@
 			"settings": {
 				"editor.defaultFormatter": "esbenp.prettier-vscode",
 				"editor.formatOnSave": true,
-				"[java]": { "editor.defaultFormatter": "redhat.java" }
+				"[java]": { "editor.defaultFormatter": "redhat.java" },
+				"git.blame.editorDecoration.enabled": true,
+				"git.blame.statusBarItem.enabled": true
 			}
 		}
 	}
