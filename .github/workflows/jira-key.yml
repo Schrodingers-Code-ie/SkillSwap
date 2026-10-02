@@ -1,0 +1,20 @@
+name: Jira key
+
+on:
+    pull_request:
+        types: [opened, edited, reopened, synchronize]
+
+jobs:
+    jira-key:
+        runs-on: ubuntu-latest
+        steps:
+            # Title goes through env, not straight into the script, so a title can't inject shell commands
+            - env:
+                  TITLE: ${{ github.event.pull_request.title }}
+              run: |
+                  if echo "$TITLE" | grep -qE 'SCRUM-[0-9]+'; then
+                    echo "Found Jira key in: $TITLE"
+                  else
+                    echo "::error::PR title must contain a Jira key like SCRUM-1, so it links to the ticket and the squash commit on main carries the key"
+                    exit 1
+                  fi
