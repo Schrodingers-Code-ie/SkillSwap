@@ -6,6 +6,7 @@ export default function Button({
 }) {
 	return (
 		<button
+			type="button"
 			className={`w-40 h-11 cursor-pointer rounded-full flex items-center justify-center font-main font-g-medium text-base ${
 				darkStyle
 					? 'bg-dark-button-bg text-dark-button-text hover:shadow-dark-button-hover active:bg-dark-button-pressed-bg'

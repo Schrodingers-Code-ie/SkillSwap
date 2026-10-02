@@ -5,6 +5,7 @@ export default function Input({
 	titleText,
 	placeholderText,
 	className = '',
+	...props
 }) {
 	return (
 		<>
@@ -20,6 +21,7 @@ export default function Input({
 				name={name}
 				placeholder={placeholderText}
 				className={`w-80 h-10 px-3 my-2 text-subtitle font-main bg-input-bg border outline-none border-border focus:border-active-input-border placeholder:text-input-placeholder rounded-input ${className}`}
+				{...props}
 			/>
 		</>
 	);
