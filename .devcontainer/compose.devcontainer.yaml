@@ -1,0 +1,14 @@
+services:
+    app:
+        image: mcr.microsoft.com/devcontainers/java:21
+        volumes:
+            - .:/workspaces/SkillSwap:cached # relative to the root compose.yaml, so "." is the repo root
+        command: sleep infinity
+        environment:
+            DB_HOST: postgres
+            SPRING_PROFILES_ACTIVE: dev
+            TESTCONTAINERS_HOST_OVERRIDE: host.docker.internal
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        depends_on:
+            - postgres
