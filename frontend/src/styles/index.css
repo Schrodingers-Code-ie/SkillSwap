@@ -1,0 +1,80 @@
+@import 'tailwindcss';
+@import './style_tokens.css';
+@import '@fontsource/geist/400.css'; /* Regular */
+@import '@fontsource/geist/500.css'; /* Medium */
+@import '@fontsource/geist/600.css'; /* Semi Bold */
+@import '@fontsource/geist/700.css'; /* Bold */
+@import '@fontsource/geist-mono/400.css'; /* Regular */
+@import '@fontsource/geist-mono/700.css'; /* Bold */
+@import '@fontsource/newsreader/500.css'; /* Medium */
+
+:root {
+	--raw-brown: #4d4638; /* Brown buttons and headers/titles */
+	--raw-light-brown: #6e6656; /* Main text under all headings */
+	--raw-dark-brown: #322d22; /* Pressed brown button */
+	--raw-dark-grey: rgb(77 70 56 / 15%); /* Pressed white button */
+	--raw-grey: #9a9ca3; /* Faded headers/titles */
+	--raw-dark-red: #8c2a1e; /* Error message on the pink background */
+	--raw-pink: #fcebe8; /* Pink bg for an error message */
+	--raw-light-pink: #f2d6cc; /* Pink for the gradient on a side profile */
+	--raw-muddy: #6a4f12; /* Text color inside yellow skill bubbles */
+	--raw-dirty-yellow: #f3e3b5; /* Yellow bg for yellow skill bubbles */
+	--raw-dark-green: #3f5b2e; /* Text color for green skill bubbles */
+	--raw-bg-dark-green: #dde8d5; /* Green bg for green skill bubbles */
+	--raw-light-green: #48782b; /* Success message color for password */
+	--raw-bg-light-green: #f1f5ec; /* Bg color for "can teach" skill cards on the profile page */
+	--raw-light-red: #a23a1e; /* Error messages on cream bg */
+	--raw-bg-cream: #ede8e1; /* Bg color on every page */
+	--raw-container-cream: #fbf7f2; /* Bg color for every container */
+	--raw-bg-light-grey: rgb(
+		77 70 56 / 6%
+	); /* Bg color for "choose skills" container */
+	--raw-bg-dark-grey: rgb(77 70 56 / 7%); /* Bg color for grey buttons */
+	--raw-border-grey: rgb(
+		77 70 56 / 8%
+	); /* Border color for all cream containers */
+	--raw-input-bg-cream: #fffcf8; /* Inputs background */
+	--raw-border-light-grey: rgb(
+		77 70 56 / 20%
+	); /* Border color for inputs/cards */
+	--raw-active-border-light-grey: rgb(
+		77 70 56 / 40%
+	); /* Border for active inputs */
+	--raw-button-text-cream: #f4efe8; /* Text color for brown buttons */
+	--raw-inactive-grey: #c9c9c9; /* Text color for inactive buttons */
+}
+
+* {
+	/* font-family:  */
+}
+
+/* Container for context of current page below navigation bar*/
+.page-container {
+	position: relative;
+}
+
+/* Covers the page when the next page is loading, place for spinner. In the future should make page underneath dime*/
+.loading-overlay {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+/* Temporary spinner */
+.spinner {
+	width: 30px;
+	height: 30px;
+	border: 3px solid #ccc;
+	border-top-color: #333;
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+}
+
+/* Temporary roration animation for spinner */
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
