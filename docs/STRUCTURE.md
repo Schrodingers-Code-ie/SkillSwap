@@ -33,6 +33,25 @@ All API errors use one format:
 { "status": 404, "message": "User not found" }
 ```
 
-To return an error, throw an exception (for example `ResourceNotFoundException`)
+To return an error, do not edit `GlobalExceptionHandler`. Instead, create a subclass of one
+of the base exceptions in `common.exception`:
+
+| Base exception        | Use when                                  | HTTP |
+|-----------------------|-------------------------------------------|------|
+| `ValidationException` | the input breaks a business rule          | 400  |
+| `NotFoundException`   | the requested item does not exist         | 404  |
+| `ConflictException`   | the request clashes with existing data    | 409  |
+| `ForbiddenException`  | the user is not allowed to do this action | 403  |
+
+Example:
+
+    public class EmailAlreadyUsedException extends ConflictException {
+        public EmailAlreadyUsedException(String email) {
+            super("Email " + email + " is already registered");
+        }
+    }
+
+The message is returned to the client, so keep it user-friendly and never include
+passwords, SQL or stack traces. The status code is set in `GlobalExceptionHandler`.
 from your service. `GlobalExceptionHandler` in `common/exception` converts it
 to the format above. Don't build error responses by hand in controllers.
