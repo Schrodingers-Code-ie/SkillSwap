@@ -55,3 +55,31 @@ The message is returned to the client, so keep it user-friendly and never includ
 passwords, SQL or stack traces. The status code is set in `GlobalExceptionHandler`.
 from your service. `GlobalExceptionHandler` in `common/exception` converts it
 to the format above. Don't build error responses by hand in controllers.
+## Current user
+
+To get the ID of the user making the request, inject `CurrentUser`
+(in `auth`) and call `getId()`:
+
+```java
+@RestController
+public class SkillController {
+    private final CurrentUser currentUser;
+
+    public SkillController(CurrentUser currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    @GetMapping("/api/skills/mine")
+    public List<SkillDto> mine() {
+        return skillService.findByUser(currentUser.getId());
+    }
+}
+```
+
+If nobody is logged in, `getId()` throws and the API returns 401. You don't
+need to check for that yourself.
+
+**Until real login exists**, the ID comes from the `X-User-Id` request header.
+In Postman, add `X-User-Id: 1` to act as user 1. `GET /api/auth/me` shows
+which ID the backend sees. When real login lands, only the implementation
+changes; code that uses `CurrentUser` stays the same.
