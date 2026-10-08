@@ -1,0 +1,9 @@
+{
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.formatOnSave": true,
+	"[java]": { "editor.defaultFormatter": "redhat.java" },
+	"java.format.settings.url": "backend/eclipse-formatter.xml",
+	"java.format.settings.profile": "SkillSwap",
+	"java.compile.nullAnalysis.mode": "automatic",
+	"java.configuration.updateBuildConfiguration": "automatic"
+}
