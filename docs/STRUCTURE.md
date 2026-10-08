@@ -24,28 +24,34 @@ Every feature has the same four sub-packages:
 
 | Layer            | What goes here                                                                 |
 |------------------|--------------------------------------------------------------------------------|
-| `domain`         | Aggregates, entities, value objects, repository interfaces, domain exceptions |
+| `domain`         | Aggregates, entities, value objects, repository interfaces; exceptions in `domain/exception` |
 | `application`    | Use-case services: load an aggregate, call its method, save it                 |
 | `infrastructure` | Repository implementations (in-memory now, JPA later), JPA entities            |
-| `web`            | Controllers, request and response DTOs                                         |
+| `web`            | Controllers; request and response DTOs in `web/dto`                            |
+
+Exceptions and DTOs get their own sub-package (`domain/exception`, `web/dto`), because
+they pile up quickly. That keeps `domain` showing the model and `web` showing the endpoints.
 
 Example for registration:
 
 ```
 auth/
   domain/
-    User.java                       aggregate
-    Email.java                      value object
-    UserRepository.java             interface
-    EmailAlreadyUsedException.java
+    User.java                         aggregate
+    Email.java                        value object
+    UserRepository.java               interface
+    exception/
+      InvalidEmailException.java
+      EmailAlreadyUsedException.java
   application/
-    RegisterUser.java               use case
+    RegisterUser.java                 use case
   infrastructure/
-    InMemoryUserRepository.java     implements UserRepository
+    InMemoryUserRepository.java       implements UserRepository
   web/
     RegisterController.java
-    RegisterRequest.java
-    UserResponse.java
+    dto/
+      RegisterRequest.java
+      UserResponse.java
 ```
 
 ## Rules
@@ -64,7 +70,7 @@ auth/
 5. **Controllers only translate.** They turn the request into a call to an
    application service and the result into a response DTO. No `if` statements
    about business rules.
-6. **Never return domain objects from a controller.** Map them to a response DTO in `web`.
+6. **Never return domain objects from a controller.** Map them to a response DTO in `web/dto`.
 7. **Features talk to each other through interfaces.** If `chat` needs to know whether
    two users are connected, `connection` exposes a small interface for it.
    Do not reach into another feature's `infrastructure`.
@@ -84,7 +90,7 @@ There are two kinds of checks, and they go in different places:
 
 | Kind of check                              | Example                                   | Where                                 |
 |--------------------------------------------|-------------------------------------------|---------------------------------------|
-| Shape of the request                       | field is present, text is not blank       | annotations on the request DTO in `web` |
+| Shape of the request                       | field is present, text is not blank       | annotations on the request DTO in `web/dto`|
 | Business rule                              | user is 18+, no duplicate skills          | aggregate or value object in `domain` |
 
 Shape checks use annotations such as `@NotNull`, `@NotBlank` and `@Size` on the
@@ -104,7 +110,7 @@ All API errors use one format:
 ```
 
 To return an error, do not edit `GlobalExceptionHandler`. Instead, create a subclass of one
-of the base exceptions in `common.exception`, and put it in your feature's `domain` package:
+of the base exceptions in `common.exception`, and put it in your feature's `domain/exception` package:
 
 | Base exception        | Use when                                  | HTTP |
 |-----------------------|-------------------------------------------|------|
