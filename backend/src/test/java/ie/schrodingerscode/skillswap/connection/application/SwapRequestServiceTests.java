@@ -11,8 +11,8 @@ import ie.schrodingerscode.skillswap.connection.domain.exception.DuplicateReques
 import ie.schrodingerscode.skillswap.connection.domain.exception.RequestNotFoundException;
 import ie.schrodingerscode.skillswap.connection.infrastructure.InMemorySwapRequestRepository;
 
-//uses the real in-memory repository, still no Spring needed
-class SwapRequestServiceTest {
+//plain JUnit with the in-memory repository, no Spring needed
+class SwapRequestServiceTests {
 
     private SwapRequestService service;
 

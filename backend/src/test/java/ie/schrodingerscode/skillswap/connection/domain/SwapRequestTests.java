@@ -10,7 +10,7 @@ import ie.schrodingerscode.skillswap.connection.domain.exception.NotRequestRecei
 import ie.schrodingerscode.skillswap.connection.domain.exception.SelfRequestException;
 
 //plain unit tests for the state machine, no Spring, so they run instantly
-class SwapRequestTest {
+class SwapRequestTests {
 
     //user 1 sends to user 2, user 3 is a stranger
     private SwapRequest newRequest() {
