@@ -42,6 +42,7 @@ of the base exceptions in `common.exception`:
 | `NotFoundException`   | the requested item does not exist         | 404  |
 | `ConflictException`   | the request clashes with existing data    | 409  |
 | `ForbiddenException`  | the user is not allowed to do this action | 403  |
+| `UnauthorizedException` | nobody is logged in (thrown by `CurrentUser`, don't throw it yourself) | 401 |
 
 Example:
 
@@ -53,8 +54,7 @@ Example:
 
 The message is returned to the client, so keep it user-friendly and never include
 passwords, SQL or stack traces. The status code is set in `GlobalExceptionHandler`.
-from your service. `GlobalExceptionHandler` in `common/exception` converts it
-to the format above. Don't build error responses by hand in controllers.
+
 ## Current user
 
 To get the ID of the user making the request, inject `CurrentUser`
