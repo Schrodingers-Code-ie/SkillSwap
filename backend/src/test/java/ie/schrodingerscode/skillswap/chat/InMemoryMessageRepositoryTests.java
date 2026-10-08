@@ -19,7 +19,7 @@ class InMemoryMessageRepositoryTests {
 
     /**
      * Creates an unsaved message for testing.
-     * 
+     *
      * @param from sender's user ID
      * @param to   receiver's user ID
      * @param text message content

@@ -31,7 +31,7 @@ public class InMemoryMessageRepository implements MessageRepository {
      * withId() creates a new Message because Message is immutable.
      * synchronized prevents concurrent requests from modifying the list
      * simultaneously.
-     * 
+     *
      * @param message message to save
      * @return saved message with its assigned ID
      */
@@ -46,7 +46,7 @@ public class InMemoryMessageRepository implements MessageRepository {
      * Retrieves all messages exchanged between two users.
      * Includes messages sent in either direction and sorts them by timestamp,
      * using the message id to break ties when timestamps are equal.
-     * 
+     *
      * @param userA ID of the first user
      * @param userB ID of the second user
      * @return conversation messages, oldest first

@@ -19,7 +19,7 @@ public record MatchResponse(
                 match.matchUserName(),
                 match.matchingScore(),
                 match.skillsTheyCanTeachMe().stream().sorted().toList(), // With .stream() we can use .sorted and
-                                                                         // .toList
+                // .toList
                 match.skillsICanTeachThem().stream().sorted().toList());
     }
 }

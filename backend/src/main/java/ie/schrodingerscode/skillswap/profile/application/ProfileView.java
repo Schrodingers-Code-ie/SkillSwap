@@ -10,7 +10,9 @@ public record ProfileView(
         List<TeachSkillView> teachSkills,
         List<SkillView> learnSkills) {
 
-    public record TeachSkillView(long skillId, String name, Proficiency proficiency) {}
+    public record TeachSkillView(long skillId, String name, Proficiency proficiency) {
+    }
 
-    public record SkillView(long skillId, String name) {}
+    public record SkillView(long skillId, String name) {
+    }
 }

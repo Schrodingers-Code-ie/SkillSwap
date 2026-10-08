@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Shared Java formatter, used by Spotless (pom.xml) and the VS Code Java extension (.vscode/settings.json).
+     Only overrides are listed; everything else is the Eclipse default. -->
+<profiles version="23">
+	<profile kind="CodeFormatterProfile" name="SkillSwap" version="23">
+		<setting id="org.eclipse.jdt.core.formatter.tabulation.char" value="space"/>
+		<setting id="org.eclipse.jdt.core.formatter.tabulation.size" value="4"/>
+		<setting id="org.eclipse.jdt.core.formatter.indentation.size" value="4"/>
+		<setting id="org.eclipse.jdt.core.formatter.lineSplit" value="120"/>
+		<setting id="org.eclipse.jdt.core.formatter.join_wrapped_lines" value="false"/>
+		<setting id="org.eclipse.jdt.core.formatter.comment.format_javadoc_comments" value="false"/>
+		<setting id="org.eclipse.jdt.core.formatter.comment.format_block_comments" value="false"/>
+		<setting id="org.eclipse.jdt.core.formatter.comment.format_line_comments" value="false"/>
+	</profile>
+</profiles>
