@@ -1,5 +1,7 @@
 package ie.schrodingerscode.skillswap.chat.domain;
 
+import ie.schrodingerscode.skillswap.chat.domain.exception.InvalidMessageTextException;
+
 /**
  * The text of a chat message. A value object:
  * 1. It has no identity. It is defined only by its value, so two

@@ -1,4 +1,4 @@
-package ie.schrodingerscode.skillswap.chat.domain;
+package ie.schrodingerscode.skillswap.chat.domain.exception;
 
 import ie.schrodingerscode.skillswap.common.exception.ValidationException;
 

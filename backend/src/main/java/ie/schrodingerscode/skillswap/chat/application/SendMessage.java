@@ -24,7 +24,7 @@ public class SendMessage {
     private final CurrentUser currentUser;
 
     /**
-     * @param messages    interface define how to save messages
+     * @param messages    repository used to save messages
      * @param connections checks whether users are connected
      * @param currentUser provides the id of the currently logged-in user
      */
@@ -42,10 +42,10 @@ public class SendMessage {
      */
     public Message execute(long receiverId, String rawText) {
         long senderId = currentUser.getId(); // 401 if nobody is logged in
-        MessageText text = new MessageText(rawText); // 400 if empty or too long
         if (!connections.areConnected(senderId, receiverId)) {
             throw new NotConnectedException(); // 403
         }
+        MessageText text = new MessageText(rawText); // 400 if empty or too long
         return messages.save(Message.create(senderId, receiverId, text, Instant.now()));
     }
 

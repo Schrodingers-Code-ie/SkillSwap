@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.Test;
 
-import ie.schrodingerscode.skillswap.chat.domain.InvalidMessageTextException;
 import ie.schrodingerscode.skillswap.chat.domain.MessageText;
+import ie.schrodingerscode.skillswap.chat.domain.exception.InvalidMessageTextException;
 
 public class MessageTextTest {
     /* Accepts valid message text. */
