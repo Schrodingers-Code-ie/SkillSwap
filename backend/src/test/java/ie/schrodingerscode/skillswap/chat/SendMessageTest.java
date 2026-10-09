@@ -18,18 +18,17 @@ class SendMessageTest {
     /**
      * Creates a service with a fake connection checker and current user.
      *
-     * @param userId    ID of the logged-in user
      * @param connected whether the users are considered connected
      * @return a configured message sending service
      */
-    private SendMessage sendAs(long userId, boolean connected) {
-        return new SendMessage(repo, (a, b) -> connected, () -> userId);
+    private SendMessage sendAs(boolean connected) {
+        return new SendMessage(repo, (a, b) -> connected);
     }
 
     /** Verifies that a valid message is saved when the users are connected. */
     @Test
     void savesMessageWhenConnected() {
-        Message sent = sendAs(1, true).execute(2, "Hi");
+        Message sent = sendAs(true).execute(1, 2, "Hi");
 
         assertThat(sent.id()).isNotNull();
         assertThat(sent.senderId()).isEqualTo(1);
@@ -44,7 +43,7 @@ class SendMessageTest {
      */
     @Test
     void notConnectedThrowsAndSavesNothing() {
-        assertThatThrownBy(() -> sendAs(1, false).execute(2, "Hi")).isInstanceOf(NotConnectedException.class);
+        assertThatThrownBy(() -> sendAs(false).execute(1, 2, "Hi")).isInstanceOf(NotConnectedException.class);
 
         assertThat(repo.findConversation(1, 2)).isEmpty();
     }
@@ -52,7 +51,7 @@ class SendMessageTest {
     /** Verifies that invalid message text is rejected without saving a message. */
     @Test
     void invalidTextToConnectionThrowsAndSavesNothing() {
-        assertThatThrownBy(() -> sendAs(1, true).execute(2, "   ")).isInstanceOf(InvalidMessageTextException.class);
+        assertThatThrownBy(() -> sendAs(true).execute(1, 2, "   ")).isInstanceOf(InvalidMessageTextException.class);
 
         assertThat(repo.findConversation(1, 2)).isEmpty();
     }
@@ -63,6 +62,6 @@ class SendMessageTest {
      */
     @Test
     void emptyTextToNonConnectionGivesNotConnectedError() {
-        assertThatThrownBy(() -> sendAs(1, false).execute(2, "")).isInstanceOf(NotConnectedException.class);
+        assertThatThrownBy(() -> sendAs(false).execute(1, 2, "")).isInstanceOf(NotConnectedException.class);
     }
 }

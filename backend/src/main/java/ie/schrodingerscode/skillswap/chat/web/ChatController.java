@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
 
 import ie.schrodingerscode.skillswap.chat.application.GetMessageHistory;
 import ie.schrodingerscode.skillswap.chat.application.SendMessage;
 import ie.schrodingerscode.skillswap.chat.web.dto.MessageResponse;
 import ie.schrodingerscode.skillswap.chat.web.dto.SendMessageRequest;
+import ie.schrodingerscode.skillswap.auth.CurrentUser;
 
 /**
  * REST controller for sending messages and retrieving chat history.
@@ -28,6 +30,7 @@ import ie.schrodingerscode.skillswap.chat.web.dto.SendMessageRequest;
 @RequestMapping("/api/chats/{userId}/messages")
 public class ChatController {
 
+    private final CurrentUser currentUser;
     private final SendMessage sendMessage;
     private final GetMessageHistory getMessageHistory;
 
@@ -37,7 +40,8 @@ public class ChatController {
      * @param sendMessage       service that handles sending messages
      * @param getMessageHistory service that retrieves conversation history
      */
-    public ChatController(SendMessage sendMessage, GetMessageHistory getMessageHistory) {
+    public ChatController(CurrentUser currentUser, SendMessage sendMessage, GetMessageHistory getMessageHistory) {
+        this.currentUser = currentUser;
         this.sendMessage = sendMessage;
         this.getMessageHistory = getMessageHistory;
     }
@@ -54,8 +58,8 @@ public class ChatController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public MessageResponse send(@PathVariable long userId, @RequestBody SendMessageRequest request) {
-        return MessageResponse.from(sendMessage.execute(userId, request.text()));
+    public MessageResponse send(@PathVariable long userId, @Valid @RequestBody SendMessageRequest request) {
+        return MessageResponse.from(sendMessage.execute(currentUser.getId(), userId, request.text()));
     }
 
     /**
@@ -69,6 +73,6 @@ public class ChatController {
      */
     @GetMapping
     public List<MessageResponse> history(@PathVariable long userId) {
-        return getMessageHistory.execute(userId).stream().map(MessageResponse::from).toList();
+        return getMessageHistory.execute(currentUser.getId(), userId).stream().map(MessageResponse::from).toList();
     }
 }

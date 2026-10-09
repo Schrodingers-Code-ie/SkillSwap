@@ -21,13 +21,12 @@ class GetMessageHistoryTest {
     private final InMemoryMessageRepository repo = new InMemoryMessageRepository();
 
     /**
-     * Creates the service with a simulated logged-in user.
+     * Creates the service
      * 
-     * @param userId the id of the current user
      * @return a service for retrieving message history as that user
      */
-    private GetMessageHistory historyAs(long userId, boolean connected) {
-        return new GetMessageHistory(repo, (a, b) -> connected, () -> userId);
+    private GetMessageHistory historyAs(boolean connected) {
+        return new GetMessageHistory(repo, (a, b) -> connected);
     }
 
     /**
@@ -39,7 +38,7 @@ class GetMessageHistoryTest {
         repo.save(Message.create(1, 2, new MessageText("Hi"), Instant.now()));
         repo.save(Message.create(2, 1, new MessageText("Hello"), Instant.now()));
         repo.save(Message.create(3, 4, new MessageText("Other chat"), Instant.now()));
-        List<Message> history = historyAs(1, true).execute(2);
+        List<Message> history = historyAs(true).execute(1, 2);
         assertThat(history).hasSize(2);
     }
 
@@ -50,7 +49,7 @@ class GetMessageHistoryTest {
         // saved out of order on purpose
         repo.save(Message.create(1, 2, new MessageText("second"), t0.plusSeconds(10)));
         repo.save(Message.create(2, 1, new MessageText("first"), t0));
-        assertThat(historyAs(1, true).execute(2)).extracting(m -> m.text().value()).containsExactly("first", "second");
+        assertThat(historyAs(true).execute(1, 2)).extracting(m -> m.text().value()).containsExactly("first", "second");
     }
 
     /**
@@ -59,6 +58,6 @@ class GetMessageHistoryTest {
      */
     @Test
     void notConnectedThrows() {
-        assertThatThrownBy(() -> historyAs(1, false).execute(2)).isInstanceOf(NotConnectedException.class);
+        assertThatThrownBy(() -> historyAs(false).execute(1, 2)).isInstanceOf(NotConnectedException.class);
     }
 }
