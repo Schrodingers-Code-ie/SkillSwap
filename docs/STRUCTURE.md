@@ -5,17 +5,17 @@ repository, DTOs, and entities.
 
 All backend code lives in `backend/src/main/java/ie/schrodingerscode/skillswap/`.
 
-| Package    | Responsibility                               |
-| ---------- | -------------------------------------------- |
-| auth       | Login, registration, tokens                  |
-| user       | User profiles                                |
-| skill      | Skills a user offers or wants                |
-| match      | Matching users by skills                     |
-| connection | Connection requests between users            |
-| chat       | Messaging                                    |
-| common     | Shared code: exceptions, utilities           |
-| config     | App-wide configuration (e.g. SecurityConfig) |
-| health     | Health check endpoint                        |
+| Package    | Responsibility                                      |
+|------------|-----------------------------------------------------|
+| auth       | Login, registration, tokens                         |
+| user       | User profiles                                       |
+| skill      | Skills a user offers or wants                       |
+| match      | Matching users by skills                            |
+| connection | Connection requests between users                   |
+| chat       | Messaging                                           |
+| common     | Shared code: exceptions, utilities                  |
+| config     | App-wide configuration (e.g. SecurityConfig)        |
+| health     | Health check endpoint                               |
 
 ## Where do new files go?
 
@@ -24,7 +24,6 @@ All backend code lives in `backend/src/main/java/ie/schrodingerscode/skillswap/`
 - Database access: that feature's `repository` package
 - Request/response objects: that feature's `dto` package
 - Something used by 2 or more features: `common`
-- Entities and value objects: that feature's `model` package
 
 ## Error handling
 
@@ -38,7 +37,7 @@ To return an error, do not edit `GlobalExceptionHandler`. Instead, create a subc
 of the base exceptions in `common.exception`:
 
 | Base exception        | Use when                                  | HTTP |
-| --------------------- | ----------------------------------------- | ---- |
+|-----------------------|-------------------------------------------|------|
 | `ValidationException` | the input breaks a business rule          | 400  |
 | `NotFoundException`   | the requested item does not exist         | 404  |
 | `ConflictException`   | the request clashes with existing data    | 409  |
@@ -56,7 +55,6 @@ The message is returned to the client, so keep it user-friendly and never includ
 passwords, SQL or stack traces. The status code is set in `GlobalExceptionHandler`.
 from your service. `GlobalExceptionHandler` in `common/exception` converts it
 to the format above. Don't build error responses by hand in controllers.
-
 ## Current user
 
 To get the ID of the user making the request, inject `CurrentUser`
