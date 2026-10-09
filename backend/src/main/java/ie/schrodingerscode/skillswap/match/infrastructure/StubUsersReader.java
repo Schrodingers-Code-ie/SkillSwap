@@ -27,7 +27,7 @@ public class StubUsersReader implements SkillSwapUsersReader {
                 // with
                 // Ulven
                 new SkillSwapUser(4, "Jessica", Set.of("Japanese"), Set.of("SQL")), // one way overlap with Ulven
-                new SkillSwapUser(5, "Doe", Set.of("Python"), Set.of("Cooking, Piano"))); // no overlap with Ulven
+                new SkillSwapUser(5, "Doe", Set.of("Python"), Set.of("Cooking", "Piano"))); // no overlap with Ulven
     }
 }
 

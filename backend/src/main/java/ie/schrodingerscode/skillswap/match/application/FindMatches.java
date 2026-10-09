@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import ie.schrodingerscode.skillswap.match.domain.MatchScorer;
 import ie.schrodingerscode.skillswap.common.exception.NotFoundException;
+import ie.schrodingerscode.skillswap.match.application.exception.UserNotFoundException;
 import ie.schrodingerscode.skillswap.match.domain.Match;
 import ie.schrodingerscode.skillswap.match.domain.SkillSwapUser;
 
@@ -33,7 +34,7 @@ public class FindMatches {
         }
 
         if (me == null) {
-            // TODO: Throw an exception here (create a subclass of NotFoundException.java?)
+            throw new UserNotFoundException("User not found.");
         }
 
         List<Match> matchingUsers = new ArrayList<>(); // What we will return eventually
