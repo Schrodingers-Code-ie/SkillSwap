@@ -38,7 +38,7 @@ class MeControllerTests {
 
     @Test
     void invalidHeaderReturns401() throws Exception {
-        for (String bad : new String[] { "abc", "0", "-5", " " }) {
+        for (String bad : new String[]{"abc", "0", "-5", " "}) {
             mockMvc.perform(get("/api/auth/me").header("X-User-Id", bad))
                     .andExpect(status().isUnauthorized());
         }

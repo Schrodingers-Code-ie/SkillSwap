@@ -20,9 +20,6 @@
 				"dbaeumer.vscode-eslint"
 			],
 			"settings": {
-				"editor.defaultFormatter": "esbenp.prettier-vscode",
-				"editor.formatOnSave": true,
-				"[java]": { "editor.defaultFormatter": "redhat.java" },
 				"git.blame.editorDecoration.enabled": true,
 				"git.blame.statusBarItem.enabled": true
 			}
