@@ -4,7 +4,7 @@ import java.time.Instant;
 
 import org.springframework.stereotype.Service;
 
-import ie.schrodingerscode.skillswap.chat.domain.ConnectionChecker;
+import ie.schrodingerscode.skillswap.connection.application.ConnectionChecker;
 import ie.schrodingerscode.skillswap.chat.domain.Message;
 import ie.schrodingerscode.skillswap.chat.domain.MessageRepository;
 import ie.schrodingerscode.skillswap.chat.domain.MessageText;

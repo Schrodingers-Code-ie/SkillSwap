@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import ie.schrodingerscode.skillswap.chat.domain.MessageText;
 import ie.schrodingerscode.skillswap.chat.domain.exception.InvalidMessageTextException;
 
-public class MessageTextTest {
+public class MessageTextTests {
     /* Accepts valid message text. */
     @Test
     void acceptsNormalText() {
