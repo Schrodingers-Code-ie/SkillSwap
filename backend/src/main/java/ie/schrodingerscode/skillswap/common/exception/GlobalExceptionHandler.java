@@ -1,5 +1,7 @@
 package ie.schrodingerscode.skillswap.common.exception;
 
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -43,6 +45,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class) //parameter has the wrong type, e.g. /api/users/abc instead of a number
     public ResponseEntity<ApiError> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
         return build(HttpStatus.BAD_REQUEST, "Parameter '" + ex.getName() + "' has the wrong type");
+    }
+    
+    @ExceptionHandler(MissingServletRequestParameterException.class) //a required ?param is missing, e.g. /api/skills instead of /api/skills?category=Music
+    public ResponseEntity<ApiError> handleMissingParam(MissingServletRequestParameterException ex) {
+        return build(HttpStatus.BAD_REQUEST, "Missing required parameter '" + ex.getParameterName() + "'");
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class) //body sent as the wrong type, e.g. text/plain instead of JSON
+    public ResponseEntity<ApiError> handleWrongContentType(HttpMediaTypeNotSupportedException ex) {
+        return build(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Content type not supported, send the body as application/json");
     }
 
     @ExceptionHandler(NoResourceFoundException.class) //no endpoint exists for this URL
