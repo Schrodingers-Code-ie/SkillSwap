@@ -16,7 +16,7 @@ import ie.schrodingerscode.skillswap.chat.application.GetMessageHistory;
 /**
  * Tests retrieving message history between users.
  */
-class GetMessageHistoryTest {
+class GetMessageHistoryTests {
 
     private final InMemoryMessageRepository repo = new InMemoryMessageRepository();
 

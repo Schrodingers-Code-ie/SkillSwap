@@ -11,7 +11,7 @@ import ie.schrodingerscode.skillswap.chat.infrastructure.InMemoryMessageReposito
 import ie.schrodingerscode.skillswap.chat.application.SendMessage;
 
 /** Tests message sending, connection checks, and text validation. */
-class SendMessageTest {
+class SendMessageTests {
 
     private final InMemoryMessageRepository repo = new InMemoryMessageRepository();
 

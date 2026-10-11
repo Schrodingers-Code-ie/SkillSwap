@@ -10,7 +10,7 @@ import ie.schrodingerscode.skillswap.chat.domain.Message;
 import ie.schrodingerscode.skillswap.chat.domain.MessageText;
 import ie.schrodingerscode.skillswap.chat.infrastructure.InMemoryMessageRepository;
 
-class InMemoryMessageRepositoryTest {
+class InMemoryMessageRepositoryTests {
 
     private final InMemoryMessageRepository repo = new InMemoryMessageRepository();
 
