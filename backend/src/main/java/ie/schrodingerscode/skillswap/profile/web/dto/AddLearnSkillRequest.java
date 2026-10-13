@@ -1,4 +1,4 @@
-package ie.schrodingerscode.skillswap.user.web.dto;
+package ie.schrodingerscode.skillswap.profile.web.dto;
 
 import jakarta.validation.constraints.NotNull;
 

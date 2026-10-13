@@ -1,4 +1,4 @@
-package ie.schrodingerscode.skillswap.user.domain;
+package ie.schrodingerscode.skillswap.profile.domain.exception;
 
 import ie.schrodingerscode.skillswap.common.exception.ConflictException;
 

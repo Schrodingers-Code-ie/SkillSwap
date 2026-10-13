@@ -9,8 +9,6 @@ import java.util.Optional;
 
 @Repository
 public class InMemorySkillRepository implements SkillRepository {
-
-
 private final List<Skill> skills = List.of(
         new Skill(1, "Guitar"),
         new Skill(2, "Piano"),
@@ -39,7 +37,7 @@ private final List<Skill> skills = List.of(
         new Skill(25, "Swimming")
 );
 
-@Override
+    @Override
     public List<Skill> findAll() {
         return skills;
     }

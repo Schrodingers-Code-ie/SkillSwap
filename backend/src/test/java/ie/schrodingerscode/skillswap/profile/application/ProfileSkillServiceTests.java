@@ -1,21 +1,21 @@
-package ie.schrodingerscode.skillswap.user.application;
+package ie.schrodingerscode.skillswap.profile.application;
 
 import ie.schrodingerscode.skillswap.skill.domain.SkillNotFoundException;
 import ie.schrodingerscode.skillswap.skill.infrastructure.InMemorySkillRepository;
-import ie.schrodingerscode.skillswap.user.domain.DuplicateSkillException;
-import ie.schrodingerscode.skillswap.user.domain.Proficiency;
-import ie.schrodingerscode.skillswap.user.domain.ProficiencyRequiredException;
-import ie.schrodingerscode.skillswap.user.domain.Profile;
-import ie.schrodingerscode.skillswap.user.domain.ProfileNotFoundException;
-import ie.schrodingerscode.skillswap.user.domain.SkillNotInListException;
-import ie.schrodingerscode.skillswap.user.infrastructure.InMemoryProfileRepository;
+import ie.schrodingerscode.skillswap.profile.domain.exception.DuplicateSkillException;
+import ie.schrodingerscode.skillswap.profile.domain.Proficiency;
+import ie.schrodingerscode.skillswap.profile.domain.exception.ProficiencyRequiredException;
+import ie.schrodingerscode.skillswap.profile.domain.Profile;
+import ie.schrodingerscode.skillswap.profile.domain.exception.ProfileNotFoundException;
+import ie.schrodingerscode.skillswap.profile.domain.exception.SkillNotInListException;
+import ie.schrodingerscode.skillswap.profile.infrastructure.InMemoryProfileRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class ProfileSkillServiceTest {
+class ProfileSkillServiceTests {
 
     private static final long USER_ID = 100L;   // not one of the seeded users
     private static final long GUITAR = 1L;      // exists in the catalogue

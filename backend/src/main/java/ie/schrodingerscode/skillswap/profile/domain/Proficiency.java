@@ -1,4 +1,4 @@
-package ie.schrodingerscode.skillswap.user.domain;
+package ie.schrodingerscode.skillswap.profile.domain;
 
 public enum Proficiency {
     NONE,

@@ -1,10 +1,10 @@
-package ie.schrodingerscode.skillswap.user.web;
+package ie.schrodingerscode.skillswap.profile.web;
 
-import ie.schrodingerscode.skillswap.user.application.GetProfileService;
-import ie.schrodingerscode.skillswap.user.application.ProfileSkillService;
-import ie.schrodingerscode.skillswap.user.application.ProfileView;
-import ie.schrodingerscode.skillswap.user.web.dto.AddLearnSkillRequest;
-import ie.schrodingerscode.skillswap.user.web.dto.AddTeachSkillRequest;
+import ie.schrodingerscode.skillswap.profile.application.GetProfileService;
+import ie.schrodingerscode.skillswap.profile.application.ProfileSkillService;
+import ie.schrodingerscode.skillswap.profile.application.ProfileView;
+import ie.schrodingerscode.skillswap.profile.web.dto.AddLearnSkillRequest;
+import ie.schrodingerscode.skillswap.profile.web.dto.AddTeachSkillRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

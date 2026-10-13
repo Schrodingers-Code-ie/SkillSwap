@@ -1,8 +1,8 @@
-package ie.schrodingerscode.skillswap.user.infrastructure;
+package ie.schrodingerscode.skillswap.profile.infrastructure;
 
-import ie.schrodingerscode.skillswap.user.domain.Proficiency;
-import ie.schrodingerscode.skillswap.user.domain.Profile;
-import ie.schrodingerscode.skillswap.user.domain.ProfileRepository;
+import ie.schrodingerscode.skillswap.profile.domain.Proficiency;
+import ie.schrodingerscode.skillswap.profile.domain.Profile;
+import ie.schrodingerscode.skillswap.profile.domain.ProfileRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Map;

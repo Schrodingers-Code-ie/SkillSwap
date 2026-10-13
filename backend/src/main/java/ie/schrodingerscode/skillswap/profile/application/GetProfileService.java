@@ -1,10 +1,10 @@
-package ie.schrodingerscode.skillswap.user.application;
+package ie.schrodingerscode.skillswap.profile.application;
 
 import ie.schrodingerscode.skillswap.skill.domain.Skill;
 import ie.schrodingerscode.skillswap.skill.domain.SkillRepository;
-import ie.schrodingerscode.skillswap.user.domain.Profile;
-import ie.schrodingerscode.skillswap.user.domain.ProfileNotFoundException;
-import ie.schrodingerscode.skillswap.user.domain.ProfileRepository;
+import ie.schrodingerscode.skillswap.profile.domain.Profile;
+import ie.schrodingerscode.skillswap.profile.domain.exception.ProfileNotFoundException;
+import ie.schrodingerscode.skillswap.profile.domain.ProfileRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;

@@ -1,6 +1,6 @@
-package ie.schrodingerscode.skillswap.user.application;
+package ie.schrodingerscode.skillswap.profile.application;
 
-import ie.schrodingerscode.skillswap.user.domain.Proficiency;
+import ie.schrodingerscode.skillswap.profile.domain.Proficiency;
 import java.util.List;
 
 public record ProfileView(

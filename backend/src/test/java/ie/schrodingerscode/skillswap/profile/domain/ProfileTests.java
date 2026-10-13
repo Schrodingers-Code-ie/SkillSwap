@@ -1,4 +1,8 @@
-package ie.schrodingerscode.skillswap.user.domain;
+package ie.schrodingerscode.skillswap.profile.domain;
+
+import ie.schrodingerscode.skillswap.profile.domain.exception.DuplicateSkillException;
+import ie.schrodingerscode.skillswap.profile.domain.exception.ProficiencyRequiredException;
+import ie.schrodingerscode.skillswap.profile.domain.exception.SkillNotInListException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -6,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class ProfileTest {
+class ProfileTests {
 
     private Profile profile;
 

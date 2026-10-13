@@ -1,6 +1,6 @@
-package ie.schrodingerscode.skillswap.user.web.dto;
+package ie.schrodingerscode.skillswap.profile.web.dto;
 
-import ie.schrodingerscode.skillswap.user.domain.Proficiency;
+import ie.schrodingerscode.skillswap.profile.domain.Proficiency;
 import jakarta.validation.constraints.NotNull;
 
 public record AddTeachSkillRequest(

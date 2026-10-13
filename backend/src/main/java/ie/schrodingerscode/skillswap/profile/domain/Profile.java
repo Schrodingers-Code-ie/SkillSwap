@@ -1,9 +1,13 @@
-package ie.schrodingerscode.skillswap.user.domain;
+package ie.schrodingerscode.skillswap.profile.domain;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+import ie.schrodingerscode.skillswap.profile.domain.exception.DuplicateSkillException;
+import ie.schrodingerscode.skillswap.profile.domain.exception.ProficiencyRequiredException;
+import ie.schrodingerscode.skillswap.profile.domain.exception.SkillNotInListException;
 
 public class Profile {
 
