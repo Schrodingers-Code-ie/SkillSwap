@@ -17,8 +17,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ProfileSkillServiceTests {
 
-    private static final long USER_ID = 100L;   // not one of the seeded users
-    private static final long GUITAR = 1L;      // exists in the catalogue
+    private static final long USER_ID = 100L; // not one of the seeded users
+    private static final long GUITAR = 1L; // exists in the catalogue
     private static final long UNKNOWN_SKILL = 999L;
 
     private InMemoryProfileRepository profiles;
@@ -122,8 +122,7 @@ class ProfileSkillServiceTests {
 
     @Test
     void unknownUserHasNoProfile() {
-        ProfileSkillService other =
-                new ProfileSkillService(profiles, new InMemorySkillRepository(), () -> 555L);
+        ProfileSkillService other = new ProfileSkillService(profiles, new InMemorySkillRepository(), () -> 555L);
 
         assertThatThrownBy(() -> other.addLearnSkill(GUITAR))
                 .isInstanceOf(ProfileNotFoundException.class);

@@ -5,4 +5,5 @@ import jakarta.validation.constraints.NotNull;
 
 public record AddTeachSkillRequest(
         @NotNull(message = "skillId is required") Long skillId,
-        Proficiency proficiency) {}
+        Proficiency proficiency) {
+}

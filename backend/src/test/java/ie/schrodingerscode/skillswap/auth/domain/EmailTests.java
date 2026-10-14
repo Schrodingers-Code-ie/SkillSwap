@@ -35,7 +35,7 @@ class EmailTests {
 
     @Test
     void rejectsBadFormat() {
-        for (String bad : new String[] { "ann", "ann@mail", "ann mail@x.ie", "a@b@c.ie", "@mail.com" }) {
+        for (String bad : new String[]{"ann", "ann@mail", "ann mail@x.ie", "a@b@c.ie", "@mail.com"}) {
             assertThatThrownBy(() -> new Email(bad))
                     .as(bad)
                     .isInstanceOf(InvalidEmailException.class);

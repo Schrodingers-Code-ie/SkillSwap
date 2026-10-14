@@ -22,7 +22,7 @@ class GetMessageHistoryTests {
 
     /**
      * Creates the service
-     * 
+     *
      * @return a service for retrieving message history as that user
      */
     private GetMessageHistory historyAs(boolean connected) {

@@ -19,7 +19,7 @@ public class StubUsersReader implements SkillSwapUsersReader {
                 new SkillSwapUser(1, "Ulven", Set.of("Guitar", "Spanish", "French", "Python"),
                         Set.of("Piano", "Japanese", "JavaScript", "Java")),
                 new SkillSwapUser(2, "Jane", Set.of("JavaScript"), Set.of("Guitar", "Spanish")), // two way overlap
-                                                                                                 // with
+                // with
                 // Ulven
                 new SkillSwapUser(3, "Mike", Set.of("Piano", "Japanese"), Set.of("Guitar", "Spanish", "Yoga")), // two
                 // way

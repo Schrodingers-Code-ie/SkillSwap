@@ -56,11 +56,21 @@ public class Profile {
         return teachSkills.stream().anyMatch(t -> t.skillId() == skillId);
     }
 
-    public long getUserId() { return userId; }
-    public String getDisplayName() { return displayName; }
-    public String getBio() { return bio; }
+    public long getUserId() {
+        return userId;
+    }
+    public String getDisplayName() {
+        return displayName;
+    }
+    public String getBio() {
+        return bio;
+    }
 
     // Copies, so callers can't bypass the rules by editing the collections.
-    public List<TeachSkill> getTeachSkills() { return List.copyOf(teachSkills); }
-    public Set<Long> getLearnSkillIds() { return Set.copyOf(learnSkillIds); }
+    public List<TeachSkill> getTeachSkills() {
+        return List.copyOf(teachSkills);
+    }
+    public Set<Long> getLearnSkillIds() {
+        return Set.copyOf(learnSkillIds);
+    }
 }

@@ -53,21 +53,21 @@ class ProfileControllerTests {
     @Test
     void addTeachSkillReturns201() throws Exception {
         mvc.perform(post(TEACH).contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"skillId\": 11, \"proficiency\": \"BEGINNER\"}"))
+                .content("{\"skillId\": 11, \"proficiency\": \"BEGINNER\"}"))
                 .andExpect(status().isCreated());
     }
 
     @Test
     void addLearnSkillReturns201WithoutProficiency() throws Exception {
         mvc.perform(post(LEARN).contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"skillId\": 5}"))
+                .content("{\"skillId\": 5}"))
                 .andExpect(status().isCreated());
     }
 
     @Test
     void teachSkillWithoutProficiencyReturns400() throws Exception {
         mvc.perform(post(TEACH).contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"skillId\": 12}"))
+                .content("{\"skillId\": 12}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
                 .andExpect(jsonPath("$.message").exists());
@@ -76,7 +76,7 @@ class ProfileControllerTests {
     @Test
     void invalidProficiencyReturns400() throws Exception {
         mvc.perform(post(TEACH).contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"skillId\": 12, \"proficiency\": \"SUPERHUMAN\"}"))
+                .content("{\"skillId\": 12, \"proficiency\": \"SUPERHUMAN\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400));
     }
@@ -90,7 +90,7 @@ class ProfileControllerTests {
     @Test
     void unknownSkillReturns404() throws Exception {
         mvc.perform(post(TEACH).contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"skillId\": 999, \"proficiency\": \"BEGINNER\"}"))
+                .content("{\"skillId\": 999, \"proficiency\": \"BEGINNER\"}"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status").value(404));
     }
