@@ -24,20 +24,18 @@ public class SwapRequestService implements ConnectionChecker {
     }
 
     //synchronized so two requests sent at the same moment can't both pass the duplicate check
+    //(the unique index in the database is a backstop for this too)
     public synchronized SwapRequest send(long senderId, long receiverId) {
         if (repository.findByPair(UserPair.of(senderId, receiverId)).isPresent()) {
             throw new DuplicateRequestException();
         }
-        SwapRequest request = SwapRequest.create(repository.nextId(), senderId, receiverId);
-        repository.save(request);
-        return request;
+        return repository.save(SwapRequest.create(senderId, receiverId));
     }
 
     public SwapRequest accept(long requestId, long userId) {
         SwapRequest request = findRequest(requestId);
         request.accept(userId);
-        repository.save(request);
-        return request;
+        return repository.save(request);
     }
 
     public void decline(long requestId, long userId) {
