@@ -23,7 +23,7 @@ public class MessageTextTests {
     /* Rejects empty and whitespace-only text. */
     @Test
     void rejectsEmptyAndWhitespaceOnly() {
-        for (String bad : new String[] { "", "   ", "\t\n" }) {
+        for (String bad : new String[]{"", "   ", "\t\n"}) {
             assertThatThrownBy(() -> new MessageText(bad)).isInstanceOf(InvalidMessageTextException.class);
         }
     }

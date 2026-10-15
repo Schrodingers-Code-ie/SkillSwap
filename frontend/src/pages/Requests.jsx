@@ -1,3 +1,3 @@
 export default function Requests() {
-    return <h1>Requests Page</h1>;
+	return <h1>Requests Page</h1>;
 }

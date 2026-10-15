@@ -7,7 +7,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import ie.schrodingerscode.skillswap.match.domain.MatchScorer;
-import ie.schrodingerscode.skillswap.common.exception.NotFoundException;
 import ie.schrodingerscode.skillswap.match.application.exception.UserNotFoundException;
 import ie.schrodingerscode.skillswap.match.domain.Match;
 import ie.schrodingerscode.skillswap.match.domain.SkillSwapUser;

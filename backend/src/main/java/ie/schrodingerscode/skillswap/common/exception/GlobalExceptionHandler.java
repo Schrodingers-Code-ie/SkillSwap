@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
         return build(HttpStatus.BAD_REQUEST, "Parameter '" + ex.getName() + "' has the wrong type");
     }
-    
+
     @ExceptionHandler(MissingServletRequestParameterException.class) //a required ?param is missing, e.g. /api/skills instead of /api/skills?category=Music
     public ResponseEntity<ApiError> handleMissingParam(MissingServletRequestParameterException ex) {
         return build(HttpStatus.BAD_REQUEST, "Missing required parameter '" + ex.getParameterName() + "'");
@@ -54,7 +54,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class) //body sent as the wrong type, e.g. text/plain instead of JSON
     public ResponseEntity<ApiError> handleWrongContentType(HttpMediaTypeNotSupportedException ex) {
-        return build(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Content type not supported, send the body as application/json");
+        return build(HttpStatus.UNSUPPORTED_MEDIA_TYPE,
+                "Content type not supported, send the body as application/json");
     }
 
     @ExceptionHandler(NoResourceFoundException.class) //no endpoint exists for this URL

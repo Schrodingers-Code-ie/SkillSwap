@@ -61,6 +61,7 @@ class GlobalExceptionHandlerTests {
     void wrongContentTypeReturns415() throws Exception {
         mockMvc.perform(post("/api/test/body").contentType(MediaType.TEXT_PLAIN).content("hello"))
                 .andExpect(status().isUnsupportedMediaType())
-                .andExpect(jsonPath("$.message").value("Content type not supported, send the body as application/json"));
+                .andExpect(
+                        jsonPath("$.message").value("Content type not supported, send the body as application/json"));
     }
 }

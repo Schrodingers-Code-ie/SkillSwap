@@ -1,6 +1,9 @@
 .idea/
-.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
 .env
-# Postman local workspace files
+# Postman local workspace files, except the shared collections
 .postman/
-postman/
+postman/*
+!postman/collections/

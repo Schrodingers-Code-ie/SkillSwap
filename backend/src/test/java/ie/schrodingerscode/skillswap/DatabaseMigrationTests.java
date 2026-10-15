@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest
 @Import(TestcontainersConfiguration.class)
-class DatabaseMigrationTest {
+class DatabaseMigrationTests {
 
     @Autowired
     JdbcTemplate jdbc;

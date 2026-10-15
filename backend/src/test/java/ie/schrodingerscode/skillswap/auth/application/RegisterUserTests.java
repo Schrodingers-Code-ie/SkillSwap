@@ -13,6 +13,7 @@ import ie.schrodingerscode.skillswap.auth.domain.UserRepository;
 import ie.schrodingerscode.skillswap.auth.domain.exception.AgeNotConfirmedException;
 import ie.schrodingerscode.skillswap.auth.domain.exception.EmailAlreadyUsedException;
 import ie.schrodingerscode.skillswap.auth.domain.exception.InvalidPasswordException;
+import ie.schrodingerscode.skillswap.auth.domain.exception.UsernameAlreadyUsedException;
 import ie.schrodingerscode.skillswap.auth.infrastructure.InMemoryUserRepository;
 
 //plain unit tests with the real in-memory repository and BCrypt, no Spring
@@ -27,23 +28,41 @@ class RegisterUserTests {
 
     @Test
     void validRegistrationSavesUserWithId() {
-        User user = registerUser.register("ann@mail.com", PASSWORD, "Ann", true);
+        User user = registerUser.register("ann@mail.com", "ann", PASSWORD, "Ann", true);
 
         assertThat(user.getId()).isNotNull();
         assertThat(repository.findByEmail(new Email("ann@mail.com"))).contains(user);
+        assertThat(repository.findById(user.getId())).contains(user);
     }
 
     @Test
     void sameEmailInUpperCaseIsRejected() {
-        registerUser.register("ann@mail.com", PASSWORD, "Ann", true);
+        registerUser.register("ann@mail.com", "ann", PASSWORD, "Ann", true);
 
-        assertThatThrownBy(() -> registerUser.register("ANN@MAIL.COM", PASSWORD, "Ann again", true))
+        assertThatThrownBy(() -> registerUser.register("ANN@MAIL.COM", "ann2", PASSWORD, "Ann again", true))
                 .isInstanceOf(EmailAlreadyUsedException.class);
     }
 
     @Test
+    void sameUsernameIgnoringCaseIsRejected() {
+        registerUser.register("ann@mail.com", "ann", PASSWORD, "Ann", true);
+
+        assertThatThrownBy(() -> registerUser.register("other@mail.com", "Ann", PASSWORD, "Other", true))
+                .isInstanceOf(UsernameAlreadyUsedException.class);
+        assertThat(repository.existsByEmail(new Email("other@mail.com"))).isFalse();
+    }
+
+    @Test
+    void usernameIsStoredAsTyped() {
+        User user = registerUser.register("ann@mail.com", "Ann_Smith", PASSWORD, "Ann", true);
+
+        assertThat(user.getUsername()).isEqualTo("Ann_Smith");
+        assertThat(repository.existsByUsername("ann_smith")).isTrue();
+    }
+
+    @Test
     void passwordIsStoredAsBcryptHash() {
-        User user = registerUser.register("ann@mail.com", PASSWORD, "Ann", true);
+        User user = registerUser.register("ann@mail.com", "ann", PASSWORD, "Ann", true);
 
         assertThat(user.getPasswordHash()).isNotEqualTo(PASSWORD);
         assertThat(user.getPasswordHash()).startsWith("$2"); //BCrypt hashes start with $2a$, $2b$ or $2y$
@@ -52,19 +71,20 @@ class RegisterUserTests {
 
     @Test
     void passwordMustBe8To72Characters() {
-        assertThatThrownBy(() -> registerUser.register("a@mail.com", "a".repeat(7), "Ann", true))
+        assertThatThrownBy(() -> registerUser.register("a@mail.com", "ann", "a".repeat(7), "Ann", true))
                 .isInstanceOf(InvalidPasswordException.class);
-        assertThatThrownBy(() -> registerUser.register("b@mail.com", "a".repeat(73), "Ann", true))
+        assertThatThrownBy(() -> registerUser.register("b@mail.com", "ann", "a".repeat(73), "Ann", true))
                 .isInstanceOf(InvalidPasswordException.class);
-        assertThatThrownBy(() -> registerUser.register("c@mail.com", null, "Ann", true))
+        assertThatThrownBy(() -> registerUser.register("c@mail.com", "ann", null, "Ann", true))
                 .isInstanceOf(InvalidPasswordException.class);
     }
 
     @Test
     void failedRegistrationSavesNothing() {
-        assertThatThrownBy(() -> registerUser.register("ann@mail.com", PASSWORD, "Ann", false))
+        assertThatThrownBy(() -> registerUser.register("ann@mail.com", "ann", PASSWORD, "Ann", false))
                 .isInstanceOf(AgeNotConfirmedException.class);
 
         assertThat(repository.existsByEmail(new Email("ann@mail.com"))).isFalse();
+        assertThat(repository.existsByUsername("ann")).isFalse();
     }
 }

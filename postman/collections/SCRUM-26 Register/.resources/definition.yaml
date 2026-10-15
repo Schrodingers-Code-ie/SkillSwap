@@ -1,0 +1,7 @@
+$kind: collection
+description: Calls for POST /api/auth/register and GET /api/auth/me. Run them in order (Run collection) or one by one. The first call picks a new email and username every time, so the collection can be rerun without restarting the backend.
+variables:
+  baseUrl: http://localhost:8080
+  email: ""
+  username: ""
+  userId: ""
