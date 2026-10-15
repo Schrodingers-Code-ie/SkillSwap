@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-// This is a Sprint Data tool, it talks to Postgres using UserEntity and knows nothing about the domain User or Email 
+// This is a Sprint Data tool, it talks to Postgres using UserEntity and knows nothing about the domain User or Email
 // Basically a list of database operations we want. Spring will build the code behind them
 public interface UserJpa extends JpaRepository<UserEntity, Long> {
     // With JpaRepository we automatically get save, findById, findAll, delete and other methods from JpaRepository

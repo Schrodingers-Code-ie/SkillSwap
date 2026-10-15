@@ -8,7 +8,6 @@ import java.time.Instant;
 import org.junit.jupiter.api.Test;
 
 import ie.schrodingerscode.skillswap.auth.domain.exception.AgeNotConfirmedException;
-import ie.schrodingerscode.skillswap.auth.domain.exception.InvalidDisplayNameException;
 import ie.schrodingerscode.skillswap.auth.domain.exception.InvalidUsernameException;
 
 //plain unit tests for the registration rules on the User aggregate
@@ -61,7 +60,7 @@ class UserTests {
 
     @Test
     void usernameAllowsOnlyLettersNumbersAndUnderscore() {
-        for (String bad : new String[] { "ann-smith", "ann smith", "ann.smith", "ann!", "anné" }) {
+        for (String bad : new String[]{"ann-smith", "ann smith", "ann.smith", "ann!", "anné"}) {
             assertThatThrownBy(() -> User.register(EMAIL, bad, "hash", true))
                     .as(bad)
                     .isInstanceOf(InvalidUsernameException.class);
