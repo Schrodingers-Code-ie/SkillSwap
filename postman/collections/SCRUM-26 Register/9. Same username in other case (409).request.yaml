@@ -1,0 +1,27 @@
+$kind: http-request
+url: "{{baseUrl}}/api/auth/register"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+        "email": "{{otherEmail}}",
+        "username": "{{usernameUpper}}",
+        "password": "secret123",
+        "displayName": "Ann again",
+        "confirmedAdult": true
+    }
+scripts:
+  - type: beforeRequest
+    code: |-
+      pm.variables.set('otherEmail', 'other' + Date.now() + '@mail.com');
+      pm.variables.set('usernameUpper', pm.collectionVariables.get('username').toUpperCase());
+    language: text/javascript
+  - type: afterResponse
+    code: |-
+      pm.test('409 Conflict', () => pm.response.to.have.status(409));
+      pm.test('message', () => pm.expect(pm.response.json().message).to.eql('Username is already taken'));
+    language: text/javascript
+order: 10000

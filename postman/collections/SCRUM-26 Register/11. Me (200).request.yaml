@@ -1,0 +1,18 @@
+$kind: http-request
+url: "{{baseUrl}}/api/auth/me"
+method: GET
+headers:
+  X-User-Id: "{{userId}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('200 OK', () => pm.response.to.have.status(200));
+      const body = pm.response.json();
+      pm.test('returns the user registered in call 1', () => {
+          pm.expect(String(body.id)).to.eql(pm.collectionVariables.get('userId'));
+          pm.expect(body.email).to.eql(pm.collectionVariables.get('email'));
+          pm.expect(body.username).to.eql(pm.collectionVariables.get('username'));
+          pm.expect(body.displayName).to.eql('Ann');
+      });
+    language: text/javascript
+order: 12000

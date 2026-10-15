@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 
 public record RegisterRequest(
         @NotBlank String email,
+        @NotBlank String username,
         @NotBlank String password,
         @NotBlank String displayName,
         @NotNull Boolean confirmedAdult) {
