@@ -7,6 +7,7 @@ import ie.schrodingerscode.skillswap.auth.domain.Email;
 import ie.schrodingerscode.skillswap.auth.domain.User;
 import ie.schrodingerscode.skillswap.auth.domain.UserRepository;
 import ie.schrodingerscode.skillswap.auth.domain.exception.EmailAlreadyUsedException;
+import ie.schrodingerscode.skillswap.auth.domain.exception.InvalidDisplayNameException;
 import ie.schrodingerscode.skillswap.auth.domain.exception.InvalidPasswordException;
 import ie.schrodingerscode.skillswap.auth.domain.exception.UsernameAlreadyUsedException;
 
@@ -28,10 +29,11 @@ public class RegisterUser {
         }
         checkPassword(rawPassword);
         String hashPassword = passwordEncoder.encode(rawPassword);
-        User user = User.register(email, username, hashPassword, displayName, confirmedAdult);
+        User user = User.register(email, username, hashPassword, confirmedAdult);
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new UsernameAlreadyUsedException("Username is already taken");
         }
+        // TODO SCRUM-65: publish UserRegistered(saved.getId(), fullName.trim(), ...) here
         return userRepository.save(user);
     }
 
@@ -47,4 +49,12 @@ public class RegisterUser {
         }
     }
 
+    private void checkDisplayName(String displayName) {
+        if (displayName == null || displayName.isBlank()) {
+            throw new InvalidDisplayNameException("Display name is required");
+        }
+        if (displayName.length() > 100) {
+            throw new InvalidDisplayNameException("Display name must be at most 100 characters");
+        }
+    }
 }

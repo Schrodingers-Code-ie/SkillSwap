@@ -25,6 +25,8 @@ import ie.schrodingerscode.skillswap.auth.domain.exception.InvalidEmailException
 import ie.schrodingerscode.skillswap.auth.domain.exception.InvalidUsernameException;
 import ie.schrodingerscode.skillswap.auth.domain.exception.UsernameAlreadyUsedException;
 
+import java.time.Instant;
+
 /**
  * Web layer tests with RegisterUser mocked, as in STRUCTURE.md.
  * These only check JSON in/out and status codes. The rules are tested in UserTests and RegisterUserTests.
@@ -32,109 +34,109 @@ import ie.schrodingerscode.skillswap.auth.domain.exception.UsernameAlreadyUsedEx
 @WebMvcTest(RegisterController.class)
 class RegisterControllerTests {
 
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-    @MockitoBean
-    private RegisterUser registerUser;
+        @MockitoBean
+        private RegisterUser registerUser;
 
-    private ResultActions register(String json) throws Exception {
-        return mockMvc.perform(post("/api/auth/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json));
-    }
+        private ResultActions register(String json) throws Exception {
+                return mockMvc.perform(post("/api/auth/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json));
+        }
 
-    private static final String VALID_BODY = """
-            {"email": "ann@mail.com", "username": "ann", "password": "secret123", "displayName": "Ann", "confirmedAdult": true}
-            """;
+        private static final String VALID_BODY = """
+                        {"email": "ann@mail.com", "username": "ann", "password": "secret123", "displayName": "Ann", "confirmedAdult": true}
+                        """;
 
-    @Test
-    void validRegistrationReturns201WithoutPassword() throws Exception {
-        User saved = User.register(new Email("ann@mail.com"), "ann", "hash", "Ann", true).withId(1);
-        when(registerUser.register("ann@mail.com", "ann", "secret123", "Ann", true)).thenReturn(saved);
+        @Test
+        void validRegistrationReturns201WithoutPassword() throws Exception {
+                User saved = User.restore(1L, new Email("ann@mail.com"), "ann", "hash", Instant.now());
+                when(registerUser.register("ann@mail.com", "ann", "secret123", "Ann", true)).thenReturn(saved);
 
-        register(VALID_BODY)
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.email").value("ann@mail.com"))
-                .andExpect(jsonPath("$.username").value("ann"))
-                .andExpect(jsonPath("$.displayName").value("Ann"))
-                .andExpect(jsonPath("$.password").doesNotExist())
-                .andExpect(jsonPath("$.passwordHash").doesNotExist());
-    }
+                register(VALID_BODY)
+                                .andExpect(status().isCreated())
+                                .andExpect(jsonPath("$.id").value(1))
+                                .andExpect(jsonPath("$.email").value("ann@mail.com"))
+                                .andExpect(jsonPath("$.username").value("ann"))
+                                .andExpect(jsonPath("$.displayName").doesNotExist())
+                                .andExpect(jsonPath("$.password").doesNotExist())
+                                .andExpect(jsonPath("$.passwordHash").doesNotExist());
+        }
 
-    @Test
-    void missingFieldsReturn400WithoutCallingService() throws Exception {
-        register("""
-                {"email": "ann@mail.com", "username": "ann", "password": "secret123", "displayName": "Ann"}
-                """)
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("confirmedAdult: must not be null"));
+        @Test
+        void missingFieldsReturn400WithoutCallingService() throws Exception {
+                register("""
+                                {"email": "ann@mail.com", "username": "ann", "password": "secret123", "displayName": "Ann"}
+                                """)
+                                .andExpect(status().isBadRequest())
+                                .andExpect(jsonPath("$.message").value("confirmedAdult: must not be null"));
 
-        register("""
-                {"email": "", "username": "ann", "password": "secret123", "displayName": "Ann", "confirmedAdult": true}
-                """)
-                .andExpect(status().isBadRequest());
+                register("""
+                                {"email": "", "username": "ann", "password": "secret123", "displayName": "Ann", "confirmedAdult": true}
+                                """)
+                                .andExpect(status().isBadRequest());
 
-        verifyNoInteractions(registerUser);
-    }
+                verifyNoInteractions(registerUser);
+        }
 
-    @Test
-    void notConfirmedAdultReturns400() throws Exception {
-        when(registerUser.register(anyString(), anyString(), anyString(), anyString(), anyBoolean()))
-                .thenThrow(new AgeNotConfirmedException("You must confirm you are 18 or older"));
+        @Test
+        void notConfirmedAdultReturns400() throws Exception {
+                when(registerUser.register(anyString(), anyString(), anyString(), anyString(), anyBoolean()))
+                                .thenThrow(new AgeNotConfirmedException("You must confirm you are 18 or older"));
 
-        register(VALID_BODY)
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("You must confirm you are 18 or older"));
-    }
+                register(VALID_BODY)
+                                .andExpect(status().isBadRequest())
+                                .andExpect(jsonPath("$.message").value("You must confirm you are 18 or older"));
+        }
 
-    @Test
-    void invalidEmailReturns400() throws Exception {
-        when(registerUser.register(anyString(), anyString(), anyString(), anyString(), anyBoolean()))
-                .thenThrow(new InvalidEmailException("Email format is incorrect"));
+        @Test
+        void invalidEmailReturns400() throws Exception {
+                when(registerUser.register(anyString(), anyString(), anyString(), anyString(), anyBoolean()))
+                                .thenThrow(new InvalidEmailException("Email format is incorrect"));
 
-        register(VALID_BODY)
-                .andExpect(status().isBadRequest());
-    }
+                register(VALID_BODY)
+                                .andExpect(status().isBadRequest());
+        }
 
-    @Test
-    void emailAlreadyUsedReturns409() throws Exception {
-        when(registerUser.register(anyString(), anyString(), anyString(), anyString(), anyBoolean()))
-                .thenThrow(new EmailAlreadyUsedException("Email is already used"));
+        @Test
+        void emailAlreadyUsedReturns409() throws Exception {
+                when(registerUser.register(anyString(), anyString(), anyString(), anyString(), anyBoolean()))
+                                .thenThrow(new EmailAlreadyUsedException("Email is already used"));
 
-        register(VALID_BODY)
-                .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.status").value(409));
-    }
+                register(VALID_BODY)
+                                .andExpect(status().isConflict())
+                                .andExpect(jsonPath("$.status").value(409));
+        }
 
-    @Test
-    void usernameAlreadyTakenReturns409() throws Exception {
-        when(registerUser.register(anyString(), anyString(), anyString(), anyString(), anyBoolean()))
-                .thenThrow(new UsernameAlreadyUsedException("Username is already taken"));
+        @Test
+        void usernameAlreadyTakenReturns409() throws Exception {
+                when(registerUser.register(anyString(), anyString(), anyString(), anyString(), anyBoolean()))
+                                .thenThrow(new UsernameAlreadyUsedException("Username is already taken"));
 
-        register(VALID_BODY)
-                .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.status").value(409))
-                .andExpect(jsonPath("$.message").value("Username is already taken"));
-    }
+                register(VALID_BODY)
+                                .andExpect(status().isConflict())
+                                .andExpect(jsonPath("$.status").value(409))
+                                .andExpect(jsonPath("$.message").value("Username is already taken"));
+        }
 
-    @Test
-    void invalidUsernameReturns400() throws Exception {
-        when(registerUser.register(anyString(), anyString(), anyString(), anyString(), anyBoolean()))
-                .thenThrow(new InvalidUsernameException("Username must be 3 to 20 characters"));
+        @Test
+        void invalidUsernameReturns400() throws Exception {
+                when(registerUser.register(anyString(), anyString(), anyString(), anyString(), anyBoolean()))
+                                .thenThrow(new InvalidUsernameException("Username must be 3 to 20 characters"));
 
-        register(VALID_BODY)
-                .andExpect(status().isBadRequest());
-    }
+                register(VALID_BODY)
+                                .andExpect(status().isBadRequest());
+        }
 
-    @Test
-    void missingUsernameReturns400WithoutCallingService() throws Exception {
-        register("""
-                {"email": "ann@mail.com", "password": "secret123", "displayName": "Ann", "confirmedAdult": true}
-                """)
-                .andExpect(status().isBadRequest());
+        @Test
+        void missingUsernameReturns400WithoutCallingService() throws Exception {
+                register("""
+                                {"email": "ann@mail.com", "password": "secret123", "displayName": "Ann", "confirmedAdult": true}
+                                """)
+                                .andExpect(status().isBadRequest());
 
-        verifyNoInteractions(registerUser);
-    }
+                verifyNoInteractions(registerUser);
+        }
 }

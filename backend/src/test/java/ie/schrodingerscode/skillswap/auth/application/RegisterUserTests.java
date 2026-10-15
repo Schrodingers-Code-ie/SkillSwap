@@ -14,7 +14,6 @@ import ie.schrodingerscode.skillswap.auth.domain.exception.AgeNotConfirmedExcept
 import ie.schrodingerscode.skillswap.auth.domain.exception.EmailAlreadyUsedException;
 import ie.schrodingerscode.skillswap.auth.domain.exception.InvalidPasswordException;
 import ie.schrodingerscode.skillswap.auth.domain.exception.UsernameAlreadyUsedException;
-import ie.schrodingerscode.skillswap.auth.infrastructure.InMemoryUserRepository;
 
 //plain unit tests with the real in-memory repository and BCrypt, no Spring
 class RegisterUserTests {
@@ -22,7 +21,7 @@ class RegisterUserTests {
     private static final String PASSWORD = "secret123";
 
     //no Spring here, so we do the dependency injection by hand
-    private final UserRepository repository = new InMemoryUserRepository();
+    private final UserRepository repository = new FakeUserRepository();
     private final PasswordEncoder encoder = new BCryptPasswordEncoder();
     private final RegisterUser registerUser = new RegisterUser(repository, encoder);
 
