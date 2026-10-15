@@ -8,6 +8,7 @@ import ie.schrodingerscode.skillswap.auth.domain.User;
 import ie.schrodingerscode.skillswap.auth.domain.UserRepository;
 import ie.schrodingerscode.skillswap.auth.domain.exception.EmailAlreadyUsedException;
 import ie.schrodingerscode.skillswap.auth.domain.exception.InvalidPasswordException;
+import ie.schrodingerscode.skillswap.auth.domain.exception.UsernameAlreadyUsedException;
 
 @Service
 public class RegisterUser {
@@ -19,14 +20,18 @@ public class RegisterUser {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User register(String rawEmail, String rawPassword, String displayName, boolean confirmedAdult) {
+    public User register(String rawEmail, String username, String rawPassword, String displayName,
+            boolean confirmedAdult) {
         Email email = new Email(rawEmail);
         if (userRepository.existsByEmail(email)) {
             throw new EmailAlreadyUsedException("Email is already used");
         }
         checkPassword(rawPassword);
         String hashPassword = passwordEncoder.encode(rawPassword);
-        User user = User.register(email, hashPassword, displayName, confirmedAdult);
+        User user = User.register(email, username, hashPassword, displayName, confirmedAdult);
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new UsernameAlreadyUsedException("Username is already taken");
+        }
         return userRepository.save(user);
     }
 

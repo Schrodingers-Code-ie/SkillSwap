@@ -28,6 +28,7 @@ public class RegisterController {
     public UserResponse register(@Valid @RequestBody RegisterRequest request) {
         User user = registerUser.register(
                 request.email(),
+                request.username(),
                 request.password(),
                 request.displayName(),
                 request.confirmedAdult());

@@ -1,0 +1,39 @@
+$kind: http-request
+url: "{{baseUrl}}/api/auth/register"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+        "email": "{{email}}",
+        "username": "{{username}}",
+        "password": "secret123",
+        "displayName": "Ann",
+        "confirmedAdult": true
+    }
+scripts:
+  - type: beforeRequest
+    code: |-
+      const stamp = Date.now();
+      pm.collectionVariables.set('email', 'ann' + stamp + '@mail.com');
+      pm.collectionVariables.set('username', 'Ann_' + String(stamp).slice(-8));
+    language: text/javascript
+  - type: afterResponse
+    code: |-
+      pm.test('201 Created', () => pm.response.to.have.status(201));
+      const body = pm.response.json();
+      pm.test('returns id, email, username and display name', () => {
+          pm.expect(body.id).to.be.a('number');
+          pm.expect(body.email).to.eql(pm.collectionVariables.get('email'));
+          pm.expect(body.username).to.eql(pm.collectionVariables.get('username'));
+          pm.expect(body.displayName).to.eql('Ann');
+      });
+      pm.collectionVariables.set('userId', String(body.id));
+      pm.test('no password in response', () => {
+          pm.expect(body).to.not.have.property('password');
+          pm.expect(body).to.not.have.property('passwordHash');
+      });
+    language: text/javascript
+order: 2000

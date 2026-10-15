@@ -1,0 +1,23 @@
+$kind: http-request
+url: "{{baseUrl}}/api/auth/register"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+        "email": "ann@mail.com",
+        "username": "ann",
+        "password": "secret123",
+        "displayName": "Ann",
+        "confirmedAdult": true
+    }
+scripts:
+  - type: beforeRequest
+    code: ""
+    language: text/javascript
+  - type: afterResponse
+    code: ""
+    language: text/javascript
+order: 9000
