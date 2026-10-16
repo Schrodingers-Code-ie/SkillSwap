@@ -10,7 +10,7 @@ import ie.schrodingerscode.skillswap.auth.domain.UserRepository;
 
 // This one is used in RegisterUserTests instead of InMemoryUserRepository, which was deleted
 public class FakeUserRepository implements UserRepository {
-    private final Map<Long, User> users = new HashMap();
+    private final Map<Long, User> users = new HashMap<>();
     private long nextId = 1;
 
     @Override

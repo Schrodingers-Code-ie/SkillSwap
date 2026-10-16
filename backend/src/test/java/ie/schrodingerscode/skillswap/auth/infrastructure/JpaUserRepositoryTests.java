@@ -7,9 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.context.annotation.Import;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
+import ie.schrodingerscode.skillswap.TestcontainersConfiguration;
 import ie.schrodingerscode.skillswap.auth.application.RegisterUser;
 import ie.schrodingerscode.skillswap.auth.domain.Email;
 import ie.schrodingerscode.skillswap.auth.domain.User;
@@ -20,7 +21,7 @@ import jakarta.transaction.Transactional;
 
 // Starts the whole app against a real Postgres in Docker. Flyway runs V1, Hibernate validates the entity
 @SpringBootTest
-@Testcontainers
+@Import(TestcontainersConfiguration.class)
 @Transactional // Each test is rolled back, so tests don't affect each other
 public class JpaUserRepositoryTests {
 

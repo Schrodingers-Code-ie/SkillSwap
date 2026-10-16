@@ -28,6 +28,8 @@ public class RegisterUser {
             throw new EmailAlreadyUsedException("Email is already used");
         }
         checkPassword(rawPassword);
+        checkDisplayName(displayName);
+
         String hashPassword = passwordEncoder.encode(rawPassword);
         User user = User.register(email, username, hashPassword, confirmedAdult);
         if (userRepository.existsByUsername(user.getUsername())) {

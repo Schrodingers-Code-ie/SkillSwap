@@ -15,7 +15,7 @@ import ie.schrodingerscode.skillswap.auth.domain.exception.EmailAlreadyUsedExcep
 import ie.schrodingerscode.skillswap.auth.domain.exception.InvalidPasswordException;
 import ie.schrodingerscode.skillswap.auth.domain.exception.UsernameAlreadyUsedException;
 
-//plain unit tests with the real in-memory repository and BCrypt, no Spring
+//plain unit tests with the FakeUserRepository and BCrypt, no Spring
 class RegisterUserTests {
 
     private static final String PASSWORD = "secret123";
