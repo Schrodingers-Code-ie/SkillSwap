@@ -8,11 +8,6 @@ import ie.schrodingerscode.skillswap.auth.domain.Email;
 import ie.schrodingerscode.skillswap.auth.domain.User;
 import ie.schrodingerscode.skillswap.auth.domain.UserRepository;
 
-// Basically a converted: User <-> UserEntity
-// RegisterUser has a method register() and this method calls userRepository.save(). Inside UserRepository we see that save() returns User, and this save() is implement IN HERE by JpaUserRepository (find below) - since this is the only implementation of UserRepository, Spring automatically inserts it into RegisterUser's variable (which is why we deleted InMemoryUserRepository, the old implementation)
-// Postgres won't be able to store it - it works ONLY with UserEntity, so something needs to CONVERT User to UserEntity
-// Inside UserJpa class, JpaRepository<UserEntity, Long>.save (provided to us by default) returns UserEntity
-// These two types are incompatible, so something has to sit in between and convert them - that's JpaUserRepository's work
 @Repository
 public class JpaUserRepository implements UserRepository {
     private final UserJpa userJpa; // What will TALK TO DATABASE, but it requires UserEntity, not User returned by UserRepository
