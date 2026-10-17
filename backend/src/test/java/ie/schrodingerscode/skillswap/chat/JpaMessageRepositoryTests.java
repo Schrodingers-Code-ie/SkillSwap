@@ -41,9 +41,10 @@ class JpaMessageRepositoryTests {
     }
 
     private long insertUser() {
+        String unique = UUID.randomUUID().toString().replace("-", "").substring(0, 20);
         return jdbc.queryForObject(
-                "INSERT INTO users (email, password_hash, display_name) VALUES (?, 'hash', 'Test') RETURNING id",
-                Long.class, UUID.randomUUID() + "@test.com");
+                "INSERT INTO users (email, username, password_hash) VALUES (?, ?, 'hash') RETURNING id",
+                Long.class, unique + "@test.com", unique);
     }
 
     private Message save(long from, long to, String text, Instant at) {
