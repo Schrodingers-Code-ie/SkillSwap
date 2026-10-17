@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import ie.schrodingerscode.skillswap.chat.domain.exception.InvalidMessageTextException;
 import ie.schrodingerscode.skillswap.chat.domain.Message;
 import ie.schrodingerscode.skillswap.chat.domain.exception.NotConnectedException;
-import ie.schrodingerscode.skillswap.chat.infrastructure.InMemoryMessageRepository;
 import ie.schrodingerscode.skillswap.chat.application.SendMessage;
 
 /** Tests message sending, connection checks, and text validation. */
