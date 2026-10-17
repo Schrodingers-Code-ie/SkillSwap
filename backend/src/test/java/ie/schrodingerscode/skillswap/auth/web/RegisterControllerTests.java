@@ -25,6 +25,8 @@ import ie.schrodingerscode.skillswap.auth.domain.exception.InvalidEmailException
 import ie.schrodingerscode.skillswap.auth.domain.exception.InvalidUsernameException;
 import ie.schrodingerscode.skillswap.auth.domain.exception.UsernameAlreadyUsedException;
 
+import java.time.Instant;
+
 /**
  * Web layer tests with RegisterUser mocked, as in STRUCTURE.md.
  * These only check JSON in/out and status codes. The rules are tested in UserTests and RegisterUserTests.
@@ -50,7 +52,7 @@ class RegisterControllerTests {
 
     @Test
     void validRegistrationReturns201WithoutPassword() throws Exception {
-        User saved = User.register(new Email("ann@mail.com"), "ann", "hash", "Ann", true).withId(1);
+        User saved = User.restore(1L, new Email("ann@mail.com"), "ann", "hash", Instant.now());
         when(registerUser.register("ann@mail.com", "ann", "secret123", "Ann", true)).thenReturn(saved);
 
         register(VALID_BODY)
@@ -58,7 +60,7 @@ class RegisterControllerTests {
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.email").value("ann@mail.com"))
                 .andExpect(jsonPath("$.username").value("ann"))
-                .andExpect(jsonPath("$.displayName").value("Ann"))
+                .andExpect(jsonPath("$.displayName").doesNotExist())
                 .andExpect(jsonPath("$.password").doesNotExist())
                 .andExpect(jsonPath("$.passwordHash").doesNotExist());
     }
