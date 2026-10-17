@@ -10,7 +10,6 @@ import java.util.List;
 import ie.schrodingerscode.skillswap.chat.domain.Message;
 import ie.schrodingerscode.skillswap.chat.domain.MessageText;
 import ie.schrodingerscode.skillswap.chat.domain.exception.NotConnectedException;
-import ie.schrodingerscode.skillswap.chat.infrastructure.InMemoryMessageRepository;
 import ie.schrodingerscode.skillswap.chat.application.GetMessageHistory;
 
 /**
