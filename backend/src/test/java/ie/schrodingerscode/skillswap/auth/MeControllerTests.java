@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.Instant;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,7 @@ class MeControllerTests {
 
     @Test
     void returnsUserFromHeader() throws Exception {
-        User ann = User.register(new Email("ann@mail.com"), "Ann_S", "hash", "Ann Smith", true).withId(1);
+        User ann = User.restore(1L, new Email("ann@mail.com"), "Ann_S", "hash", Instant.now());
         when(userRepository.findById(1L)).thenReturn(Optional.of(ann));
 
         mockMvc.perform(get("/api/auth/me").header("X-User-Id", "1"))
@@ -39,7 +40,7 @@ class MeControllerTests {
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.email").value("ann@mail.com"))
                 .andExpect(jsonPath("$.username").value("Ann_S"))
-                .andExpect(jsonPath("$.displayName").value("Ann Smith"))
+                .andExpect(jsonPath("$.displayName").doesNotExist())
                 .andExpect(jsonPath("$.passwordHash").doesNotExist());
     }
 
