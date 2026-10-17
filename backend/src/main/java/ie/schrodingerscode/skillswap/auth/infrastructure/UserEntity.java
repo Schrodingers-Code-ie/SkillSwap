@@ -4,7 +4,7 @@ import java.time.Instant;
 
 import jakarta.persistence.*;
 
-// This is what Postgres undestands - a UserEntity with plain String columns
+// This is what Postgres understands - a UserEntity with plain String columns
 @Entity
 @Table(name = "users") // Maps this class to the "users" table in Postgres
 public class UserEntity {

@@ -6,9 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Import;
-import org.testcontainers.containers.PostgreSQLContainer;
 
 import ie.schrodingerscode.skillswap.TestcontainersConfiguration;
 import ie.schrodingerscode.skillswap.auth.application.RegisterUser;
@@ -24,9 +22,6 @@ import jakarta.transaction.Transactional;
 @Import(TestcontainersConfiguration.class)
 @Transactional // Each test is rolled back, so tests don't affect each other
 public class JpaUserRepositoryTests {
-
-    @ServiceConnection // Spring points the datasource at this container automatically
-    static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:16");
 
     @Autowired
     private RegisterUser registerUser;
