@@ -39,7 +39,8 @@ class ProfileEntity {
     @Column(name = "skill_id")
     private Set<Long> learnSkillIds = new HashSet<>();
 
-    protected ProfileEntity() {}
+    protected ProfileEntity() {
+    }
 
     ProfileEntity(Long userId) {
         this.userId = userId;
@@ -58,8 +59,7 @@ class ProfileEntity {
         this.fullName = profile.getDisplayName();
         this.bio = profile.getBio();
         this.teachSkills.clear();
-        profile.getTeachSkills().forEach(t ->
-                this.teachSkills.add(new TeachSkillRow(t.skillId(), t.proficiency())));
+        profile.getTeachSkills().forEach(t -> this.teachSkills.add(new TeachSkillRow(t.skillId(), t.proficiency())));
         this.learnSkillIds.clear();
         this.learnSkillIds.addAll(profile.getLearnSkillIds());
     }
@@ -67,5 +67,6 @@ class ProfileEntity {
     @Embeddable
     record TeachSkillRow(
             @Column(name = "skill_id") long skillId,
-            @Enumerated(EnumType.STRING) @Column(name = "proficiency") Proficiency proficiency) {}
+            @Enumerated(EnumType.STRING) @Column(name = "proficiency") Proficiency proficiency) {
+    }
 }

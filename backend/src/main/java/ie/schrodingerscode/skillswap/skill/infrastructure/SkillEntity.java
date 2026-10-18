@@ -9,10 +9,15 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "skills")
 class SkillEntity {
-    @Id private Long id;
-    @Column(nullable = false) private String name;
+    @Id
+    private Long id;
+    @Column(nullable = false)
+    private String name;
 
-    protected SkillEntity() {}
+    protected SkillEntity() {
+    }
 
-    Skill toDomain() { return new Skill(id, name); }
+    Skill toDomain() {
+        return new Skill(id, name);
+    }
 }

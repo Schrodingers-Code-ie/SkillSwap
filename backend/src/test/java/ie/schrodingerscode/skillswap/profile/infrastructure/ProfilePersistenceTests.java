@@ -19,15 +19,18 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @Import(TestcontainersConfiguration.class)
 class ProfilePersistenceTests {
 
-    @Autowired ProfileRepository profiles;
-    @Autowired SkillRepository skills;
-    @Autowired JdbcTemplate jdbc;
+    @Autowired
+    ProfileRepository profiles;
+    @Autowired
+    SkillRepository skills;
+    @Autowired
+    JdbcTemplate jdbc;
 
     private long createUser() {
         String unique = UUID.randomUUID().toString().replace("-", "");
         return jdbc.queryForObject(
-            "INSERT INTO users (email, username, password_hash) VALUES (?, ?, 'x') RETURNING id",
-            Long.class, unique + "@test.com", "user_" + unique.substring(0, 8));
+                "INSERT INTO users (email, username, password_hash) VALUES (?, ?, 'x') RETURNING id",
+                Long.class, unique + "@test.com", "user_" + unique.substring(0, 8));
     }
 
     @Test
