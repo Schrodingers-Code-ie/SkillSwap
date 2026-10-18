@@ -1,14 +1,14 @@
 package ie.schrodingerscode.skillswap.profile.application;
 
 import ie.schrodingerscode.skillswap.skill.domain.SkillNotFoundException;
-import ie.schrodingerscode.skillswap.skill.infrastructure.InMemorySkillRepository;
+import ie.schrodingerscode.skillswap.skill.FakeSkillRepository;
 import ie.schrodingerscode.skillswap.profile.domain.exception.DuplicateSkillException;
 import ie.schrodingerscode.skillswap.profile.domain.Proficiency;
 import ie.schrodingerscode.skillswap.profile.domain.exception.ProficiencyRequiredException;
 import ie.schrodingerscode.skillswap.profile.domain.Profile;
 import ie.schrodingerscode.skillswap.profile.domain.exception.ProfileNotFoundException;
 import ie.schrodingerscode.skillswap.profile.domain.exception.SkillNotInListException;
-import ie.schrodingerscode.skillswap.profile.infrastructure.InMemoryProfileRepository;
+import ie.schrodingerscode.skillswap.profile.FakeProfileRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,15 +21,15 @@ class ProfileSkillServiceTests {
     private static final long GUITAR = 1L; // exists in the catalogue
     private static final long UNKNOWN_SKILL = 999L;
 
-    private InMemoryProfileRepository profiles;
+    private FakeProfileRepository profiles;
     private ProfileSkillService service;
 
     @BeforeEach
     void setUp() {
-        profiles = new InMemoryProfileRepository();
+        profiles = new FakeProfileRepository();
         profiles.save(new Profile(USER_ID, "Test User", "Test bio"));
         // CurrentUser has one method, so a lambda works as a fake logged-in user
-        service = new ProfileSkillService(profiles, new InMemorySkillRepository(), () -> USER_ID);
+        service = new ProfileSkillService(profiles, new FakeSkillRepository(), () -> USER_ID);
     }
 
     private Profile profile() {
@@ -122,7 +122,7 @@ class ProfileSkillServiceTests {
 
     @Test
     void unknownUserHasNoProfile() {
-        ProfileSkillService other = new ProfileSkillService(profiles, new InMemorySkillRepository(), () -> 555L);
+        ProfileSkillService other = new ProfileSkillService(profiles, new FakeSkillRepository(), () -> 555L);
 
         assertThatThrownBy(() -> other.addLearnSkill(GUITAR))
                 .isInstanceOf(ProfileNotFoundException.class);
