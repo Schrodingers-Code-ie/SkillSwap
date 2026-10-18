@@ -34,7 +34,7 @@ class RegistrationCreatesProfileTests {
                 """;
 
         String response = mvc.perform(post("/api/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON).content(body))
+                .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
         long id = JsonPath.parse(response).read("$.id", Long.class);
