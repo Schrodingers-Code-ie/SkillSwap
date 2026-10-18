@@ -1,5 +1,6 @@
 package ie.schrodingerscode.skillswap.match.domain;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 

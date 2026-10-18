@@ -3,6 +3,7 @@ package ie.schrodingerscode.skillswap.match.application;
 import org.assertj.core.api.Assertions;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -23,11 +24,18 @@ public class FindMatchesTests {
     private FindMatches serviceWith(SkillSwapUser... users) {
         SkillSwapUsersReader fakeReader = new SkillSwapUsersReader() {
             @Override
-            public List<SkillSwapUser> findAll() {
-                return List.of(users);
+            public Optional<SkillSwapUser> findById(long id) {
+                return List.of(users).stream()
+                        .filter(u -> u.id() == id)
+                        .findFirst();
+            }
+
+            @Override
+            public List<SkillSwapUser> findCandidatesFor(long meId) {
+                return List.of(users); // Deliberately includes "me" for the tests below
             }
         };
-        return new FindMatches(fakeReader); // Passing this reader with new users to the FindMatches constructor
+        return new FindMatches(fakeReader);
     }
 
     @Test
