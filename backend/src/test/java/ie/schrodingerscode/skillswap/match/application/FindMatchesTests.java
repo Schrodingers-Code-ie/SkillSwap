@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import ie.schrodingerscode.skillswap.match.application.exception.UserNotFoundException;
 import ie.schrodingerscode.skillswap.match.domain.Match;
 import ie.schrodingerscode.skillswap.match.domain.SkillSwapUser;
 
@@ -56,5 +57,13 @@ public class FindMatchesTests {
 
         Assertions.assertThat(result).extracting(Match::matchUserName)
                 .doesNotContain("Me");
+    }
+
+    @Test
+    void unknownUserThrowsUserNotFoundTest() {
+        FindMatches service = serviceWith(); // No users passed
+
+        Assertions.assertThatThrownBy(() -> service.forUser(1L)) // No one passed in, so we reader.findById() in .forUser() throws
+                .isInstanceOf(UserNotFoundException.class);
     }
 }

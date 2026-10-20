@@ -21,11 +21,11 @@ public class FindMatches {
     }
 
     public List<Match> forUser(long meId) {
-        List<SkillSwapUser> candidates = reader.findCandidatesFor(meId); // Read in all the users using interface implementation
-
         // Find the user that requested suggestions
         SkillSwapUser me = reader.findById(meId)
                 .orElseThrow(() -> new UserNotFoundException("User not found."));
+
+        List<SkillSwapUser> candidates = reader.findCandidatesFor(meId); // Read in the users who could be a match (everyone except me)
 
         List<Match> matchingUsers = new ArrayList<>(); // What we will return eventually
 
