@@ -26,6 +26,7 @@ import ie.schrodingerscode.skillswap.connection.domain.SwapRequest;
 import ie.schrodingerscode.skillswap.connection.domain.exception.DuplicateRequestException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.InvalidRequestStateException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.NotRequestReceiverException;
+import ie.schrodingerscode.skillswap.connection.domain.exception.ReceiverNotFoundException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.RequestNotFoundException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.SelfRequestException;
 
@@ -86,6 +87,13 @@ class SwapRequestControllerTests {
         when(service.send(2L, 1L)).thenThrow(new DuplicateRequestException());
 
         sendRequest(2, 1).andExpect(status().isConflict());
+    }
+
+    @Test
+    void requestToUnknownUserReturns404() throws Exception {
+        when(service.send(1L, 99L)).thenThrow(new ReceiverNotFoundException());
+
+        sendRequest(1, 99).andExpect(status().isNotFound());
     }
 
     @Test
