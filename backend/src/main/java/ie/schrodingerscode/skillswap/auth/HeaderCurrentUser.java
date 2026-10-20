@@ -1,15 +1,14 @@
 package ie.schrodingerscode.skillswap.auth;
 
-import org.springframework.stereotype.Component;
-
 import ie.schrodingerscode.skillswap.common.exception.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
- * TEMPORARY stub: reads the user ID from the X-User-Id request header.
- * TODO: replace with a real implementation when login is built in sprint 2.
+ * OLD stub: reads the user ID from the X-User-Id request header.
+ * No longer a @Component, the app uses SessionCurrentUser now.
+ * Only kept because some controller tests still @Import it.
+ * TODO: delete once SCRUM-71 and SCRUM-72 are merged.
  */
-@Component //spring creates one of these and injects it wherever CurrentUser is asked for
 public class HeaderCurrentUser implements CurrentUser {
 
     static final String HEADER = "X-User-Id";

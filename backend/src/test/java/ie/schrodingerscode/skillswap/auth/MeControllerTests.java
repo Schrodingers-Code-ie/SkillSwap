@@ -11,17 +11,16 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import ie.schrodingerscode.skillswap.auth.domain.Email;
 import ie.schrodingerscode.skillswap.auth.domain.User;
 import ie.schrodingerscode.skillswap.auth.domain.UserRepository;
+import ie.schrodingerscode.skillswap.common.exception.UnauthorizedException;
 
 //@WebMvcTest starts only the web layer (no database), so it runs fast without Docker
 @WebMvcTest(MeController.class)
-@Import(HeaderCurrentUser.class) //@WebMvcTest skips @Component classes, so add the stub by hand
 class MeControllerTests {
 
     @Autowired
@@ -30,12 +29,16 @@ class MeControllerTests {
     @MockitoBean
     private UserRepository userRepository;
 
+    @MockitoBean
+    private CurrentUser currentUser;
+
     @Test
-    void returnsUserFromHeader() throws Exception {
+    void returnsCurrentUser() throws Exception {
         User ann = User.restore(1L, new Email("ann@mail.com"), "Ann_S", "hash", Instant.now());
         when(userRepository.findById(1L)).thenReturn(Optional.of(ann));
+        when(currentUser.getId()).thenReturn(1L);
 
-        mockMvc.perform(get("/api/auth/me").header("X-User-Id", "1"))
+        mockMvc.perform(get("/api/auth/me"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.email").value("ann@mail.com"))
@@ -47,23 +50,17 @@ class MeControllerTests {
     @Test
     void unknownUserReturns404() throws Exception {
         when(userRepository.findById(2L)).thenReturn(Optional.empty());
-
-        mockMvc.perform(get("/api/auth/me").header("X-User-Id", "2"))
+        when(currentUser.getId()).thenReturn(2L);
+        mockMvc.perform(get("/api/auth/me"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    void missingHeaderReturns401() throws Exception {
+    void notLoggedInReturns401() throws Exception {
+        when(currentUser.getId()).thenThrow(new UnauthorizedException("Not logged in"));
+
         mockMvc.perform(get("/api/auth/me"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.status").value(401));
-    }
-
-    @Test
-    void invalidHeaderReturns401() throws Exception {
-        for (String bad : new String[]{"abc", "0", "-5", " "}) {
-            mockMvc.perform(get("/api/auth/me").header("X-User-Id", bad))
-                    .andExpect(status().isUnauthorized());
-        }
     }
 }
