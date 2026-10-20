@@ -3,28 +3,33 @@ package ie.schrodingerscode.skillswap.auth.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import ie.schrodingerscode.skillswap.auth.domain.Email;
 import ie.schrodingerscode.skillswap.auth.domain.User;
+import ie.schrodingerscode.skillswap.auth.domain.UserRegistered;
 import ie.schrodingerscode.skillswap.auth.domain.UserRepository;
 import ie.schrodingerscode.skillswap.auth.domain.exception.AgeNotConfirmedException;
 import ie.schrodingerscode.skillswap.auth.domain.exception.EmailAlreadyUsedException;
 import ie.schrodingerscode.skillswap.auth.domain.exception.InvalidPasswordException;
 import ie.schrodingerscode.skillswap.auth.domain.exception.UsernameAlreadyUsedException;
-import ie.schrodingerscode.skillswap.auth.infrastructure.InMemoryUserRepository;
 
-//plain unit tests with the real in-memory repository and BCrypt, no Spring
+//plain unit tests with the FakeUserRepository and BCrypt, no Spring
 class RegisterUserTests {
 
     private static final String PASSWORD = "secret123";
 
     //no Spring here, so we do the dependency injection by hand
-    private final UserRepository repository = new InMemoryUserRepository();
+    private final UserRepository repository = new FakeUserRepository();
     private final PasswordEncoder encoder = new BCryptPasswordEncoder();
-    private final RegisterUser registerUser = new RegisterUser(repository, encoder);
+    //ApplicationEventPublisher has one method, so events::add works as a fake publisher
+    private final List<Object> events = new ArrayList<>();
+    private final RegisterUser registerUser = new RegisterUser(repository, encoder, events::add);
 
     @Test
     void validRegistrationSavesUserWithId() {
@@ -33,6 +38,13 @@ class RegisterUserTests {
         assertThat(user.getId()).isNotNull();
         assertThat(repository.findByEmail(new Email("ann@mail.com"))).contains(user);
         assertThat(repository.findById(user.getId())).contains(user);
+    }
+
+    @Test
+    void validRegistrationPublishesUserRegistered() {
+        User user = registerUser.register("ann@mail.com", "ann", PASSWORD, "  Ann Smith  ", true);
+
+        assertThat(events).containsExactly(new UserRegistered(user.getId(), "Ann Smith"));
     }
 
     @Test
@@ -86,5 +98,6 @@ class RegisterUserTests {
 
         assertThat(repository.existsByEmail(new Email("ann@mail.com"))).isFalse();
         assertThat(repository.existsByUsername("ann")).isFalse();
+        assertThat(events).isEmpty();
     }
 }
