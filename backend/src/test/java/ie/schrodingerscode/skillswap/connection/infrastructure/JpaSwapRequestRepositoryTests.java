@@ -44,12 +44,12 @@ class JpaSwapRequestRepositoryTests {
         bob = insertUser();
     }
 
-    //TODO: update the columns here once SCRUM-57 changes the users table
+    //username and email are both unique, so each test user gets a random one
     private long insertUser() {
+        String unique = UUID.randomUUID().toString().replace("-", "").substring(0, 20);
         return jdbc.queryForObject(
-                "INSERT INTO users (email, password_hash, display_name) VALUES (?, 'hash', 'Test User') RETURNING id",
-                Long.class,
-                UUID.randomUUID() + "@test.com"); //random email, because email is unique
+                "INSERT INTO users (email, username, password_hash) VALUES (?, ?, 'hash') RETURNING id",
+                Long.class, unique + "@test.com", unique);
     }
 
     @Test
