@@ -14,7 +14,7 @@ class SwapRequestTests {
 
     //user 1 sends to user 2, user 3 is a stranger
     private SwapRequest newRequest() {
-        return SwapRequest.create(1, 1, 2);
+        return SwapRequest.create(1, 2);
     }
 
     @Test
@@ -23,8 +23,16 @@ class SwapRequestTests {
     }
 
     @Test
+    void newRequestHasNoIdUntilSaved() {
+        //Postgres gives out the id when the request is saved
+        SwapRequest request = newRequest();
+        assertThat(request.getId()).isNull();
+        assertThat(request.getCreatedAt()).isNotNull();
+    }
+
+    @Test
     void cannotSendRequestToYourself() {
-        assertThatThrownBy(() -> SwapRequest.create(1, 5, 5))
+        assertThatThrownBy(() -> SwapRequest.create(5, 5))
                 .isInstanceOf(SelfRequestException.class);
     }
 

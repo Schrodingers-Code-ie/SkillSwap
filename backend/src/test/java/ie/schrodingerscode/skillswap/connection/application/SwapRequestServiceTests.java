@@ -8,17 +8,28 @@ import org.junit.jupiter.api.Test;
 
 import ie.schrodingerscode.skillswap.connection.domain.SwapRequest;
 import ie.schrodingerscode.skillswap.connection.domain.exception.DuplicateRequestException;
+import ie.schrodingerscode.skillswap.connection.domain.exception.ReceiverNotFoundException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.RequestNotFoundException;
 import ie.schrodingerscode.skillswap.connection.infrastructure.InMemorySwapRequestRepository;
 
 //plain JUnit with the in-memory repository, no Spring needed
 class SwapRequestServiceTests {
 
+    private static final long UNKNOWN_USER = 99;
+
     private SwapRequestService service;
 
     @BeforeEach
     void setUp() {
-        service = new SwapRequestService(new InMemorySwapRequestRepository()); //fresh empty storage for every test
+        //fresh empty storage for every test, and every user exists except 99
+        service = new SwapRequestService(new InMemorySwapRequestRepository(), userId -> userId != UNKNOWN_USER);
+    }
+
+    @Test
+    void requestToUnknownUserIsNotFound() {
+        assertThatThrownBy(() -> service.send(1, UNKNOWN_USER))
+                .isInstanceOf(ReceiverNotFoundException.class);
+        assertThat(service.pendingRequests(1)).isEmpty(); //nothing was saved
     }
 
     @Test

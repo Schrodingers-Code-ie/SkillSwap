@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import ie.schrodingerscode.skillswap.auth.application.UserChecker;
 import ie.schrodingerscode.skillswap.connection.domain.SwapRequest;
 import ie.schrodingerscode.skillswap.connection.domain.SwapRequestRepository;
 import ie.schrodingerscode.skillswap.connection.domain.UserPair;
 import ie.schrodingerscode.skillswap.connection.domain.exception.DuplicateRequestException;
+import ie.schrodingerscode.skillswap.connection.domain.exception.ReceiverNotFoundException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.RequestNotFoundException;
 
 /**
@@ -18,26 +20,30 @@ import ie.schrodingerscode.skillswap.connection.domain.exception.RequestNotFound
 public class SwapRequestService implements ConnectionChecker {
 
     private final SwapRequestRepository repository;
+    private final UserChecker users;
 
-    public SwapRequestService(SwapRequestRepository repository) {
+    public SwapRequestService(SwapRequestRepository repository, UserChecker users) {
         this.repository = repository;
+        this.users = users;
     }
 
     //synchronized so two requests sent at the same moment can't both pass the duplicate check
+    //(the unique index in the database is a backstop for this too)
     public synchronized SwapRequest send(long senderId, long receiverId) {
+        //otherwise the foreign key in the database rejects it and the API gives a 500
+        if (!users.exists(receiverId)) {
+            throw new ReceiverNotFoundException();
+        }
         if (repository.findByPair(UserPair.of(senderId, receiverId)).isPresent()) {
             throw new DuplicateRequestException();
         }
-        SwapRequest request = SwapRequest.create(repository.nextId(), senderId, receiverId);
-        repository.save(request);
-        return request;
+        return repository.save(SwapRequest.create(senderId, receiverId));
     }
 
     public SwapRequest accept(long requestId, long userId) {
         SwapRequest request = findRequest(requestId);
         request.accept(userId);
-        repository.save(request);
-        return request;
+        return repository.save(request);
     }
 
     public void decline(long requestId, long userId) {

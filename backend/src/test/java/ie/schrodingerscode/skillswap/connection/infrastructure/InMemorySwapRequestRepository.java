@@ -6,30 +6,28 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.springframework.stereotype.Repository;
-
 import ie.schrodingerscode.skillswap.connection.domain.SwapRequest;
 import ie.schrodingerscode.skillswap.connection.domain.SwapRequestRepository;
 import ie.schrodingerscode.skillswap.connection.domain.UserPair;
 
 /**
- * TEMPORARY storage: keeps requests in a map, so everything is lost when the backend restarts.
- * TODO: replace with a Postgres version later. Only this class changes, the domain and service stay the same.
+ * Test-only storage in a map, so SwapRequestServiceTests can run as plain JUnit without a database.
+ * The app itself uses JpaSwapRequestRepository. This one has no @Repository on purpose,
+ * otherwise Spring would find two SwapRequestRepository beans.
  */
-@Repository
 public class InMemorySwapRequestRepository implements SwapRequestRepository {
 
     private final Map<Long, SwapRequest> requests = new ConcurrentHashMap<>();
-    private final AtomicLong ids = new AtomicLong(); //gives 1, 2, 3... thread safe
+    private final AtomicLong ids = new AtomicLong(); //gives 1, 2, 3... like Postgres would
 
     @Override
-    public long nextId() {
-        return ids.incrementAndGet();
-    }
-
-    @Override
-    public void save(SwapRequest request) {
-        requests.put(request.getId(), request);
+    public SwapRequest save(SwapRequest request) {
+        SwapRequest saved = request.getId() == null
+                ? SwapRequest.restore(ids.incrementAndGet(), request.getSenderId(), request.getReceiverId(),
+                        request.getStatus(), request.getCreatedAt())
+                : request;
+        requests.put(saved.getId(), saved);
+        return saved;
     }
 
     @Override

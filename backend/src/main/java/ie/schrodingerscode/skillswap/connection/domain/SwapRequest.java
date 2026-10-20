@@ -1,5 +1,7 @@
 package ie.schrodingerscode.skillswap.connection.domain;
 
+import java.time.Instant;
+
 import ie.schrodingerscode.skillswap.connection.domain.exception.InvalidRequestStateException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.NotRequestReceiverException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.SelfRequestException;
@@ -9,27 +11,37 @@ import ie.schrodingerscode.skillswap.connection.domain.exception.SelfRequestExce
  *
  * All the rules about what can happen to a request live here, in accept() and decline(),
  * not in the controller or service. The service just loads the request, calls the method and saves it.
+ *
+ * The id is null until the request is saved, because Postgres gives out the ids.
  */
 public class SwapRequest {
 
-    private final long id;
+    private final Long id;
     private final long senderId;
     private final long receiverId;
     private RequestStatus status;
+    private final Instant createdAt;
 
-    private SwapRequest(long id, long senderId, long receiverId) {
+    private SwapRequest(Long id, long senderId, long receiverId, RequestStatus status, Instant createdAt) {
         this.id = id;
         this.senderId = senderId;
         this.receiverId = receiverId;
-        this.status = RequestStatus.PENDING;
+        this.status = status;
+        this.createdAt = createdAt;
     }
 
     //the only way to make a new request, so a request to yourself can never exist
-    public static SwapRequest create(long id, long senderId, long receiverId) {
+    public static SwapRequest create(long senderId, long receiverId) {
         if (senderId == receiverId) {
             throw new SelfRequestException();
         }
-        return new SwapRequest(id, senderId, receiverId);
+        return new SwapRequest(null, senderId, receiverId, RequestStatus.PENDING, Instant.now());
+    }
+
+    //rebuilds a request that was already saved, used by the repositories when loading
+    public static SwapRequest restore(long id, long senderId, long receiverId, RequestStatus status,
+            Instant createdAt) {
+        return new SwapRequest(id, senderId, receiverId, status, createdAt);
     }
 
     public void accept(long userId) {
@@ -76,7 +88,7 @@ public class SwapRequest {
         return status == RequestStatus.ACCEPTED;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -90,5 +102,9 @@ public class SwapRequest {
 
     public RequestStatus getStatus() {
         return status;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 }
