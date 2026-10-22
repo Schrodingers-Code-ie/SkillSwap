@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -20,10 +21,12 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import ie.schrodingerscode.skillswap.auth.HeaderCurrentUser;
 import ie.schrodingerscode.skillswap.connection.application.SwapRequestService;
+import ie.schrodingerscode.skillswap.connection.domain.RequestStatus;
 import ie.schrodingerscode.skillswap.connection.domain.SwapRequest;
 import ie.schrodingerscode.skillswap.connection.domain.exception.DuplicateRequestException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.InvalidRequestStateException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.NotRequestReceiverException;
+import ie.schrodingerscode.skillswap.connection.domain.exception.ReceiverNotFoundException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.RequestNotFoundException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.SelfRequestException;
 
@@ -43,6 +46,11 @@ class SwapRequestControllerTests {
     @MockitoBean
     private SwapRequestService service;
 
+    //a request as it comes back from the service, already saved so it has an id
+    private SwapRequest savedRequest(long id, long senderId, long receiverId) {
+        return SwapRequest.restore(id, senderId, receiverId, RequestStatus.PENDING, Instant.now());
+    }
+
     private ResultActions sendRequest(long from, long to) throws Exception {
         return mockMvc.perform(post("/api/requests")
                 .header("X-User-Id", String.valueOf(from))
@@ -57,7 +65,7 @@ class SwapRequestControllerTests {
 
     @Test
     void sendingReturns201AndTheRequest() throws Exception {
-        when(service.send(1L, 2L)).thenReturn(SwapRequest.create(5, 1, 2));
+        when(service.send(1L, 2L)).thenReturn(savedRequest(5, 1, 2));
 
         sendRequest(1, 2)
                 .andExpect(status().isCreated())
@@ -82,6 +90,13 @@ class SwapRequestControllerTests {
     }
 
     @Test
+    void requestToUnknownUserReturns404() throws Exception {
+        when(service.send(1L, 99L)).thenThrow(new ReceiverNotFoundException());
+
+        sendRequest(1, 99).andExpect(status().isNotFound());
+    }
+
+    @Test
     void missingReceiverIdReturns400() throws Exception {
         mockMvc.perform(post("/api/requests")
                 .header("X-User-Id", "1")
@@ -100,7 +115,7 @@ class SwapRequestControllerTests {
 
     @Test
     void acceptingReturns200AndAcceptedRequest() throws Exception {
-        SwapRequest accepted = SwapRequest.create(5, 1, 2);
+        SwapRequest accepted = savedRequest(5, 1, 2);
         accepted.accept(2);
         when(service.accept(5L, 2L)).thenReturn(accepted);
 
@@ -142,8 +157,8 @@ class SwapRequestControllerTests {
     void pendingRequestsAreSplitIntoIncomingAndOutgoing() throws Exception {
         //user 50 sent one request to 51, and got one from 52
         when(service.pendingRequests(50L)).thenReturn(List.of(
-                SwapRequest.create(1, 50, 51),
-                SwapRequest.create(2, 52, 50)));
+                savedRequest(1, 50, 51),
+                savedRequest(2, 52, 50)));
 
         mockMvc.perform(get("/api/requests").header("X-User-Id", "50"))
                 .andExpect(status().isOk())
@@ -153,7 +168,7 @@ class SwapRequestControllerTests {
 
     @Test
     void connectionsShowTheOtherUser() throws Exception {
-        SwapRequest accepted = SwapRequest.create(5, 1, 2);
+        SwapRequest accepted = savedRequest(5, 1, 2);
         accepted.accept(2);
         when(service.connections(1L)).thenReturn(List.of(accepted));
         when(service.connections(2L)).thenReturn(List.of(accepted));

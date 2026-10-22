@@ -2,11 +2,11 @@ package ie.schrodingerscode.skillswap.profile.web;
 
 import ie.schrodingerscode.skillswap.common.exception.GlobalExceptionHandler;
 import ie.schrodingerscode.skillswap.common.exception.UnauthorizedException;
-import ie.schrodingerscode.skillswap.skill.infrastructure.InMemorySkillRepository;
+import ie.schrodingerscode.skillswap.skill.FakeSkillRepository;
 import ie.schrodingerscode.skillswap.profile.application.GetProfileService;
 import ie.schrodingerscode.skillswap.profile.application.ProfileSkillService;
 import ie.schrodingerscode.skillswap.profile.domain.Profile;
-import ie.schrodingerscode.skillswap.profile.infrastructure.InMemoryProfileRepository;
+import ie.schrodingerscode.skillswap.profile.FakeProfileRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -29,9 +29,9 @@ class ProfileControllerTests {
 
     @BeforeEach
     void setUp() {
-        InMemoryProfileRepository profiles = new InMemoryProfileRepository();
+        FakeProfileRepository profiles = new FakeProfileRepository();
         profiles.save(new Profile(USER_ID, "Test User", "Test bio"));
-        InMemorySkillRepository skills = new InMemorySkillRepository();
+        FakeSkillRepository skills = new FakeSkillRepository();
 
         loggedIn.set(true);
         ProfileSkillService skillService = new ProfileSkillService(profiles, skills, () -> {
@@ -42,7 +42,8 @@ class ProfileControllerTests {
         });
 
         mvc = MockMvcBuilders
-                .standaloneSetup(new ProfileController(new GetProfileService(profiles, skills), skillService))
+                .standaloneSetup(new ProfileController(new GetProfileService(profiles, skills),
+                        skillService))
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
     }

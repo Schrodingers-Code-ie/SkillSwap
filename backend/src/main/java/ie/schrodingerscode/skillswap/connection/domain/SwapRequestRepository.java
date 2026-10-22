@@ -5,13 +5,12 @@ import java.util.Optional;
 
 /**
  * Where swap requests are stored. No Spring or JPA in here on purpose:
- * right now it's an in-memory map, later it can be Postgres, and the domain doesn't change.
+ * the Postgres version lives in infrastructure, and the domain doesn't know about it.
  */
 public interface SwapRequestRepository {
 
-    long nextId();
-
-    void save(SwapRequest request);
+    //returns the saved request, a new one comes back with the id Postgres gave it
+    SwapRequest save(SwapRequest request);
 
     Optional<SwapRequest> findById(long id);
 
