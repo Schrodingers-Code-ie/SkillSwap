@@ -4,7 +4,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -16,13 +15,12 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.ResultActions;
 
-import ie.schrodingerscode.skillswap.auth.HeaderCurrentUser;
+import ie.schrodingerscode.skillswap.auth.CurrentUser;
 import ie.schrodingerscode.skillswap.chat.application.GetMessageHistory;
 import ie.schrodingerscode.skillswap.chat.application.SendMessage;
 import ie.schrodingerscode.skillswap.chat.web.ChatController;
@@ -30,31 +28,34 @@ import ie.schrodingerscode.skillswap.chat.domain.Message;
 import ie.schrodingerscode.skillswap.chat.domain.MessageText;
 import ie.schrodingerscode.skillswap.chat.domain.exception.InvalidMessageTextException;
 import ie.schrodingerscode.skillswap.chat.domain.exception.NotConnectedException;
+import ie.schrodingerscode.skillswap.common.exception.UnauthorizedException;
 
 /**
  * HTTP-level tests for the chat endpoints. They check only the web layer.
  * <p>
- * The use cases are mocked: @MockitoBean replaces the real SendMessage @link
- * GetMessageHistory with fakes whose behavior
+ * The use cases are mocked: @MockitoBean replaces the real SendMessage and GetMessageHistory with fakes whose behavior
  * each test scripts. For example, when(sendMessage.execute(1, 4,
- * "Hi")).thenThrow(new NotConnectedException())}
+ * "Hi")).thenThrow(new NotConnectedException())
  * means "when the controller calls the use case with these arguments, pretend
  * it
  * throws NotConnectedException". The test then checks only what the controller
  * is
  * responsible for:
  * - the right status code and JSON come out,
- * - the {X-User-Id} header becomes the sender id,
+ * - the logged-in user (CurrentUser) becomes the sender id,
  * - the @NotNull shape check on the request DTO is enforced.
  * Whether a real non-connection is rejected, or whether text over 2000
  * characters
  * fails, is tested where those rules live (SendMessageTests, MessageTextTests).
  */
 @WebMvcTest(ChatController.class)
-@Import(HeaderCurrentUser.class)
 class ChatControllerTests {
     @Autowired
     private MockMvc mockMvc;
+
+    /** Fake logged-in user: each test decides who is logged in (or that nobody is). */
+    @MockitoBean
+    private CurrentUser currentUser;
 
     /** Fake use case: each test decides what it returns or throws. */
     @MockitoBean
@@ -72,11 +73,12 @@ class ChatControllerTests {
     }
 
     /**
-     * POST /api/chats/{to}/messages as user {from}; a null body sends no body at
+     * POST /api/chats/{to}/messages as logged-in user {from}; a null body sends no body at
      * all.
      */
-    private ResultActions send(String from, String to, String body) throws Exception {
-        var request = post("/api/chats/" + to + "/messages").header("X-User-Id", from)
+    private ResultActions send(long from, String to, String body) throws Exception {
+        when(currentUser.getId()).thenReturn(from);
+        var request = post("/api/chats/" + to + "/messages")
                 .contentType(MediaType.APPLICATION_JSON);
         if (body != null) {
             request.content(body);
@@ -84,9 +86,10 @@ class ChatControllerTests {
         return mockMvc.perform(request);
     }
 
-    /** GET /api/chats/{with}/messages as user as. */
-    private ResultActions history(String as, String with) throws Exception {
-        return mockMvc.perform(get("/api/chats/" + with + "/messages").header("X-User-Id", as));
+    /** GET /api/chats/{with}/messages as logged-in user {as}. */
+    private ResultActions history(long as, String with) throws Exception {
+        when(currentUser.getId()).thenReturn(as);
+        return mockMvc.perform(get("/api/chats/" + with + "/messages"));
     }
 
     /** Builds the JSON body "text":"...". */
@@ -95,13 +98,13 @@ class ChatControllerTests {
     }
 
     /**
-     * The header user is passed as the sender, and the saved message is returned
+     * The logged-in user (CurrentUser.getId()) is passed as the sender, and the saved message is returned
      * with 201.
      */
     @Test
     void sendReturns201() throws Exception {
         when(sendMessage.execute(1, 2, "Hi")).thenReturn(message(7, 1, 2, "Hi", t0));
-        send("1", "2", text("Hi")).andExpect(status().isCreated()).andExpect(jsonPath("$.id").value(7))
+        send(1, "2", text("Hi")).andExpect(status().isCreated()).andExpect(jsonPath("$.id").value(7))
                 .andExpect(jsonPath("$.senderId").value(1)).andExpect(jsonPath("$.receiverId").value(2))
                 .andExpect(jsonPath("$.text").value("Hi"));
     }
@@ -110,7 +113,7 @@ class ChatControllerTests {
     @Test
     void sendToNonConnectionReturns403() throws Exception {
         when(sendMessage.execute(1, 4, "Hi")).thenThrow(new NotConnectedException());
-        send("1", "4", text("Hi")).andExpect(status().isForbidden()).andExpect(jsonPath("$.status").value(403));
+        send(1, "4", text("Hi")).andExpect(status().isForbidden()).andExpect(jsonPath("$.status").value(403));
     }
 
     /** InvalidMessageTextException from the domain becomes 400 with its message. */
@@ -118,7 +121,7 @@ class ChatControllerTests {
     void invalidTextReturns400() throws Exception {
         when(sendMessage.execute(anyLong(), anyLong(), anyString()))
                 .thenThrow(new InvalidMessageTextException("Message text must not be empty"));
-        send("1", "2", text("")).andExpect(status().isBadRequest()).andExpect(jsonPath("$.status").value(400))
+        send(1, "2", text("")).andExpect(status().isBadRequest()).andExpect(jsonPath("$.status").value(400))
                 .andExpect(jsonPath("$.message").value("Message text must not be empty"));
     }
 
@@ -132,27 +135,37 @@ class ChatControllerTests {
      */
     @Test
     void missingTextFieldReturns400BeforeConnectionCheck() throws Exception {
-        send("1", "4", "{}").andExpect(status().isBadRequest());
+        send(1, "4", "{}").andExpect(status().isBadRequest());
         verifyNoInteractions(sendMessage); // never reached the use case
     }
 
     /** A POST without a body returns 400. */
     @Test
     void missingBodyReturns400() throws Exception {
-        send("1", "2", null).andExpect(status().isBadRequest());
+        send(1, "2", null).andExpect(status().isBadRequest());
     }
 
     /** A non-numeric user id in the URL returns 400. */
     @Test
     void nonNumericUserIdReturns400() throws Exception {
-        send("1", "abc", text("Hi")).andExpect(status().isBadRequest());
+        send(1, "abc", text("Hi")).andExpect(status().isBadRequest());
     }
 
-    /** A request without the X-User-Id header returns 401. */
+    /** When nobody is logged in, CurrentUser throws and the request returns 401. */
     @Test
-    void missingUserHeaderReturns401() throws Exception {
+    void notLoggedInReturns401() throws Exception {
+        when(currentUser.getId()).thenThrow(new UnauthorizedException("Not logged in"));
         mockMvc.perform(post("/api/chats/2/messages").contentType(MediaType.APPLICATION_JSON)
-                .content(text("Hi"))).andExpect(status().isUnauthorized());
+                .content(text("Hi"))).andExpect(status().isUnauthorized()).andExpect(jsonPath("$.status").value(401));
+        verifyNoInteractions(sendMessage);
+    }
+
+    /** History also returns 401 when nobody is logged in. */
+    @Test
+    void historyNotLoggedInReturns401() throws Exception {
+        when(currentUser.getId()).thenThrow(new UnauthorizedException("Not logged in"));
+        mockMvc.perform(get("/api/chats/2/messages")).andExpect(status().isUnauthorized());
+        verifyNoInteractions(getMessageHistory);
     }
 
     /** History is returned in the order the use case gives it (oldest first). */
@@ -160,7 +173,7 @@ class ChatControllerTests {
     void historyReturnsMessagesInOrder() throws Exception {
         when(getMessageHistory.execute(1, 2)).thenReturn(
                 List.of(message(1, 1, 2, "first", t0), message(2, 2, 1, "second", t0.plusSeconds(10))));
-        history("1", "2").andExpect(status().isOk()).andExpect(jsonPath("$.length()").value(2))
+        history(1, "2").andExpect(status().isOk()).andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].text").value("first"))
                 .andExpect(jsonPath("$[1].text").value("second"));
     }
@@ -169,6 +182,6 @@ class ChatControllerTests {
     @Test
     void historyWithNonConnectionReturns403() throws Exception {
         when(getMessageHistory.execute(1, 4)).thenThrow(new NotConnectedException());
-        history("1", "4").andExpect(status().isForbidden());
+        history(1, "4").andExpect(status().isForbidden());
     }
 }
