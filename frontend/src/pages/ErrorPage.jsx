@@ -14,10 +14,11 @@ export default function ErrorPage() {
 		);
 	}
 
+	// Errors from api/client.js carry the message from the backend response
 	return (
 		<div>
 			<h1>Something went wrong</h1>
-			<p>Please try again.</p>
+			<p>{error?.message || 'Please try again.'}</p>
 			<Link to="/login">Go to Login</Link>
 		</div>
 	);

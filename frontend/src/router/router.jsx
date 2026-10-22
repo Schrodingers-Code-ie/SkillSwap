@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router';
 
 import AppLayout from '../components/AppLayout';
 import RootLayout from '../components/RootLayout';
-import { homeLoader, protectedLoader } from './loaders';
+import { friendsLoader, homeLoader, protectedLoader } from './loaders';
 
 import Login from '../pages/Login';
 import Signup from '../pages/Signup';
@@ -81,14 +81,16 @@ const router = createBrowserRouter([
 							},
 
 							{
-								path: '/requests',
+								path: '/friends',
+								loader: friendsLoader, // loads my connections before the page renders
 								lazy: async () => {
 									const module =
-										await import('../pages/Requests');
+										await import('../pages/Friends');
 									return { Component: module.default };
 								},
+								ErrorBoundary: ErrorPage,
 								handle: {
-									title: 'SkillSwap | Requests',
+									title: 'SkillSwap | Friends',
 								},
 							},
 
