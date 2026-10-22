@@ -1,12 +1,15 @@
 package ie.schrodingerscode.skillswap.match.application;
 
 import java.util.List;
+import java.util.Optional;
 
 import ie.schrodingerscode.skillswap.match.domain.SkillSwapUser;
 
-// An interface used for the STUB
-// But it's the SAME INTERFACE that will be used for the proper implementation, that reads info from the database
-// TODO: discuss what methods we need to implement in this contract - what exactly are we reading from the database? Maybe some specific methods will make it easier/more efficient to calculate the matching score?
+// An interface used for the class that reads in users straight from the database
 public interface SkillSwapUsersReader {
-    List<SkillSwapUser> findAll();
+    /** Finds one user with passed id - kpet with Optional just in case (even though the current user is checked for existence when logging in) */
+    Optional<SkillSwapUser> findById(long id);
+
+    /** Users who could swap with meId, excluding meId, blocked users and existing connections */
+    List<SkillSwapUser> findCandidatesFor(long meId);
 }

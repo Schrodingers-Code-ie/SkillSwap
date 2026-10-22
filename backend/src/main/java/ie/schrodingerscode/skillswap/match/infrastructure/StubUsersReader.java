@@ -1,6 +1,8 @@
 package ie.schrodingerscode.skillswap.match.infrastructure;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.stereotype.Component;
@@ -8,26 +10,34 @@ import org.springframework.stereotype.Component;
 import ie.schrodingerscode.skillswap.match.application.SkillSwapUsersReader;
 import ie.schrodingerscode.skillswap.match.domain.SkillSwapUser;
 
-// JUST A STUB
-// TODO: Replace with the actual implementation that will take info about users from the database
 @Component
 public class StubUsersReader implements SkillSwapUsersReader {
+    private final List<SkillSwapUser> fakeUsers = List.of(
+            new SkillSwapUser(1, "Ulven", Set.of("Guitar", "Spanish", "French", "Python"),
+                    Set.of("Piano", "Japanese", "JavaScript", "Java")),
+            new SkillSwapUser(2, "Jane", Set.of("JavaScript"), Set.of("Guitar", "Spanish")),
+            new SkillSwapUser(3, "Mike", Set.of("Piano", "Japanese"), Set.of("Guitar", "Spanish", "Yoga")),
+            new SkillSwapUser(4, "Jessica", Set.of("Japanese"), Set.of("SQL")),
+            new SkillSwapUser(5, "Doe", Set.of("Python"), Set.of("Cooking", "Piano")));
+
     @Override
-    public List<SkillSwapUser> findAll() {
-        // Structure of SkillSwapUser: name, learn, teach
-        return List.of(
-                new SkillSwapUser(1, "Ulven", Set.of("Guitar", "Spanish", "French", "Python"),
-                        Set.of("Piano", "Japanese", "JavaScript", "Java")),
-                new SkillSwapUser(2, "Jane", Set.of("JavaScript"), Set.of("Guitar", "Spanish")), // two way overlap
-                // with
-                // Ulven
-                new SkillSwapUser(3, "Mike", Set.of("Piano", "Japanese"), Set.of("Guitar", "Spanish", "Yoga")), // two
-                // way
-                // overlap
-                // with
-                // Ulven
-                new SkillSwapUser(4, "Jessica", Set.of("Japanese"), Set.of("SQL")), // one way overlap with Ulven
-                new SkillSwapUser(5, "Doe", Set.of("Python"), Set.of("Cooking", "Piano"))); // no overlap with Ulven
+    public Optional<SkillSwapUser> findById(long id) {
+        for (SkillSwapUser user : fakeUsers) {
+            if (user.id() == id)
+                return Optional.of(user);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public List<SkillSwapUser> findCandidatesFor(long meId) {
+        List<SkillSwapUser> candidates = new ArrayList<>();
+
+        for (SkillSwapUser user : fakeUsers) {
+            if (user.id() != meId)
+                candidates.add(user);
+        }
+        return candidates;
     }
 }
 
