@@ -3,10 +3,12 @@ package ie.schrodingerscode.skillswap.match.application;
 import org.assertj.core.api.Assertions;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import ie.schrodingerscode.skillswap.match.application.exception.UserNotFoundException;
 import ie.schrodingerscode.skillswap.match.domain.Match;
 import ie.schrodingerscode.skillswap.match.domain.SkillSwapUser;
 
@@ -23,11 +25,18 @@ public class FindMatchesTests {
     private FindMatches serviceWith(SkillSwapUser... users) {
         SkillSwapUsersReader fakeReader = new SkillSwapUsersReader() {
             @Override
-            public List<SkillSwapUser> findAll() {
-                return List.of(users);
+            public Optional<SkillSwapUser> findById(long id) {
+                return List.of(users).stream()
+                        .filter(u -> u.id() == id)
+                        .findFirst();
+            }
+
+            @Override
+            public List<SkillSwapUser> findCandidatesFor(long meId) {
+                return List.of(users); // Deliberately includes "me" for the tests below
             }
         };
-        return new FindMatches(fakeReader); // Passing this reader with new users to the FindMatches constructor
+        return new FindMatches(fakeReader);
     }
 
     @Test
@@ -48,5 +57,13 @@ public class FindMatchesTests {
 
         Assertions.assertThat(result).extracting(Match::matchUserName)
                 .doesNotContain("Me");
+    }
+
+    @Test
+    void unknownUserThrowsUserNotFoundTest() {
+        FindMatches service = serviceWith(); // No users passed
+
+        Assertions.assertThatThrownBy(() -> service.forUser(1L)) // No one passed in, so we reader.findById() in .forUser() throws
+                .isInstanceOf(UserNotFoundException.class);
     }
 }
