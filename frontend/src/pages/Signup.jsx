@@ -118,7 +118,7 @@ export default function Signup() {
 				email: form.email.trim(),
 				password: form.password,
 			});
-			navigate('/signup/skills');
+			navigate('/profile');
 		} catch {
 			// The account exists now, so let them sign in by hand
 			navigate('/login');

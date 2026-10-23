@@ -50,6 +50,7 @@ const router = createBrowserRouter([
 
 			// Protected routes
 			{
+				id: 'protected', // lets the Header read the logged-in user with useRouteLoaderData('protected')
 				loader: protectedLoader, // loads authentications, if not authenticated redirects to /login
 				ErrorBoundary: ErrorPage,
 				children: [

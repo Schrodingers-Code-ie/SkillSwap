@@ -8,9 +8,15 @@
 @import '@fontsource/geist-mono/700.css'; /* Bold */
 @import '@fontsource/newsreader/500.css'; /* Medium */
 
+/* By default Tailwind only applies hover: styles when the browser says the device can hover.
+   Some touchscreen laptops say they can't, so hover effects never showed up there.
+   This makes hover: work whenever the mouse is over the element. */
+@custom-variant hover (&:hover);
+
 :root {
 	--raw-brown: #4d4638; /* Brown buttons and headers/titles */
 	--raw-deep-brown: #3a342a; /* Typed values, dates and the small logo */
+	--raw-avatar-brown: #5e5646; /* Your avatar circle in the Header */
 	--raw-light-brown: #6e6656; /* Main text under all headings */
 	--raw-dark-brown: #322d22; /* Pressed brown button */
 	--raw-dark-grey: rgb(77 70 56 / 15%); /* Pressed white button */

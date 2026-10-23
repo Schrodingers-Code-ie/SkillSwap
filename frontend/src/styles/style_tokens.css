@@ -53,6 +53,11 @@
 
 	/* Big cream containers, e.g. the auth and welcome panels: ------------------------------ */
 	--color-page-bg: var(--raw-bg-cream); /* Use as "bg-page-bg" */
+	/* Grey pill behind the Header tabs */
+	--color-nav-bg: var(--raw-bg-light-grey);
+	--shadow-nav-tab: 0 2px 6px rgba(77, 70, 56, 0.08); /* The selected Header tab */
+	--color-avatar-bg: var(--raw-avatar-brown);
+	--shadow-avatar: 0 4px 12px rgba(77, 70, 56, 0.16);
 	--color-error-box-bg: var(--raw-pink); /* Pink box for an error message */
 	--color-container-border: var(--raw-border-grey);
 	--shadow-container:

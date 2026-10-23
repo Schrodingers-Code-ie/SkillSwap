@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { Link } from 'react-router';
 import dividerLine from '../assets/auth-divider.svg';
 // Photo by Vizag Explore on Unsplash (free to use under the Unsplash License)
@@ -51,10 +52,11 @@ export default function AuthLayout({ active, children }) {
 }
 
 function AuthTabs({ active }) {
+	// transition-colors fades the colour change instead of switching instantly
 	const tab = (isActive) =>
 		isActive
 			? 'font-g-bold text-title'
-			: 'text-title-faded hover:text-title';
+			: 'text-title-faded transition-colors duration-300 ease-out hover:text-title';
 
 	return (
 		<nav className="mb-5 flex items-center gap-5 text-2xl">
@@ -107,9 +109,36 @@ function CreatorsMarquee() {
 		</ul>
 	);
 
+	const trackRef = useRef(null);
+	const frameRef = useRef(null);
+
+	// CSS can only pause an animation instantly. To slow it down smoothly we change
+	// its speed (playbackRate) a little every frame: 1 is normal speed, 0 is stopped.
+	function easeSpeedTo(target) {
+		const animation = trackRef.current.getAnimations()[0];
+		if (!animation) return; // no animation when the user turned on reduced motion
+		cancelAnimationFrame(frameRef.current);
+		const from = animation.playbackRate;
+		const start = performance.now();
+		const step = (now) => {
+			const progress = Math.min((now - start) / 600, 1); // 600ms
+			const eased = 1 - (1 - progress) ** 2; // fast at first, gentle at the end
+			animation.playbackRate = from + (target - from) * eased;
+			if (progress < 1) frameRef.current = requestAnimationFrame(step);
+		};
+		frameRef.current = requestAnimationFrame(step);
+	}
+
 	return (
-		<div className="mt-auto -mx-[7px] overflow-hidden text-xs [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
-			<div className="flex w-max animate-marquee hover:[animation-play-state:paused] motion-reduce:animate-none">
+		<div
+			onMouseEnter={() => easeSpeedTo(0)}
+			onMouseLeave={() => easeSpeedTo(1)}
+			className="mt-auto -mx-[7px] overflow-hidden text-xs [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]"
+		>
+			<div
+				ref={trackRef}
+				className="flex w-max animate-marquee motion-reduce:animate-none"
+			>
 				{names(false)}
 				{names(true)}
 			</div>
