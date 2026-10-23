@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { api } from '../api/client';
 import Button from './ui/Button';
+import Card from './ui/Card';
 
 // Bell in the Header with the number of incoming swap requests.
 // Clicking it opens the Activity dropdown where requests can be accepted or declined.
@@ -75,35 +76,40 @@ export default function RequestsBell() {
 					) : (
 						<ul className="mt-3 flex flex-col gap-3">
 							{incoming.map((request) => (
-								<li
-									key={request.id}
-									className="p-3 bg-input-bg border border-card-border rounded-card"
-								>
-									<p className="text-main-content">
-										<span className="text-title font-g-medium">
-											User {request.senderId}
-										</span>{' '}
-										wants to swap skills with you
-									</p>
-									<div className="mt-3 flex gap-2">
-										<Button
-											darkStyle
-											className="flex-1"
-											onClick={() =>
-												respond(request.id, 'accept')
-											}
-										>
-											Accept
-										</Button>
-										<Button
-											className="flex-1"
-											onClick={() =>
-												respond(request.id, 'decline')
-											}
-										>
-											Decline
-										</Button>
-									</div>
+								<li key={request.id}>
+									<Card className="w-full">
+										<p className="text-main-content">
+											<span className="text-title font-g-medium">
+												User {request.senderId}
+											</span>{' '}
+											wants to swap skills with you
+										</p>
+										<div className="mt-3 flex gap-2">
+											<Button
+												darkStyle
+												className="flex-1"
+												onClick={() =>
+													respond(
+														request.id,
+														'accept',
+													)
+												}
+											>
+												Accept
+											</Button>
+											<Button
+												className="flex-1"
+												onClick={() =>
+													respond(
+														request.id,
+														'decline',
+													)
+												}
+											>
+												Decline
+											</Button>
+										</div>
+									</Card>
 								</li>
 							))}
 						</ul>
