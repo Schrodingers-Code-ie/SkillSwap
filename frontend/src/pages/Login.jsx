@@ -1,69 +1,106 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { api } from '../api/client.js';
-import { useEffect, useState } from 'react';
+import AuthLayout from '../components/AuthLayout.jsx';
 import Button from '../components/ui/Button.jsx';
 import Input from '../components/ui/Input.jsx';
-import Card from '../components/ui/Card.jsx';
+
+const WRONG_LOGIN =
+	'The email or password is incorrect. Check them and try again.';
 
 export default function Login() {
-	const [health, setHealth] = useState('checking...');
+	const [form, setForm] = useState({ email: '', password: '' });
+	const [error, setError] = useState(null);
+	const [showPassword, setShowPassword] = useState(false);
+	const [submitting, setSubmitting] = useState(false);
+	const navigate = useNavigate();
 
-	useEffect(() => {
-		api.get('/health')
-			.then((data) => setHealth(data.status))
-			.catch(() => setHealth('backend unreachable'));
-	}, []);
+	function handleChange(e) {
+		const { name, value } = e.target;
+		setForm((prev) => ({ ...prev, [name]: value }));
+	}
+
+	async function handleSubmit(e) {
+		e.preventDefault();
+		if (!form.email.trim() || !form.password) {
+			setError('Enter your email and password.');
+			return;
+		}
+
+		setError(null);
+		setSubmitting(true);
+		try {
+			// On success Spring sets the JSESSIONID cookie, the browser keeps it for us
+			await api.post('/auth/login', {
+				email: form.email.trim(),
+				password: form.password,
+			});
+			navigate('/matches');
+		} catch (err) {
+			// 401 means wrong email or password, the backend does not say which one on purpose
+			setError(err.status === 401 ? WRONG_LOGIN : err.message);
+			setSubmitting(false);
+		}
+	}
+
 	return (
-		<main>
-			<h1>SkillSwap</h1>
-			<p>Backend: {health}</p>
-
-			<div>Testing style tokens:</div>
-			<div className="text-title">Big title color</div>
-			<div className="text-title-faded">Faded title color</div>
-			<div className="text-main-content">Main content color</div>
-			<div className="text-subtitle">Subtitle color</div>
-			<div className="font-main">Geist font</div>
-			<div className="font-project-name">Newsreader font</div>
-			<div className="font-subtitle">Geist Mono font</div>
-			<div className="font-main font-g-medium">Geist medium</div>
-			<div className="font-subtitle font-gm-bold">Geist Mono bold</div>
-
-			<Button
-				darkStyle
-				className="w-110 my-5"
-				onClick={() => console.log('clicked')}
-				type="submit"
+		<AuthLayout active="signin">
+			<form
+				onSubmit={handleSubmit}
+				noValidate
+				className="flex flex-col gap-2"
 			>
-				Sign in
-			</Button>
-			<Button onClick={() => console.log('clicked')} type="submit">
-				Decline
-			</Button>
+				{error && (
+					<p
+						role="alert"
+						className="mb-3 rounded-input bg-error-box-bg px-3 py-3 font-main text-sm leading-5 text-error-box-text"
+					>
+						{error}
+					</p>
+				)}
 
-			<Input
-				type="email"
-				id="email"
-				name="userEmail"
-				titleText="Email"
-				placeholderText="Your email"
-			></Input>
-			<Input
-				type="text"
-				id="fullName"
-				name="userFullName"
-				titleText="Full name"
-				placeholderText="Your full name"
-				className="w-100"
-			></Input>
+				<Input
+					type="email"
+					id="email"
+					name="email"
+					titleText="Email"
+					placeholderText="name@example.com"
+					autoComplete="email"
+					className="w-full"
+					value={form.email}
+					onChange={handleChange}
+				/>
 
-			<Card className="w-110">
-				<div>Review:</div>
-				<div>Jane Doe</div>
-				<div>
-					This is a test review, which will be in a separate component
-					later.
-				</div>
-			</Card>
-		</main>
+				<Input
+					type={showPassword ? 'text' : 'password'}
+					id="password"
+					name="password"
+					titleText="Password"
+					placeholderText="Your password"
+					autoComplete="current-password"
+					className="w-full"
+					value={form.password}
+					onChange={handleChange}
+					trailing={
+						<button
+							type="button"
+							onClick={() => setShowPassword((show) => !show)}
+							className="cursor-pointer px-1 font-main font-g-medium text-xs text-subtitle"
+						>
+							{showPassword ? 'Hide' : 'Show'}
+						</button>
+					}
+				/>
+
+				<Button
+					darkStyle
+					type="submit"
+					className="mt-3 h-[42px] w-full"
+					disabled={submitting}
+				>
+					{submitting ? 'Signing in...' : 'Sign in'}
+				</Button>
+			</form>
+		</AuthLayout>
 	);
 }

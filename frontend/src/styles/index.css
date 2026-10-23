@@ -10,6 +10,7 @@
 
 :root {
 	--raw-brown: #4d4638; /* Brown buttons and headers/titles */
+	--raw-deep-brown: #3a342a; /* Typed values, dates and the small logo */
 	--raw-light-brown: #6e6656; /* Main text under all headings */
 	--raw-dark-brown: #322d22; /* Pressed brown button */
 	--raw-dark-grey: rgb(77 70 56 / 15%); /* Pressed white button */
@@ -77,4 +78,10 @@
 	to {
 		transform: rotate(360deg);
 	}
+}
+
+/* Hide the browser's own date picker icon, we show the design's calendar icon instead.
+   Clicking the field still opens the picker (see showPicker in Signup.jsx) */
+input[type='date']::-webkit-calendar-picker-indicator {
+	display: none;
 }
