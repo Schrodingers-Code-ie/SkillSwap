@@ -60,6 +60,8 @@
 	--shadow-avatar: 0 4px 12px rgba(77, 70, 56, 0.16);
 	--color-error-box-bg: var(--raw-pink); /* Pink box for an error message */
 	--color-container-border: var(--raw-border-grey);
+	/* Behind the blurred leaf photo on Sign in / Sign up */
+	--color-photo-panel-bg: var(--raw-bg-light-green);
 	--shadow-container:
 		0 25px 56px rgba(77, 70, 56, 0.12), 0 8px 12px rgba(77, 70, 56, 0.06),
 		inset 0 1px 0 rgba(255, 255, 255, 0.9);

@@ -25,7 +25,7 @@ export default function AuthLayout({ active, children }) {
 			{/* Form side takes 55% of the width, the welcome panel 45%. The form side never gets narrower than 460px */}
 			<div className="grid min-h-screen items-center gap-10 px-4 py-20 lg:grid-cols-[minmax(460px,11fr)_minmax(0,9fr)] lg:py-[65px] lg:pl-[50px] lg:pr-[52px]">
 				{/* On wide screens the card sits on a leaf picture as tall as the welcome panel */}
-				<div className="relative flex items-center justify-center lg:h-full lg:min-h-[600px] lg:overflow-hidden lg:rounded-container-card lg:border lg:border-container-border lg:bg-[var(--raw-bg-light-green)] lg:px-8 lg:shadow-container">
+				<div className="relative flex items-center justify-center lg:h-full lg:min-h-[600px] lg:overflow-hidden lg:rounded-container-card lg:border lg:border-container-border lg:bg-photo-panel-bg lg:px-8 lg:shadow-container">
 					{/* The photo is its own layer so only it gets blurred, not the card.
 					    Strong blur and less colour turn it into soft green light,
 					    scale-125 hides the faded edges the blur leaves around the photo */}
