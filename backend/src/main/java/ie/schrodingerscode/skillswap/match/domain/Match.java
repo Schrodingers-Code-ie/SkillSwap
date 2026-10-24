@@ -8,6 +8,6 @@ import java.util.Set;
 // 3. Skills HE/SHE can teach US (so skills that satisfy something in our "learn" set) (if any)
 // 4. Skills WE can teach HIM/HER (so skills that satisfy something in our "teach" set) (if any)
 public record Match(long matchPersonId, String matchPersonName, String matchPersonUsername, int matchingScore,
-                Set<String> skillsTheyCanTeachMe,
-                Set<String> skillsICanTeachThem, Set<String> unmatchedSkillsTheyTeach) {
+        Set<String> skillsTheyCanTeachMe,
+        Set<String> skillsICanTeachThem, Set<String> unmatchedSkillsTheyTeach) {
 }
