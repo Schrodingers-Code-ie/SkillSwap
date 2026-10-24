@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { api } from '../api/client.js';
-import AuthLayout from '../components/AuthLayout.jsx';
 import Button from '../components/ui/Button.jsx';
 import Input from '../components/ui/Input.jsx';
 import calendarIcon from '../assets/calendar.svg';
@@ -130,130 +129,127 @@ export default function Signup() {
 	);
 
 	return (
-		<AuthLayout active="signup">
-			<form
-				onSubmit={handleSubmit}
-				noValidate
-				className="flex flex-col gap-2"
-			>
+		<form
+			onSubmit={handleSubmit}
+			noValidate
+			className="flex flex-col gap-2"
+		>
+			<Input
+				type="text"
+				id="displayName"
+				name="displayName"
+				titleText="Full name"
+				placeholderText="Your full name"
+				autoComplete="name"
+				className="w-full"
+				value={form.displayName}
+				onChange={handleChange}
+				error={errors.displayName}
+			/>
+
+			<div className="grid grid-cols-2 gap-x-[30px]">
 				<Input
 					type="text"
-					id="displayName"
-					name="displayName"
-					titleText="Full name"
-					placeholderText="Your full name"
-					autoComplete="name"
+					id="username"
+					name="username"
+					titleText="Username"
+					placeholderText="Letters, numbers, _"
+					autoComplete="username"
 					className="w-full"
-					value={form.displayName}
+					value={form.username}
 					onChange={handleChange}
-					error={errors.displayName}
+					error={errors.username}
 				/>
-
-				<div className="grid grid-cols-2 gap-x-[30px]">
-					<Input
-						type="text"
-						id="username"
-						name="username"
-						titleText="Username"
-						placeholderText="Letters, numbers, _"
-						autoComplete="username"
-						className="w-full"
-						value={form.username}
-						onChange={handleChange}
-						error={errors.username}
-					/>
-					<Input
-						type="date"
-						id="dateOfBirth"
-						name="dateOfBirth"
-						titleText="Date of birth"
-						className="w-full"
-						value={form.dateOfBirth}
-						onChange={handleChange}
-						// Open the browser's date picker from anywhere in the field
-						onClick={(e) => e.currentTarget.showPicker?.()}
-						error={errors.dateOfBirth}
-						trailing={
-							<img
-								src={calendarIcon}
-								alt=""
-								className="pointer-events-none"
-							/>
-						}
-					/>
-				</div>
-
 				<Input
-					type="email"
-					id="email"
-					name="email"
-					titleText="Email"
-					placeholderText="name@example.com"
-					autoComplete="email"
+					type="date"
+					id="dateOfBirth"
+					name="dateOfBirth"
+					titleText="Date of birth"
 					className="w-full"
-					value={form.email}
+					value={form.dateOfBirth}
 					onChange={handleChange}
-					error={errors.email}
+					// Open the browser's date picker from anywhere in the field
+					onClick={(e) => e.currentTarget.showPicker?.()}
+					error={errors.dateOfBirth}
+					trailing={
+						<img
+							src={calendarIcon}
+							alt=""
+							className="pointer-events-none"
+						/>
+					}
 				/>
+			</div>
 
-				<div>
-					<Input
-						type={showPassword ? 'text' : 'password'}
-						id="password"
-						name="password"
-						titleText="Password"
-						placeholderText="Your password"
-						autoComplete="new-password"
-						className="w-full"
-						value={form.password}
-						onChange={handleChange}
-						trailing={
-							<button
-								type="button"
-								onClick={() => setShowPassword((show) => !show)}
-								className="cursor-pointer px-1 font-main font-g-medium text-xs text-subtitle"
-							>
-								{showPassword ? 'Hide' : 'Show'}
-							</button>
-						}
-					/>
-					<ul className="mt-[13px] grid grid-cols-2 gap-x-[30px] gap-y-[5px] pl-4 font-main text-xs leading-[15px]">
-						{PASSWORD_RULES.map((rule) => (
-							<li
-								key={rule.label}
-								className={`list-disc ${ruleColor(rule, form.password, triedSubmit)}`}
-							>
-								{rule.label}
-							</li>
-						))}
-					</ul>
-					{errors.password && (
-						<p className="mt-2 font-main text-xs leading-[15px] text-error">
-							{errors.password}
-						</p>
-					)}
-				</div>
+			<Input
+				type="email"
+				id="email"
+				name="email"
+				titleText="Email"
+				placeholderText="name@example.com"
+				autoComplete="email"
+				className="w-full"
+				value={form.email}
+				onChange={handleChange}
+				error={errors.email}
+			/>
 
-				<Button
-					darkStyle
-					type="submit"
-					className="mt-3 h-[42px] w-full"
-					disabled={submitting}
-				>
-					{submitting ? 'Creating account...' : 'Sign up'}
-				</Button>
-
-				{(hasFieldErrors || errors.form) && (
-					<p
-						role="alert"
-						className="text-center font-main text-xs leading-[15px] text-error"
-					>
-						{errors.form ??
-							'Fix the highlighted fields to continue.'}
+			<div>
+				<Input
+					type={showPassword ? 'text' : 'password'}
+					id="password"
+					name="password"
+					titleText="Password"
+					placeholderText="Your password"
+					autoComplete="new-password"
+					className="w-full"
+					value={form.password}
+					onChange={handleChange}
+					trailing={
+						<button
+							type="button"
+							onClick={() => setShowPassword((show) => !show)}
+							className="cursor-pointer px-1 font-main font-g-medium text-xs text-subtitle"
+						>
+							{showPassword ? 'Hide' : 'Show'}
+						</button>
+					}
+				/>
+				<ul className="mt-[13px] grid grid-cols-2 gap-x-[30px] gap-y-[5px] pl-4 font-main text-xs leading-[15px]">
+					{PASSWORD_RULES.map((rule) => (
+						<li
+							key={rule.label}
+							className={`list-disc ${ruleColor(rule, form.password, triedSubmit)}`}
+						>
+							{rule.label}
+						</li>
+					))}
+				</ul>
+				{errors.password && (
+					<p className="mt-2 font-main text-xs leading-[15px] text-error">
+						{errors.password}
 					</p>
 				)}
-			</form>
-		</AuthLayout>
+			</div>
+
+			<Button
+				darkStyle
+				type="submit"
+				className="mt-3 h-[42px] w-full"
+				disabled={submitting}
+			>
+				{submitting ? 'Creating account...' : 'Sign up'}
+			</Button>
+
+			{(hasFieldErrors || errors.form) && (
+				<p
+					role="alert"
+					className="text-center font-main text-xs leading-[15px] text-error"
+				>
+					{errors.form ?? 'Fix the highlighted fields to continue.'}
+				</p>
+			)}
+		</form>
 	);
 }
 

@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { Link } from 'react-router';
+import { NavLink, Outlet } from 'react-router';
 import dividerLine from '../assets/auth-divider.svg';
 // Photo by Vizag Explore on Unsplash (free to use under the Unsplash License)
 import leaves from '../assets/leaves.webp';
@@ -14,8 +14,9 @@ const CREATORS = [
 
 // Shared frame for the Sign in and Sign up pages: the form card on the left,
 // the welcome panel on the right (hidden on small screens).
-// active is 'signin' or 'signup' and decides which tab is highlighted.
-export default function AuthLayout({ active, children }) {
+// It's a layout route (see router.jsx), so switching between the two pages only swaps
+// the form in <Outlet />, and the rest of the page (like the names line) keeps running.
+export default function AuthLayout() {
 	return (
 		<div className="relative min-h-screen bg-page-bg font-main">
 			<p className="absolute left-[50px] top-[31px] text-sm text-strong-text">
@@ -40,8 +41,8 @@ export default function AuthLayout({ active, children }) {
 						className="absolute inset-0 hidden bg-card-bg/40 lg:block"
 					/>
 					<section className="relative w-full max-w-[433px] rounded-container-card border border-container-border bg-card-bg px-6 pt-16 pb-8 shadow-container sm:px-14">
-						<AuthTabs active={active} />
-						{children}
+						<AuthTabs />
+						<Outlet />
 					</section>
 				</div>
 
@@ -51,18 +52,19 @@ export default function AuthLayout({ active, children }) {
 	);
 }
 
-function AuthTabs({ active }) {
+function AuthTabs() {
+	// NavLink tells us if its link is the current page, so we can highlight it.
 	// transition-colors fades the colour change instead of switching instantly
-	const tab = (isActive) =>
+	const tab = ({ isActive }) =>
 		isActive
 			? 'font-g-bold text-title'
 			: 'text-title-faded transition-colors duration-300 ease-out hover:text-title';
 
 	return (
 		<nav className="mb-5 flex items-center gap-5 text-2xl">
-			<Link to="/login" className={tab(active === 'signin')}>
+			<NavLink to="/login" className={tab}>
 				Sign in
-			</Link>
+			</NavLink>
 			<div className="flex h-[27px] w-0 items-center justify-center">
 				<img
 					src={dividerLine}
@@ -70,9 +72,9 @@ function AuthTabs({ active }) {
 					className="max-w-none rotate-90"
 				/>
 			</div>
-			<Link to="/signup" className={tab(active === 'signup')}>
+			<NavLink to="/signup" className={tab}>
 				Sign up
-			</Link>
+			</NavLink>
 		</nav>
 	);
 }

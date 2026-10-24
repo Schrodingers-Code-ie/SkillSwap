@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { api } from '../api/client.js';
-import AuthLayout from '../components/AuthLayout.jsx';
 import Button from '../components/ui/Button.jsx';
 import Input from '../components/ui/Input.jsx';
 
@@ -44,63 +43,61 @@ export default function Login() {
 	}
 
 	return (
-		<AuthLayout active="signin">
-			<form
-				onSubmit={handleSubmit}
-				noValidate
-				className="flex flex-col gap-2"
-			>
-				{error && (
-					<p
-						role="alert"
-						className="mb-3 rounded-input bg-error-box-bg px-3 py-3 font-main text-sm leading-5 text-error-box-text"
-					>
-						{error}
-					</p>
-				)}
-
-				<Input
-					type="email"
-					id="email"
-					name="email"
-					titleText="Email"
-					placeholderText="name@example.com"
-					autoComplete="email"
-					className="w-full"
-					value={form.email}
-					onChange={handleChange}
-				/>
-
-				<Input
-					type={showPassword ? 'text' : 'password'}
-					id="password"
-					name="password"
-					titleText="Password"
-					placeholderText="Your password"
-					autoComplete="current-password"
-					className="w-full"
-					value={form.password}
-					onChange={handleChange}
-					trailing={
-						<button
-							type="button"
-							onClick={() => setShowPassword((show) => !show)}
-							className="cursor-pointer px-1 font-main font-g-medium text-xs text-subtitle"
-						>
-							{showPassword ? 'Hide' : 'Show'}
-						</button>
-					}
-				/>
-
-				<Button
-					darkStyle
-					type="submit"
-					className="mt-3 h-[42px] w-full"
-					disabled={submitting}
+		<form
+			onSubmit={handleSubmit}
+			noValidate
+			className="flex flex-col gap-2"
+		>
+			{error && (
+				<p
+					role="alert"
+					className="mb-3 rounded-input bg-error-box-bg px-3 py-3 font-main text-sm leading-5 text-error-box-text"
 				>
-					{submitting ? 'Signing in...' : 'Sign in'}
-				</Button>
-			</form>
-		</AuthLayout>
+					{error}
+				</p>
+			)}
+
+			<Input
+				type="email"
+				id="email"
+				name="email"
+				titleText="Email"
+				placeholderText="name@example.com"
+				autoComplete="email"
+				className="w-full"
+				value={form.email}
+				onChange={handleChange}
+			/>
+
+			<Input
+				type={showPassword ? 'text' : 'password'}
+				id="password"
+				name="password"
+				titleText="Password"
+				placeholderText="Your password"
+				autoComplete="current-password"
+				className="w-full"
+				value={form.password}
+				onChange={handleChange}
+				trailing={
+					<button
+						type="button"
+						onClick={() => setShowPassword((show) => !show)}
+						className="cursor-pointer px-1 font-main font-g-medium text-xs text-subtitle"
+					>
+						{showPassword ? 'Hide' : 'Show'}
+					</button>
+				}
+			/>
+
+			<Button
+				darkStyle
+				type="submit"
+				className="mt-3 h-[42px] w-full"
+				disabled={submitting}
+			>
+				{submitting ? 'Signing in...' : 'Sign in'}
+			</Button>
+		</form>
 	);
 }
