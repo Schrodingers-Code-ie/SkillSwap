@@ -65,4 +65,18 @@ public class MatchScorerTests {
         Assertions.assertThat(scorer.score(me, other).matchingScore()).isEqualTo(4);
     }
 
+    @Test
+    void threeOverlapsInSkillsInBothDirectionsReturnsMatchingScoreThreeTest() {
+        SkillSwapUser me = new SkillSwapUser(1, "Ulven", "ulvenrev", Set.of("Guitar", "Spanish", "French", "Python"),
+                Set.of("Piano", "Japanese", "JavaScript", "Java"));
+        SkillSwapUser other = new SkillSwapUser(2, "Jane", "JJJ", Set.of("JavaScript"), Set.of("Guitar", "Spanish"));
+
+        Match match = scorer.score(me, other);
+
+        Assertions.assertThat(match).isNotNull();
+        Assertions.assertThat(match.skillsTheyCanTeachMe()).containsExactly("Guitar", "Spanish");
+        Assertions.assertThat(match.skillsICanTeachThem()).containsExactly("JavaScript");
+        Assertions.assertThat(match.matchingScore()).isEqualTo(3);
+    }
+
 }

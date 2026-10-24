@@ -47,7 +47,7 @@ public class FindMatchesTests {
 
         List<Match> result = service.forUser(1L);
 
-        Assertions.assertThat(result).extracting(Match::matchUserName)
+        Assertions.assertThat(result).extracting(Match::matchPersonName)
                 .containsExactly("Strong", "Weak");
     }
 
@@ -57,7 +57,7 @@ public class FindMatchesTests {
 
         List<Match> result = service.forUser(1L);
 
-        Assertions.assertThat(result).extracting(Match::matchUserName)
+        Assertions.assertThat(result).extracting(Match::matchPersonName)
                 .doesNotContain("Me");
     }
 
