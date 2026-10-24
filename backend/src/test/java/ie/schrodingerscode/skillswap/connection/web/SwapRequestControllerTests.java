@@ -13,13 +13,13 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import ie.schrodingerscode.skillswap.auth.HeaderCurrentUser;
+import ie.schrodingerscode.skillswap.auth.CurrentUser;
+import ie.schrodingerscode.skillswap.common.exception.UnauthorizedException;
 import ie.schrodingerscode.skillswap.connection.application.SwapRequestService;
 import ie.schrodingerscode.skillswap.connection.domain.RequestStatus;
 import ie.schrodingerscode.skillswap.connection.domain.SwapRequest;
@@ -37,7 +37,6 @@ import ie.schrodingerscode.skillswap.connection.domain.exception.SelfRequestExce
  * The rules themselves are tested in SwapRequestTests and SwapRequestServiceTests.
  */
 @WebMvcTest(SwapRequestController.class)
-@Import(HeaderCurrentUser.class) //@WebMvcTest skips @Component classes, so add the current user stub by hand
 class SwapRequestControllerTests {
 
     @Autowired
@@ -46,21 +45,29 @@ class SwapRequestControllerTests {
     @MockitoBean
     private SwapRequestService service;
 
+    //fake logged-in user, each test says who is logged in (or that nobody is)
+    @MockitoBean
+    private CurrentUser currentUser;
+
+    private void loggedInAs(long userId) {
+        when(currentUser.getId()).thenReturn(userId);
+    }
+
     //a request as it comes back from the service, already saved so it has an id
     private SwapRequest savedRequest(long id, long senderId, long receiverId) {
         return SwapRequest.restore(id, senderId, receiverId, RequestStatus.PENDING, Instant.now());
     }
 
     private ResultActions sendRequest(long from, long to) throws Exception {
+        loggedInAs(from);
         return mockMvc.perform(post("/api/requests")
-                .header("X-User-Id", String.valueOf(from))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"receiverId\": " + to + "}"));
     }
 
     private ResultActions accept(long requestId, long asUser) throws Exception {
-        return mockMvc.perform(post("/api/requests/" + requestId + "/accept")
-                .header("X-User-Id", String.valueOf(asUser)));
+        loggedInAs(asUser);
+        return mockMvc.perform(post("/api/requests/" + requestId + "/accept"));
     }
 
     @Test
@@ -98,19 +105,22 @@ class SwapRequestControllerTests {
 
     @Test
     void missingReceiverIdReturns400() throws Exception {
+        loggedInAs(1);
         mockMvc.perform(post("/api/requests")
-                .header("X-User-Id", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{}"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    void missingUserHeaderReturns401() throws Exception {
+    void notLoggedInReturns401() throws Exception {
+        when(currentUser.getId()).thenThrow(new UnauthorizedException("Not logged in"));
+
         mockMvc.perform(post("/api/requests")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"receiverId\": 2}"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.status").value(401));
     }
 
     @Test
@@ -147,7 +157,8 @@ class SwapRequestControllerTests {
 
     @Test
     void decliningReturns204() throws Exception {
-        mockMvc.perform(post("/api/requests/5/decline").header("X-User-Id", "2"))
+        loggedInAs(2);
+        mockMvc.perform(post("/api/requests/5/decline"))
                 .andExpect(status().isNoContent());
 
         verify(service).decline(5L, 2L); //the controller passed the right request and user to the service
@@ -160,7 +171,8 @@ class SwapRequestControllerTests {
                 savedRequest(1, 50, 51),
                 savedRequest(2, 52, 50)));
 
-        mockMvc.perform(get("/api/requests").header("X-User-Id", "50"))
+        loggedInAs(50);
+        mockMvc.perform(get("/api/requests"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.outgoing[0].receiverId").value(51))
                 .andExpect(jsonPath("$.incoming[0].senderId").value(52));
@@ -173,10 +185,12 @@ class SwapRequestControllerTests {
         when(service.connections(1L)).thenReturn(List.of(accepted));
         when(service.connections(2L)).thenReturn(List.of(accepted));
 
-        mockMvc.perform(get("/api/connections").header("X-User-Id", "1"))
+        loggedInAs(1);
+        mockMvc.perform(get("/api/connections"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].userId").value(2));
-        mockMvc.perform(get("/api/connections").header("X-User-Id", "2"))
+        loggedInAs(2);
+        mockMvc.perform(get("/api/connections"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].userId").value(1));
     }
