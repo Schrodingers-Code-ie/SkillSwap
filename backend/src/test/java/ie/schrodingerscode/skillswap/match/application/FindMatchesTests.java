@@ -13,11 +13,12 @@ import ie.schrodingerscode.skillswap.match.domain.Match;
 import ie.schrodingerscode.skillswap.match.domain.SkillSwapUser;
 
 public class FindMatchesTests {
-    private SkillSwapUser me = new SkillSwapUser(1, "Me", Set.of("Guitar", "Spanish"), Set.of("Piano", "Japanese"));
+    private SkillSwapUser me = new SkillSwapUser(1, "Me", "me123", Set.of("Guitar", "Spanish"),
+            Set.of("Piano", "Japanese"));
 
-    private SkillSwapUser strongMatch = new SkillSwapUser(2, "Strong", Set.of("Piano", "Japanese"),
+    private SkillSwapUser strongMatch = new SkillSwapUser(2, "Strong", "StronG12", Set.of("Piano", "Japanese"),
             Set.of("Guitar", "Spanish")); // score 4
-    private SkillSwapUser weakMatch = new SkillSwapUser(3, "Weak", Set.of("Piano"), Set.of("Guitar")); // score 2
+    private SkillSwapUser weakMatch = new SkillSwapUser(3, "Weak", "uwu", Set.of("Piano"), Set.of("Guitar")); // score 2
 
     // Creating a FAKE reader instead of StubUsersReader because we need to read the
     // ones created at the top
@@ -33,7 +34,8 @@ public class FindMatchesTests {
 
             @Override
             public List<SkillSwapUser> findCandidatesFor(long meId) {
-                return List.of(users); // Deliberately includes "me" for the tests below
+                return List.of(users); // strongMatch and weakMatch both have overlap with me, so just return both
+                // Also, me is deliberately included for one of the tests below
             }
         };
         return new FindMatches(fakeReader);
@@ -45,7 +47,7 @@ public class FindMatchesTests {
 
         List<Match> result = service.forUser(1L);
 
-        Assertions.assertThat(result).extracting(Match::matchUserName)
+        Assertions.assertThat(result).extracting(Match::matchPersonName)
                 .containsExactly("Strong", "Weak");
     }
 
@@ -55,7 +57,7 @@ public class FindMatchesTests {
 
         List<Match> result = service.forUser(1L);
 
-        Assertions.assertThat(result).extracting(Match::matchUserName)
+        Assertions.assertThat(result).extracting(Match::matchPersonName)
                 .doesNotContain("Me");
     }
 

@@ -29,7 +29,8 @@ public class MatchScorer {
         // point
         int matchingScore = skillsICanTeachThem.size() + skillsTheyCanTeachMe.size();
 
-        return new Match(other.id(), other.name(), matchingScore, skillsTheyCanTeachMe, skillsICanTeachThem,
+        return new Match(other.id(), other.name(), other.username(), matchingScore, skillsTheyCanTeachMe,
+                skillsICanTeachThem,
                 unmatchedSkillsTheyTeach);
     }
 }
