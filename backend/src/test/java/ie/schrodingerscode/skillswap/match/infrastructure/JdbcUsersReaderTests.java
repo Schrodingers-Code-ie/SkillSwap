@@ -1,4 +1,4 @@
-package ie.schrodingerscode.skillswap.match.web;
+package ie.schrodingerscode.skillswap.match.infrastructure;
 
 import java.util.Map;
 import static java.util.Map.entry;
@@ -19,7 +19,6 @@ import ie.schrodingerscode.skillswap.TestcontainersConfiguration;
 import ie.schrodingerscode.skillswap.auth.application.RegisterUser;
 import ie.schrodingerscode.skillswap.auth.domain.User;
 import ie.schrodingerscode.skillswap.match.domain.SkillSwapUser;
-import ie.schrodingerscode.skillswap.match.infrastructure.JdbcUsersReader;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
@@ -30,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Import(TestcontainersConfiguration.class)
 @Transactional
-class JpaRequestsMatchingFlowTests {
+class JdbcUsersReaderTests {
 
     private static final String PASSWORD = "secret123";
 
@@ -124,6 +123,7 @@ class JpaRequestsMatchingFlowTests {
         SkillSwapUser ulven = usersReader.findById(ulvenId).orElseThrow();
 
         assertThat(ulven.name()).isEqualTo("Ulven");
+        assertThat(ulven.username()).isEqualTo("ulvenrev");
         assertThat(ulven.learn()).containsExactlyInAnyOrder("Guitar", "Spanish", "French", "Python");
         assertThat(ulven.teach()).containsExactlyInAnyOrder("Piano", "Japanese", "JavaScript", "Java");
     }
@@ -138,5 +138,19 @@ class JpaRequestsMatchingFlowTests {
         assertThat(usersReader.findCandidatesFor(ulvenId))
                 .extracting(SkillSwapUser::name)
                 .containsExactlyInAnyOrder("Jane", "Mike", "Jessica"); // Doe has no overlap
+    }
+
+    @Test
+    void userInSwapRequestsDoesntShowAsMatchTest() throws Exception {
+        // Sending a request from Ulven to Jane
+        MockHttpSession session = login("ulven@mail.com");
+        mockMvc.perform(post("/api/requests").session(session)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"receiverId\": " + janeId + "}"))
+                .andExpect(status().isCreated());
+
+        assertThat(usersReader.findCandidatesFor(ulvenId))
+                .extracting(SkillSwapUser::name)
+                .containsExactlyInAnyOrder("Mike", "Jessica"); // Jane doesn't appear in the suggestions anymore
     }
 }
