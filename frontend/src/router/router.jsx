@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router';
 
 import AppLayout from '../components/AppLayout';
+import AuthLayout from '../components/AuthLayout';
 import RootLayout from '../components/RootLayout';
 import { homeLoader, protectedLoader } from './loaders';
 
@@ -20,23 +21,28 @@ const router = createBrowserRouter([
 				loader: homeLoader, // load authentication, if authenticated redirects to /matches, otherwise to /login
 				ErrorBoundary: ErrorPage,
 			},
-			// Public routes
+			// Public routes. AuthLayout stays on screen while you switch between them
 			{
-				path: '/login',
-				Component: Login,
-				ErrorBoundary: ErrorPage,
-				handle: {
-					title: 'SkillSwap | Login',
-				},
-			},
+				element: <AuthLayout />,
+				children: [
+					{
+						path: '/login',
+						Component: Login,
+						ErrorBoundary: ErrorPage,
+						handle: {
+							title: 'SkillSwap | Login',
+						},
+					},
 
-			{
-				path: '/signup',
-				Component: Signup,
-				ErrorBoundary: ErrorPage,
-				handle: {
-					title: 'SkillSwap | Sign Up',
-				},
+					{
+						path: '/signup',
+						Component: Signup,
+						ErrorBoundary: ErrorPage,
+						handle: {
+							title: 'SkillSwap | Sign Up',
+						},
+					},
+				],
 			},
 
 			{
@@ -50,6 +56,7 @@ const router = createBrowserRouter([
 
 			// Protected routes
 			{
+				id: 'protected', // lets the Header read the logged-in user with useRouteLoaderData('protected')
 				loader: protectedLoader, // loads authentications, if not authenticated redirects to /login
 				ErrorBoundary: ErrorPage,
 				children: [

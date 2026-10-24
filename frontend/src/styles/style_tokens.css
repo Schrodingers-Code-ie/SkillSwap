@@ -2,11 +2,13 @@
 	/* Everything for text: ------------------------------*/
 	/* --color prefix is replaced with "text", e.g. className="text-title" */
 	--color-title: var(--raw-brown);
+	--color-strong-text: var(--raw-deep-brown);
 	--color-title-faded: var(--raw-grey);
 	--color-input-placeholder: var(--raw-grey);
 	--color-main-content: var(--raw-light-brown);
 	--color-subtitle: var(--raw-light-brown);
 	--color-error: var(--raw-light-red);
+	--color-error-box-text: var(--raw-dark-red);
 	--color-correct: var(--raw-light-green);
 	--color-orange-bubble: var(--raw-muddy);
 	--color-green-bubble: var(--raw-dark-green);
@@ -48,4 +50,27 @@
 
 	--color-card-bg: var(--raw-container-cream);
 	--color-card-border: var(--raw-border-light-grey);
+
+	/* Big cream containers, e.g. the auth and welcome panels: ------------------------------ */
+	--color-page-bg: var(--raw-bg-cream); /* Use as "bg-page-bg" */
+	/* Grey pill behind the Header tabs */
+	--color-nav-bg: var(--raw-bg-light-grey);
+	--shadow-nav-tab: 0 2px 6px rgba(77, 70, 56, 0.08); /* The selected Header tab */
+	--color-avatar-bg: var(--raw-avatar-brown);
+	--shadow-avatar: 0 4px 12px rgba(77, 70, 56, 0.16);
+	--color-error-box-bg: var(--raw-pink); /* Pink box for an error message */
+	--color-container-border: var(--raw-border-grey);
+	/* Behind the blurred leaf photo on Sign in / Sign up */
+	--color-photo-panel-bg: var(--raw-bg-light-green);
+	--shadow-container:
+		0 25px 56px rgba(77, 70, 56, 0.12), 0 8px 12px rgba(77, 70, 56, 0.06),
+		inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+	/* Creators line on the welcome panel, use as "animate-marquee" */
+	--animate-marquee: marquee 25s linear infinite;
+	@keyframes marquee {
+		to {
+			transform: translateX(-50%);
+		}
+	}
 }

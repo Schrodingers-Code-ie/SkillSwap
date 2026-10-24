@@ -37,6 +37,7 @@ public class SecurityConfig {
                 //spring ends the session and deletes the cookie. 204 instead of the default redirect to a login page
                 .logout(logout -> logout
                         .logoutUrl("/api/auth/logout")
+                        .deleteCookies("JSESSIONID")
                         .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.NO_CONTENT)));
         return http.build();
     }
