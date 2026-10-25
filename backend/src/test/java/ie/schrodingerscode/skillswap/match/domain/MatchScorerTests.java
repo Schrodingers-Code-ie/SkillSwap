@@ -10,8 +10,8 @@ public class MatchScorerTests {
 
     @Test
     void twoWayOverlapReturnsAMatchTest() {
-        SkillSwapUser me = new SkillSwapUser(1, "Me", Set.of("Guitar"), Set.of("Piano"));
-        SkillSwapUser other = new SkillSwapUser(2, "Other", Set.of("Piano"), Set.of("Guitar"));
+        SkillSwapUser me = new SkillSwapUser(1, "Me", "me123", Set.of("Guitar"), Set.of("Piano"));
+        SkillSwapUser other = new SkillSwapUser(2, "Other", "o12", Set.of("Piano"), Set.of("Guitar"));
 
         Match match = scorer.score(me, other);
 
@@ -23,8 +23,8 @@ public class MatchScorerTests {
 
     @Test
     void oneWayOverlapITeachReturnsAMatchTest() {
-        SkillSwapUser me = new SkillSwapUser(1, "Me", Set.of("Guitar"), Set.of("Piano"));
-        SkillSwapUser other = new SkillSwapUser(2, "Other", Set.of("Piano"), Set.of("Cooking"));
+        SkillSwapUser me = new SkillSwapUser(1, "Me", "me123", Set.of("Guitar"), Set.of("Piano"));
+        SkillSwapUser other = new SkillSwapUser(2, "Other", "o12", Set.of("Piano"), Set.of("Cooking"));
 
         Match match = scorer.score(me, other);
 
@@ -36,8 +36,8 @@ public class MatchScorerTests {
 
     @Test
     void oneWayOverlapILearnReturnsAMatchTest() {
-        SkillSwapUser me = new SkillSwapUser(1, "Me", Set.of("Guitar"), Set.of("Piano"));
-        SkillSwapUser other = new SkillSwapUser(2, "Other", Set.of("Cooking"), Set.of("Guitar"));
+        SkillSwapUser me = new SkillSwapUser(1, "Me", "me123", Set.of("Guitar"), Set.of("Piano"));
+        SkillSwapUser other = new SkillSwapUser(2, "Other", "o12", Set.of("Cooking"), Set.of("Guitar"));
 
         Match match = scorer.score(me, other);
 
@@ -49,18 +49,34 @@ public class MatchScorerTests {
 
     @Test
     void noOverlapAtAllIsNotAMatchTest() {
-        SkillSwapUser me = new SkillSwapUser(1, "Me", Set.of("Guitar"), Set.of("Piano"));
-        SkillSwapUser other = new SkillSwapUser(2, "Other", Set.of("Yoga"), Set.of("SQL"));
+        SkillSwapUser me = new SkillSwapUser(1, "Me", "me123", Set.of("Guitar"), Set.of("Piano"));
+        SkillSwapUser other = new SkillSwapUser(2, "Other", "o12", Set.of("Yoga"), Set.of("SQL"));
 
         Assertions.assertThat(scorer.score(me, other)).isNull();
     }
 
     @Test
     void scoreIsOnePointPerOverlappingSkillInEitherDirectionTest() {
-        SkillSwapUser me = new SkillSwapUser(1, "Me", Set.of("Guitar", "Spanish"), Set.of("Piano", "Japanese"));
-        SkillSwapUser other = new SkillSwapUser(2, "Other", Set.of("Piano", "Japanese"), Set.of("Guitar", "Spanish"));
+        SkillSwapUser me = new SkillSwapUser(1, "Me", "me123", Set.of("Guitar", "Spanish"),
+                Set.of("Piano", "Japanese"));
+        SkillSwapUser other = new SkillSwapUser(2, "Other", "o12", Set.of("Piano", "Japanese"),
+                Set.of("Guitar", "Spanish"));
 
         Assertions.assertThat(scorer.score(me, other).matchingScore()).isEqualTo(4);
+    }
+
+    @Test
+    void threeOverlapsInSkillsInBothDirectionsReturnsMatchingScoreThreeTest() {
+        SkillSwapUser me = new SkillSwapUser(1, "Ulven", "ulvenrev", Set.of("Guitar", "Spanish", "French", "Python"),
+                Set.of("Piano", "Japanese", "JavaScript", "Java"));
+        SkillSwapUser other = new SkillSwapUser(2, "Jane", "JJJ", Set.of("JavaScript"), Set.of("Guitar", "Spanish"));
+
+        Match match = scorer.score(me, other);
+
+        Assertions.assertThat(match).isNotNull();
+        Assertions.assertThat(match.skillsTheyCanTeachMe()).containsExactly("Guitar", "Spanish");
+        Assertions.assertThat(match.skillsICanTeachThem()).containsExactly("JavaScript");
+        Assertions.assertThat(match.matchingScore()).isEqualTo(3);
     }
 
 }
