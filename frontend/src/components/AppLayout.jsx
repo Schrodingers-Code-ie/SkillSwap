@@ -7,7 +7,7 @@ export default function AppLayout() {
 	const isNavigating = Boolean(navigation.location);
 
 	return (
-		<>
+		<div className="min-h-screen bg-page-bg">
 			{/* Header stays visible on all authenticated pages */}
 			<Header />
 
@@ -22,6 +22,6 @@ export default function AppLayout() {
 					</div>
 				)}
 			</main>
-		</>
+		</div>
 	);
 }

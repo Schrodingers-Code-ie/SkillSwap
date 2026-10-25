@@ -36,7 +36,7 @@ class ProfileControllerTests {
         loggedIn.set(true);
         ProfileSkillService skillService = new ProfileSkillService(profiles, skills, () -> {
             if (!loggedIn.get()) {
-                throw new UnauthorizedException("Missing or invalid X-User-Id header");
+                throw new UnauthorizedException("Not logged in");
             }
             return USER_ID;
         });
