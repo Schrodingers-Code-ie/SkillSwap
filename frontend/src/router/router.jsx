@@ -3,6 +3,7 @@ import { createBrowserRouter } from 'react-router';
 import AppLayout from '../components/AppLayout';
 import AuthLayout from '../components/AuthLayout';
 import RootLayout from '../components/RootLayout';
+import Spinner from '../components/Spinner';
 import { friendsLoader, homeLoader, protectedLoader } from './loaders';
 
 import Login from '../pages/Login';
@@ -59,6 +60,7 @@ const router = createBrowserRouter([
 				id: 'protected', // lets the Header read the logged-in user with useRouteLoaderData('protected')
 				loader: protectedLoader, // loads authentications, if not authenticated redirects to /login
 				ErrorBoundary: ErrorPage,
+				HydrateFallback: Spinner, // shown while the login check runs on the first page load
 				children: [
 					{
 						element: <AppLayout />,
