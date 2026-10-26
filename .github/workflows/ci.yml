@@ -71,3 +71,27 @@ jobs:
               if: ${{ !cancelled() }}
               working-directory: frontend
               run: npm run format:check
+    # Builds the Docker image and pushes it to GHCR. Watchtower on the server pulls it within 5 minutes.
+    deploy:
+        # only after all checks pass
+        needs: [backend, frontend, format]
+        # only on a push to main (a merged PR), never on PR runs
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        runs-on: ubuntu-latest
+        # lets GITHUB_TOKEN push images to the org's GHCR
+        permissions:
+            contents: read
+            packages: write
+        steps:
+            - uses: actions/checkout@v4
+            - uses: docker/login-action@v3
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+            - uses: docker/build-push-action@v6
+              with:
+                  context: .
+                  push: true
+                  tags: ghcr.io/schrodingers-code-ie/skillswap:latest
+                  build-args: GIT_SHA=${{ github.sha }}
