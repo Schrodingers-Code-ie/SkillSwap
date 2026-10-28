@@ -1,11 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate, useRouteLoaderData } from 'react-router';
 import { api } from '../api/client.js';
-<<<<<<< HEAD
 import Profile from './ui/Profile.jsx';
-=======
 import RequestsBell from './RequestsBell';
->>>>>>> origin/main
 
 const TABS = [
 	{ to: '/matches', label: 'Search' },
