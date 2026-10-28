@@ -32,7 +32,7 @@ export async function chatLoader() {
 		api.get('/auth/me'),
 		api.get('/connections'),
 	]);
-	// Two requests: GET /api/connections gives user ids, and GET /api/users/{id}/profile gives usernames
+
 	const [myProfile, friends] = await Promise.all([
 		api.get(`/users/${me.id}/profile`),
 		Promise.all(
@@ -49,4 +49,11 @@ export async function chatLoader() {
 	]);
 
 	return { myProfile, friends };
+}
+
+export async function friendsLoader() {
+	// Runs before the Friends page renders, the page reads it with useLoaderData().
+	// Returns a list like [{ userId: 2 }, { userId: 5 }].
+	// If the request fails, the error goes to the route's ErrorBoundary.
+	return api.get('/connections');
 }

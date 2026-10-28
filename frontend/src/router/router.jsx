@@ -3,7 +3,13 @@ import { createBrowserRouter } from 'react-router';
 import AppLayout from '../components/AppLayout';
 import AuthLayout from '../components/AuthLayout';
 import RootLayout from '../components/RootLayout';
-import { chatLoader, homeLoader, protectedLoader } from './loaders';
+import Spinner from '../components/Spinner';
+import {
+	chatLoader,
+	friendsLoader,
+	homeLoader,
+	protectedLoader,
+} from './loaders';
 
 import Login from '../pages/Login';
 import Signup from '../pages/Signup';
@@ -59,6 +65,7 @@ const router = createBrowserRouter([
 				id: 'protected', // lets the Header read the logged-in user with useRouteLoaderData('protected')
 				loader: protectedLoader, // loads authentications, if not authenticated redirects to /login
 				ErrorBoundary: ErrorPage,
+				HydrateFallback: Spinner, // shown while the login check runs on the first page load
 				children: [
 					{
 						element: <AppLayout />,
@@ -88,14 +95,16 @@ const router = createBrowserRouter([
 							},
 
 							{
-								path: '/requests',
+								path: '/friends',
+								loader: friendsLoader, // loads my connections before the page renders
 								lazy: async () => {
 									const module =
-										await import('../pages/Requests');
+										await import('../pages/Friends');
 									return { Component: module.default };
 								},
+								ErrorBoundary: ErrorPage,
 								handle: {
-									title: 'SkillSwap | Requests',
+									title: 'SkillSwap | Friends',
 								},
 							},
 
