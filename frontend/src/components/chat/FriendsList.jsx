@@ -6,7 +6,12 @@ import searchIcon from '../../assets/search.svg';
 // friends: profiles from the Chat page loader
 // selectedId: userId of the open chat, decides which row gets the highlight
 // onSelect: called with a userId when a friend is clicked
-export default function FriendsList({ friends, selectedId, onSelect }) {
+export default function FriendsList({
+	friends,
+	selectedId,
+	onSelect,
+	className = '',
+}) {
 	const [query, setQuery] = useState('');
 	const search = query.trim().toLowerCase();
 	const shown = friends.filter((friend) =>
@@ -14,7 +19,7 @@ export default function FriendsList({ friends, selectedId, onSelect }) {
 	);
 
 	return (
-		<aside className="flex min-h-0 flex-col">
+		<aside className={`flex min-h-0 flex-col ${className}`}>
 			<div className="flex items-baseline justify-between px-1.5">
 				<h1 className="text-2xl uppercase text-title">Chat</h1>
 				<p className="text-xs text-subtitle">
@@ -36,7 +41,7 @@ export default function FriendsList({ friends, selectedId, onSelect }) {
 				/>
 			</label>
 
-			<ul className="mt-3 flex min-h-0 flex-col gap-1 overflow-y-auto">
+			<ul className="mt-3 flex max-h-[22dvh] min-h-0 flex-col gap-1 overflow-y-auto scrollbar-soft pr-3 md:max-h-none md:pr-1">
 				{shown.map((friend) => {
 					const active = friend.userId === selectedId;
 					return (

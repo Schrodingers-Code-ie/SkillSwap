@@ -9,7 +9,7 @@ const MAX_LENGTH = 2000; // same limit as MessageText on the backend
 
 // Middle column of the Chat page
 // friend: open friend's profile
-export default function Conversation({ friend }) {
+export default function Conversation({ friend, className = '' }) {
 	// The logged-in user, loaded by protectedLoader (route with id protected)
 	const me = useRouteLoaderData('protected');
 
@@ -84,7 +84,9 @@ export default function Conversation({ friend }) {
 	}
 
 	return (
-		<section className="flex min-h-0 flex-col overflow-hidden rounded-container-card border border-container-border bg-card-bg shadow-container">
+		<section
+			className={`flex min-h-0 flex-col overflow-hidden rounded-container-card border border-container-border bg-card-bg shadow-container ${className}`}
+		>
 			<header className="flex items-center gap-3 border-b border-container-border px-5 py-4">
 				<Profile name={friend.displayName} />
 				<h2 className="truncate text-lg text-strong-text">
@@ -92,7 +94,6 @@ export default function Conversation({ friend }) {
 				</h2>
 			</header>
 
-			{/* relative: the notice below is positioned inside this box */}
 			<div className="relative flex min-h-0 flex-1 flex-col">
 				{notice && (
 					<p
@@ -105,7 +106,7 @@ export default function Conversation({ friend }) {
 				<div
 					ref={listRef}
 					aria-live="polite"
-					className="min-h-0 flex-1 overflow-y-auto px-5 py-4"
+					className="min-h-0 flex-1 overflow-y-auto scrollbar-soft px-5 py-4"
 				>
 					{!loaded && (
 						<p className="text-sm text-subtitle">
