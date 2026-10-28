@@ -76,17 +76,34 @@ export default function MatchCard({ match }) {
 				</div>
 
 				<div className="mt-2 flex flex-wrap items-center gap-2">
-					{match.skillsTheyCanTeachMe.map((skill) => (
+					{match.skillsTheyCanTeachMe.slice(0, 2).map((skill) => (
 						<SkillBubble key={skill} variant="green">
 							{skill}
 						</SkillBubble>
 					))}
-					<span className="mx-1 h-4 w-px bg-border" />
-					{match.skillsICanTeachThem.map((skill) => (
+					{/* If there's more than 2 bubbles, indicate it but don't show all of them */}
+					{match.skillsTheyCanTeachMe.length > 2 && (
+						<SkillBubble variant="green">
+							+{match.skillsTheyCanTeachMe.length - 2}
+						</SkillBubble>
+					)}
+
+					{/* Showing the divider only if both sides have bubbles - otherwise don't show it */}
+					{match.skillsTheyCanTeachMe.length > 0 &&
+						match.skillsICanTeachThem.length > 0 && (
+							<span className="mx-1 h-4 w-px bg-border" />
+						)}
+
+					{match.skillsICanTeachThem.slice(0, 2).map((skill) => (
 						<SkillBubble key={skill} variant="yellow">
 							{skill}
 						</SkillBubble>
 					))}
+					{match.skillsICanTeachThem.length > 2 && (
+						<SkillBubble variant="green">
+							+{match.skillsICanTeachThem.length - 2}
+						</SkillBubble>
+					)}
 				</div>
 			</div>
 
