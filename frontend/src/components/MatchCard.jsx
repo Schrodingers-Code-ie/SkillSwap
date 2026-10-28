@@ -1,46 +1,54 @@
 import SkillBubble from './ui/SkillBubble.jsx';
 import { api } from '../api/client.js';
-// import { useState } from 'react';
+import { useState } from 'react';
+import plus_icon from '../assets/plus_icon.png';
+import cross_icon from '../assets/cross_icon.png';
+import tick_icon from '../assets/tick_icon.png';
 
 export default function MatchCard({ match }) {
 	// 3 states of the same buttom to show different text: idle = "Add", sent = "Sent", cancel = "Cancel"
-	// const [status, setStatus] = useState('idle');
-	// const [requestId, setRequestId] = useState(null);
-	// const [busy, setBusy] = useState(false);
+	const [status, setStatus] = useState('idle');
+	const [requestId, setRequestId] = useState(null);
+	const [busy, setBusy] = useState(false);
 
-	// async function handleButtonClick() {
-	// 	if (busy) return; // Already doing some request
+	async function handleButtonClick() {
+		if (busy) return; // Already doing some request, so that we can't spam clicks and brake the API call
 
-	// 	// Sent -> Cancel is just a UI step, no request sent yet
-	// 	if (status === 'sent') {
-	// 		setStatus('cancel');
-	// 		return;
-	// 	}
+		// Sent -> Cancel is just a UI step, no request sent yet
+		if (status === 'sent') {
+			setStatus('cancel');
+			console.log('CONFIRM DELETING.');
+			return;
+		}
 
-	// 	setBusy(true);
-	// 	try {
-	// 		if (status === 'idle') {
-	// 			const createdSwapRequest = await api.post('/requests', {
-	// 				receiverId: match.matchPersonId,
-	// 			});
-	// 			setRequestId(createdSwapRequest); // TODOOOOOOOOOOOOOOOOOOOOOOO - continue, check what we return from api/requests
-	// 			setStatus(sent);
-	// 		}
-	// 	} catch (err) {
-	// 		console.log(err);
-	// 	}
-	// }
-
-	async function sendSwapRequest(suggestedUserId) {
-		console.log(suggestedUserId);
+		setBusy(true);
 		try {
-			await api.post('/requests', {
-				receiverId: suggestedUserId,
-			});
+			if (status === 'idle') {
+				const createdSwapRequest = await api.post('/requests', {
+					receiverId: match.matchPersonId,
+				});
+				setRequestId(createdSwapRequest.id);
+				setStatus('sent');
+				console.log('REQUEST SENT to: ' + requestId);
+			} else {
+				// TODO: insert the api.delete() (SCRUM 93) in here to remove the request that was sent
+				console.log('REQUEST DELETED.');
+				setRequestId(null);
+				setStatus('idle');
+			}
 		} catch (err) {
 			console.log(err);
+		} finally {
+			setBusy(false);
 		}
 	}
+
+	const buttonStyles =
+		status === 'idle'
+			? 'bg-dark-button-bg text-dark-button-text hover:shadow-dark-button-hover active:bg-dark-button-pressed-bg'
+			: status === 'sent'
+				? 'bg-light-button-bg border-1 border-grey-button-border text-light-button-text hover:shadow-light-hover active:bg-light-button-pressed-bg'
+				: 'text-light-button-text bg-red-button-bg border-1 border-red-button-border hover:shadow-light-hover active:bg-red-button-pressed-bg';
 
 	function getInitials(name) {
 		return name
@@ -84,11 +92,27 @@ export default function MatchCard({ match }) {
 
 			<button
 				type="button"
-				className="flex shrink-0 cursor-pointer items-center gap-2 rounded-full bg-dark-button-bg px-15 py-3 font-main font-g-medium text-dark-button-text transition hover:shadow-dark-button-hover active:bg-dark-button-pressed-bg"
-				onClick={() => sendSwapRequest(match.matchPersonId)}
+				className={`flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full w-43 py-3 font-main font-g-medium transition ${buttonStyles}`}
+				onClick={handleButtonClick}
 			>
-				<span className="text-lg leading-none">+</span>
-				Add
+				{status === 'idle' && (
+					<>
+						<img src={plus_icon} alt="plus icon"></img>
+						Add
+					</>
+				)}
+				{status === 'sent' && (
+					<>
+						<img src={tick_icon} alt="tick icon"></img>
+						Sent
+					</>
+				)}
+				{status === 'cancel' && (
+					<>
+						<img src={cross_icon} alt="cross icon"></img>
+						Cancel?
+					</>
+				)}
 			</button>
 		</div>
 	);
