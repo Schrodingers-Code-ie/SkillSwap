@@ -33,6 +33,7 @@
 	--raw-light-red: #a23a1e; /* Error messages on cream bg */
 	--raw-bg-cream: #ede8e1; /* Bg color on every page */
 	--raw-container-cream: #fbf7f2; /* Bg color for every container */
+	--raw-message-cream: #efe9e1; /* Bg for chat messages you receive */
 	--raw-bg-light-grey: rgb(
 		77 70 56 / 6%
 	); /* Bg color for "choose skills" container */

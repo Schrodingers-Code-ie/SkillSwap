@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useLoaderData } from 'react-router';
 import { api } from '../api/client.js';
 import FriendsList from '../components/chat/FriendsList';
+import Conversation from '../components/chat/Conversation';
 
 export async function loader() {
 	const connections = await api.get('/connections');
@@ -35,12 +36,15 @@ export default function Chat() {
 				onSelect={setSelectedId}
 			/>
 
-			{/* Step 5: Messages with the selected friend in the middle */}
-			<section className="rounded-container-card border border-container-border bg-card-bg p-6 shadow-container">
-				{selected
-					? `Chat with ${selected.displayName}`
-					: 'Pick a friend'}
-			</section>
+			{/* Messages with the selected friend in the middle */}
+			{selected ? (
+				// A different key defines different component, so no reusing it, thus previous conversation's pooling stops
+				<Conversation key={selected.userId} friend={selected} />
+			) : (
+				<section className="flex items-center justify-center rounded-container-card border border-container-border bg-card-bg p-6 text-sm text-subtitle shadow-container">
+					Your chats will show here once you have a connection.
+				</section>
+			)}
 
 			{/* Step 7: Profile panel on the right */}
 			<aside className="hidden lg:block" />

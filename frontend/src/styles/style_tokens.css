@@ -41,6 +41,8 @@
 	--color-green-bubble-bg: var(--raw-bg-dark-green);
 	--color-orange-bubble-bg: var(--raw-dirty-yellow);
 	--color-grey-bubble-bg: var(--raw-bg-dark-grey);
+	/* Chat messages: ------------------------------ */
+	--color-received-message-bg: var(--raw-message-cream);
 
 	/* Inputs, cards and border radius: ------------------------------ */
 	--color-input-bg: var(--raw-input-bg-cream);
