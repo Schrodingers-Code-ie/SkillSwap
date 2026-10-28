@@ -2,20 +2,31 @@ import Dropdown from '../components/ui/Dropdown.jsx';
 import MatchCard from '../components/MatchCard.jsx';
 import { useEffect, useState } from 'react';
 import { api } from '../api/client.js';
+import { useRouteLoaderData } from 'react-router';
 
 export default function Matches() {
 	const [matches, setMatches] = useState([]);
 	const [error, setError] = useState(null);
+	const [hasSkills, setHasSkills] = useState(null);
+
+	const user = useRouteLoaderData('protected');
+	const userId = user.id;
 
 	useEffect(() => {
 		let ignore = false;
 
-		api.get('/matches')
-			.then((data) => {
+		api.get(`/users/${userId}/profile`)
+			.then((profile) => {
+				const foundSkills =
+					profile.learnSkills.length != 0 ||
+					profile.teachSkills.length != 0;
 				if (ignore) return;
-				console.log(data);
-				setMatches(data);
-				setError(null);
+				setHasSkills(foundSkills);
+
+				if (!foundSkills) return; // Nothing to match, so skip the request for matches
+				return api.get('./matches').then((data) => {
+					if (!ignore) setMatches(data);
+				});
 			})
 			.catch((err) => {
 				if (!ignore) setError(err.message);
@@ -52,9 +63,16 @@ export default function Matches() {
 				</div>
 
 				<div className="suggestions-list flex flex-col gap-4">
+					{!hasSkills && (
+						<div className="text-subtitle text-base font-main font-g-regular">
+							You have no skills in any of your sections. Assign
+							them first in /signup/skills to see people with who
+							you can match.
+						</div>
+					)}
 					{error && <div>{error}</div>}
 
-					{matches.length === 0 ? (
+					{!error && hasSkills && matches.length === 0 ? (
 						<div className="text-subtitle text-base font-main font-g-regular">
 							No matching suggestions for you.
 						</div>
