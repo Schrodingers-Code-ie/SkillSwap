@@ -104,7 +104,10 @@ const router = createBrowserRouter([
 								lazy: async () => {
 									const module =
 										await import('../pages/Chat');
-									return { Component: module.default };
+									return {
+										Component: module.default,
+										loader: module.loader,
+									};
 								},
 								handle: {
 									title: 'SkillSwap | Chat',

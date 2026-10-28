@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate, useRouteLoaderData } from 'react-router';
 import { api } from '../api/client.js';
-import Avatar from './ui/Avatar';
+import Profile from './ui/Profile.jsx';
 
 const TABS = [
 	{ to: '/matches', label: 'Search' },
@@ -47,7 +47,7 @@ export default function Header() {
 	);
 }
 
-// The avatar circle. Clicking it opens a small menu with "My profile" and "Log out"
+// The profile/avatar circle. Clicking it opens a small menu with "My profile" and "Log out"
 function AccountMenu({ user }) {
 	const [open, setOpen] = useState(false);
 	const [error, setError] = useState(null);
@@ -92,7 +92,7 @@ function AccountMenu({ user }) {
 				aria-label="Account menu"
 				className=" group flex cursor-pointer rounded-full"
 			>
-				<Avatar
+				<Profile
 					name={user?.username}
 					size="sm"
 					className="transition group-hover:-translate-y-px group-hover:shadow-dark-button-hover"
