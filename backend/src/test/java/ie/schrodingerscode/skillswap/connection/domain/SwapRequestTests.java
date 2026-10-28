@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import ie.schrodingerscode.skillswap.connection.domain.exception.InvalidRequestStateException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.NotRequestReceiverException;
+import ie.schrodingerscode.skillswap.connection.domain.exception.NotRequestSenderException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.SelfRequestException;
 
 //plain unit tests for the state machine, no Spring, so they run instantly
@@ -89,6 +90,31 @@ class SwapRequestTests {
         SwapRequest request = newRequest();
         request.accept(2);
         assertThatThrownBy(() -> request.decline(2))
+                .isInstanceOf(InvalidRequestStateException.class);
+    }
+
+    @Test
+    void senderCanCancelPendingRequest() {
+        newRequest().cancel(1); //no exception means cancelling is allowed
+    }
+
+    @Test
+    void receiverCannotCancel() {
+        assertThatThrownBy(() -> newRequest().cancel(2))
+                .isInstanceOf(NotRequestSenderException.class);
+    }
+
+    @Test
+    void strangerCannotCancel() {
+        assertThatThrownBy(() -> newRequest().cancel(3))
+                .isInstanceOf(NotRequestSenderException.class);
+    }
+
+    @Test
+    void cannotCancelAcceptedRequest() {
+        SwapRequest request = newRequest();
+        request.accept(2);
+        assertThatThrownBy(() -> request.cancel(1))
                 .isInstanceOf(InvalidRequestStateException.class);
     }
 

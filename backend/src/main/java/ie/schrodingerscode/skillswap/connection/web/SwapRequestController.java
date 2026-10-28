@@ -3,6 +3,7 @@ package ie.schrodingerscode.skillswap.connection.web;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,6 +54,12 @@ public class SwapRequestController {
     @ResponseStatus(HttpStatus.NO_CONTENT) //declined requests are deleted, so there is nothing to send back
     public void decline(@PathVariable("id") long id) {
         service.decline(id, currentUser.getId());
+    }
+
+    @DeleteMapping("/requests/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT) //cancelled requests are deleted, so there is nothing to send back
+    public void cancel(@PathVariable("id") long id) {
+        service.cancel(id, currentUser.getId());
     }
 
     @GetMapping("/requests")
