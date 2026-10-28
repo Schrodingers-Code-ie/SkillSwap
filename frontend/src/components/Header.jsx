@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate, useRouteLoaderData } from 'react-router';
 import { api } from '../api/client.js';
+import RequestsBell from './RequestsBell';
 
 const TABS = [
 	{ to: '/matches', label: 'Search' },
@@ -39,7 +40,7 @@ export default function Header() {
 			</nav>
 
 			<div className="ml-auto flex items-center gap-6">
-				{/* The bell goes here (SCRUM-75) */}
+				<RequestsBell />
 				<AccountMenu user={user} />
 			</div>
 		</header>
