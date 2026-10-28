@@ -3,7 +3,7 @@ import { createBrowserRouter } from 'react-router';
 import AppLayout from '../components/AppLayout';
 import AuthLayout from '../components/AuthLayout';
 import RootLayout from '../components/RootLayout';
-import { homeLoader, protectedLoader } from './loaders';
+import { chatLoader, homeLoader, protectedLoader } from './loaders';
 
 import Login from '../pages/Login';
 import Signup from '../pages/Signup';
@@ -101,12 +101,12 @@ const router = createBrowserRouter([
 
 							{
 								path: '/chat',
+								loader: chatLoader,
 								lazy: async () => {
 									const module =
 										await import('../pages/Chat');
 									return {
 										Component: module.default,
-										loader: module.loader,
 									};
 								},
 								handle: {

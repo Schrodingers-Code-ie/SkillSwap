@@ -1,33 +1,8 @@
 import { useState } from 'react';
 import { useLoaderData } from 'react-router';
-import { api } from '../api/client.js';
 import FriendsList from '../components/chat/FriendsList';
 import Conversation from '../components/chat/Conversation';
 import ProfilePanel from '../components/chat/ProfilePanel';
-
-export async function loader() {
-	const [me, connections] = await Promise.all([
-		api.get('/auth/me'),
-		api.get('/connections'),
-	]);
-	// Two requests: GET /api/connections gives user ids, and GET /api/users/{id}/profile gives usernames
-	const [myProfile, friends] = await Promise.all([
-		api.get(`/users/${me.id}/profile`),
-		Promise.all(
-			connections.map((connection) =>
-				api.get(`/users/${connection.userId}/profile`).catch(() => ({
-					// Default placeholder, so one broken profile shouldn't break the whole page
-					userId: connection.userId,
-					displayName: 'Unknown user',
-					teachSkills: [],
-					learnSkills: [],
-				})),
-			),
-		),
-	]);
-
-	return { myProfile, friends };
-}
 
 // Figma: Chat page. Friend list on the left, messages in the middle, profile on the right
 export default function Chat() {

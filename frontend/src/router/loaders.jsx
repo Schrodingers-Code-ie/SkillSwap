@@ -26,3 +26,27 @@ export async function protectedLoader() {
 	if (!user) return redirect('/login');
 	return user;
 }
+
+export async function chatLoader() {
+	const [me, connections] = await Promise.all([
+		api.get('/auth/me'),
+		api.get('/connections'),
+	]);
+	// Two requests: GET /api/connections gives user ids, and GET /api/users/{id}/profile gives usernames
+	const [myProfile, friends] = await Promise.all([
+		api.get(`/users/${me.id}/profile`),
+		Promise.all(
+			connections.map((connection) =>
+				api.get(`/users/${connection.userId}/profile`).catch(() => ({
+					// Default placeholder, so one broken profile shouldn't break the whole page
+					userId: connection.userId,
+					displayName: 'Unknown user',
+					teachSkills: [],
+					learnSkills: [],
+				})),
+			),
+		),
+	]);
+
+	return { myProfile, friends };
+}
