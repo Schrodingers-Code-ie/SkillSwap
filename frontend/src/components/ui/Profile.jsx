@@ -1,4 +1,4 @@
-// Figma: Icons avatar/profile circle
+// Figma: from Icons Avatar/Profile circle
 // TODO: add different circle colours
 
 const SIZES = {
@@ -10,7 +10,7 @@ const SIZES = {
 // name: the text the initials come from
 // size: one of the keys in SIZES, "md" by default, influences circle size and text size
 // className: allows caller to add extra classes eg. hover effect
-export default function Avatar({ name = '', size = 'md', className = '' }) {
+export default function Profile({ name = '', size = 'md', className = '' }) {
 	return (
 		// span, so Avatar can be placed inside button
 		<span
