@@ -8,7 +8,6 @@ import { friendsLoader, homeLoader, protectedLoader } from './loaders';
 
 import Login from '../pages/Login';
 import Signup from '../pages/Signup';
-import Skills from '../pages/Skills';
 import NotFound from '../pages/NotFound';
 import ErrorPage from '../pages/ErrorPage';
 
@@ -44,15 +43,6 @@ const router = createBrowserRouter([
 						},
 					},
 				],
-			},
-
-			{
-				path: '/signup/skills',
-				Component: Skills,
-				ErrorBoundary: ErrorPage,
-				handle: {
-					title: 'SkillSwap | Skills',
-				},
 			},
 
 			// Protected routes
