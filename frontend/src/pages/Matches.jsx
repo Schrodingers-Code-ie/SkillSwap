@@ -24,7 +24,7 @@ export default function Matches() {
 				setHasSkills(foundSkills);
 
 				if (!foundSkills) return; // Nothing to match, so skip the request for matches
-				return api.get('./matches').then((data) => {
+				return api.get('/matches').then((data) => {
 					if (!ignore) setMatches(data);
 				});
 			})
@@ -63,7 +63,7 @@ export default function Matches() {
 				</div>
 
 				<div className="suggestions-list flex flex-col gap-4">
-					{!hasSkills && (
+					{hasSkills === false && (
 						<div className="text-subtitle text-base font-main font-g-regular">
 							You have no skills in any of your sections. Assign
 							them first in /signup/skills to see people with who
