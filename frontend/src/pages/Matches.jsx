@@ -36,7 +36,7 @@ export default function Matches() {
 		return () => {
 			ignore = true;
 		};
-	}); // Fetching the matches once when the component loads. LATER: refresh when filters/sorting are changed
+	}, [userId]); // Fetching the matches once when the component loads. LATER: refresh when filters/sorting are changed
 
 	return (
 		<div className="search-page-container px-12 py-8 flex justify-center">
