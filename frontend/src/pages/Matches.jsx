@@ -3,6 +3,7 @@ import MatchCard from '../components/MatchCard.jsx';
 import { useEffect, useState } from 'react';
 import { api } from '../api/client.js';
 import { useRouteLoaderData } from 'react-router';
+import { Link } from 'react-router';
 
 export default function Matches() {
 	const [matches, setMatches] = useState([]);
@@ -66,8 +67,12 @@ export default function Matches() {
 					{hasSkills === false && (
 						<div className="text-subtitle text-base font-main font-g-regular">
 							You have no skills in any of your sections. Assign
-							them first in /signup/skills to see people with who
-							you can match.
+							them first in your
+							<Link to="/profile">
+								{' '}
+								<u>profile</u>{' '}
+							</Link>
+							to see people with who you can match.
 						</div>
 					)}
 					{error && <div>{error}</div>}
