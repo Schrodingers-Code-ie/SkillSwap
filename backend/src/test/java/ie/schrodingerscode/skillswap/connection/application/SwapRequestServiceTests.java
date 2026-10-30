@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import ie.schrodingerscode.skillswap.connection.domain.SwapRequest;
 import ie.schrodingerscode.skillswap.connection.domain.exception.DuplicateRequestException;
+import ie.schrodingerscode.skillswap.connection.domain.exception.InvalidRequestStateException;
+import ie.schrodingerscode.skillswap.connection.domain.exception.NotRequestSenderException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.ReceiverNotFoundException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.RequestNotFoundException;
 import ie.schrodingerscode.skillswap.connection.infrastructure.InMemorySwapRequestRepository;
@@ -87,10 +89,40 @@ class SwapRequestServiceTests {
     }
 
     @Test
+    void cancellingDeletesTheRequest() {
+        SwapRequest request = service.send(1, 2);
+        service.cancel(request.getId(), 1);
+
+        assertThat(service.pendingRequests(1)).isEmpty();
+        assertThat(service.pendingRequests(2)).isEmpty(); //gone from the receiver's bell too
+        //deleted, so they can send again later
+        service.send(1, 2);
+    }
+
+    @Test
+    void receiverCannotCancelAndRequestStays() {
+        SwapRequest request = service.send(1, 2);
+        assertThatThrownBy(() -> service.cancel(request.getId(), 2))
+                .isInstanceOf(NotRequestSenderException.class);
+        assertThat(service.pendingRequests(2)).hasSize(1); //still there
+    }
+
+    @Test
+    void cannotCancelAcceptedRequest() {
+        SwapRequest request = service.send(1, 2);
+        service.accept(request.getId(), 2);
+        assertThatThrownBy(() -> service.cancel(request.getId(), 1))
+                .isInstanceOf(InvalidRequestStateException.class);
+        assertThat(service.areConnected(1, 2)).isTrue(); //still connected
+    }
+
+    @Test
     void unknownRequestIsNotFound() {
         assertThatThrownBy(() -> service.accept(999, 2))
                 .isInstanceOf(RequestNotFoundException.class);
         assertThatThrownBy(() -> service.decline(999, 2))
+                .isInstanceOf(RequestNotFoundException.class);
+        assertThatThrownBy(() -> service.cancel(999, 1))
                 .isInstanceOf(RequestNotFoundException.class);
     }
 }

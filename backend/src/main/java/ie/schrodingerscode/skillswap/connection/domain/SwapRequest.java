@@ -4,12 +4,13 @@ import java.time.Instant;
 
 import ie.schrodingerscode.skillswap.connection.domain.exception.InvalidRequestStateException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.NotRequestReceiverException;
+import ie.schrodingerscode.skillswap.connection.domain.exception.NotRequestSenderException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.SelfRequestException;
 
 /**
  * A swap request from one user to another (the aggregate).
  *
- * All the rules about what can happen to a request live here, in accept() and decline(),
+ * All the rules about what can happen to a request live here, in accept(), decline() and cancel(),
  * not in the controller or service. The service just loads the request, calls the method and saves it.
  *
  * The id is null until the request is saved, because Postgres gives out the ids.
@@ -58,6 +59,17 @@ public class SwapRequest {
         if (status != RequestStatus.PENDING) {
             //declining an accepted request would really be "remove connection", which is a different feature
             throw new InvalidRequestStateException("Only pending requests can be declined");
+        }
+    }
+
+    //the sender takes back a request they sent. The service deletes it after this, like decline
+    public void cancel(long userId) {
+        if (userId != senderId) {
+            throw new NotRequestSenderException();
+        }
+        if (status != RequestStatus.PENDING) {
+            //cancelling an accepted request would really be "remove connection", which is a different feature
+            throw new InvalidRequestStateException("Only pending requests can be cancelled");
         }
     }
 

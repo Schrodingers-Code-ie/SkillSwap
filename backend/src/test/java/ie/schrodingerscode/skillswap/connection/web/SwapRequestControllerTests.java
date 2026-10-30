@@ -1,7 +1,9 @@
 package ie.schrodingerscode.skillswap.connection.web;
 
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -26,6 +28,7 @@ import ie.schrodingerscode.skillswap.connection.domain.SwapRequest;
 import ie.schrodingerscode.skillswap.connection.domain.exception.DuplicateRequestException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.InvalidRequestStateException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.NotRequestReceiverException;
+import ie.schrodingerscode.skillswap.connection.domain.exception.NotRequestSenderException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.ReceiverNotFoundException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.RequestNotFoundException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.SelfRequestException;
@@ -162,6 +165,34 @@ class SwapRequestControllerTests {
                 .andExpect(status().isNoContent());
 
         verify(service).decline(5L, 2L); //the controller passed the right request and user to the service
+    }
+
+    @Test
+    void cancellingReturns204() throws Exception {
+        loggedInAs(1);
+        mockMvc.perform(delete("/api/requests/5"))
+                .andExpect(status().isNoContent());
+
+        verify(service).cancel(5L, 1L); //the controller passed the right request and user to the service
+    }
+
+    @Test
+    void cancellingSomeoneElsesRequestReturns403() throws Exception {
+        doThrow(new NotRequestSenderException()).when(service).cancel(5L, 2L);
+
+        loggedInAs(2);
+        mockMvc.perform(delete("/api/requests/5"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void cancellingAcceptedRequestReturns409() throws Exception {
+        doThrow(new InvalidRequestStateException("Only pending requests can be cancelled"))
+                .when(service).cancel(5L, 1L);
+
+        loggedInAs(1);
+        mockMvc.perform(delete("/api/requests/5"))
+                .andExpect(status().isConflict());
     }
 
     @Test
