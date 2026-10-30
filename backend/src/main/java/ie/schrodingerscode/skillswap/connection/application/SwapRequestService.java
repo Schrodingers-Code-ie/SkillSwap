@@ -52,6 +52,12 @@ public class SwapRequestService implements ConnectionChecker {
         repository.delete(request);
     }
 
+    public void cancel(long requestId, long userId) {
+        SwapRequest request = findRequest(requestId);
+        request.cancel(userId);
+        repository.delete(request);
+    }
+
     //pending requests I sent or received
     public List<SwapRequest> pendingRequests(long userId) {
         return repository.findAllInvolving(userId).stream()
