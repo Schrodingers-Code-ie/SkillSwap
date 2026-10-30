@@ -23,7 +23,7 @@ export default function Profile({ name = '', size = 'md', className = '' }) {
 	);
 }
 
-// creates inicials inside avatar/profile circle eg. "Aoife Wall" -> "AW"
+// creates initials inside avatar/profile circle eg. "Aoife Wall" -> "AW"
 function initials(name) {
 	const letters = name
 		.split(' ')

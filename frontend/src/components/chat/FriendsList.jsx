@@ -20,7 +20,7 @@ export default function FriendsList({
 
 	return (
 		<aside className={`flex min-h-0 flex-col ${className}`}>
-			<div className="flex items-baseline justify-between px-1.5">
+			<div className="flex shrink-0 items-baseline justify-between px-1.5">
 				<h1 className="text-2xl uppercase text-title">Chat</h1>
 				<p className="text-xs text-subtitle">
 					{friends.length}{' '}
@@ -29,7 +29,7 @@ export default function FriendsList({
 			</div>
 
 			{/* Figma: from Navigation section Search Bar */}
-			<label className="mt-3 flex h-[42px] items-center gap-2.5 rounded-full border border-transparent bg-nav-bg px-4 transition-colors focus-within:border-active-input-border">
+			<label className="mt-3 flex shrink-0 h-[42px] items-center gap-2.5 rounded-full border border-transparent bg-nav-bg px-4 transition-colors focus-within:border-active-input-border">
 				<img src={searchIcon} alt="" className="size-4 shrink-0" />
 				<input
 					type="search"

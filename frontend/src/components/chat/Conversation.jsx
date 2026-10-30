@@ -31,7 +31,6 @@ export default function Conversation({ friend, className = '' }) {
 	// Stops when the user leaves the page or switches friend
 	useEffect(() => {
 		let cancelled = false;
-		alert;
 		async function load() {
 			try {
 				const fresh = await api.get(`/chats/${friend.userId}/messages`);
@@ -65,13 +64,13 @@ export default function Conversation({ friend, className = '' }) {
 		if (!canSend) return;
 
 		setSending(true);
-		setSendError(null);
 		try {
 			const saved = await api.post(`/chats/${friend.userId}/messages`, {
 				text,
 			});
 			setMessages((current) => mergeById(current, [saved]));
 			setDraft('');
+			setSendError(null);
 		} catch (err) {
 			setSendError(
 				err.status && err.status < 500
@@ -109,7 +108,7 @@ export default function Conversation({ friend, className = '' }) {
 					className="min-h-0 flex-1 overflow-y-auto scrollbar-soft px-5 py-4"
 				>
 					{!loaded && (
-						<p className="text-sm text-subtitle">
+						<p className="mt-10 text-center text-sm text-subtitle">
 							Loading messages
 						</p>
 					)}
@@ -148,7 +147,6 @@ export default function Conversation({ friend, className = '' }) {
 										{message.text}
 									</p>
 
-									{/* Figma: the time only shows under the other person's messages */}
 									<time
 										dateTime={message.sentAt}
 										className="mt-1 px-1 text-[11px] text-subtitle"
