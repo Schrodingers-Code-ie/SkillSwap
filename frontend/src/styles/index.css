@@ -13,6 +13,27 @@
    This makes hover: work whenever the mouse is over the element. */
 @custom-variant hover (&:hover);
 
+@utility scrollbar-soft {
+	scrollbar-width: thin;
+	scrollbar-color: var(--raw-border-light-grey) transparent;
+
+	&:hover {
+		scrollbar-color: var(--raw-active-border-light-grey) transparent;
+	}
+
+	/* for Safari */
+	&::-webkit-scrollbar {
+		width: 6px;
+	}
+	&::-webkit-scrollbar-thumb {
+		border-radius: 9999px;
+		background: var(--raw-border-light-grey);
+	}
+	&::-webkit-scrollbar-track {
+		background: transparent;
+	}
+}
+
 :root {
 	--raw-brown: #4d4638; /* Brown buttons and headers/titles */
 	--raw-deep-brown: #3a342a; /* Typed values, dates and the small logo */
@@ -33,6 +54,7 @@
 	--raw-light-red: #a23a1e; /* Error messages on cream bg */
 	--raw-bg-cream: #ede8e1; /* Bg color on every page */
 	--raw-container-cream: #fbf7f2; /* Bg color for every container */
+	--raw-message-cream: #efe9e1; /* Bg for chat messages you receive */
 	--raw-bg-light-grey: rgb(
 		77 70 56 / 6%
 	); /* Bg color for "choose skills" container */

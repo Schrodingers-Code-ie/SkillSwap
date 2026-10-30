@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate, useRouteLoaderData } from 'react-router';
 import { api } from '../api/client.js';
+import Profile from './ui/Profile.jsx';
 import RequestsBell from './RequestsBell';
 
 const TABS = [
@@ -47,7 +48,7 @@ export default function Header() {
 	);
 }
 
-// The avatar circle. Clicking it opens a small menu with "My profile" and "Log out"
+// The profile/avatar circle. Clicking it opens a small menu with "My profile" and "Log out"
 function AccountMenu({ user }) {
 	const [open, setOpen] = useState(false);
 	const [error, setError] = useState(null);
@@ -82,9 +83,6 @@ function AccountMenu({ user }) {
 		}
 	}
 
-	// /api/auth/me only returns the username for now, so we use its first letter
-	const initial = user?.username?.[0]?.toUpperCase() ?? '?';
-
 	return (
 		<div className="relative" ref={menuRef}>
 			<button
@@ -93,9 +91,13 @@ function AccountMenu({ user }) {
 				aria-haspopup="menu"
 				aria-expanded={open}
 				aria-label="Account menu"
-				className="flex size-[38px] cursor-pointer items-center justify-center rounded-full border-3 border-card-bg bg-avatar-bg text-[13px] font-g-semibold text-dark-button-text shadow-avatar transition hover:-translate-y-px hover:shadow-dark-button-hover"
+				className=" group flex cursor-pointer rounded-full"
 			>
-				{initial}
+				<Profile
+					name={user?.username}
+					size="sm"
+					className="transition group-hover:-translate-y-px group-hover:shadow-dark-button-hover"
+				/>
 			</button>
 
 			{open && (
