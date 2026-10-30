@@ -27,6 +27,30 @@ export async function protectedLoader() {
 	return user;
 }
 
+export async function chatLoader() {
+	const [me, connections] = await Promise.all([
+		api.get('/auth/me'),
+		api.get('/connections'),
+	]);
+
+	const [myProfile, friends] = await Promise.all([
+		api.get(`/users/${me.id}/profile`),
+		Promise.all(
+			connections.map((connection) =>
+				api.get(`/users/${connection.userId}/profile`).catch(() => ({
+					// Default placeholder, so one broken profile shouldn't break the whole page
+					userId: connection.userId,
+					displayName: 'Unknown user',
+					teachSkills: [],
+					learnSkills: [],
+				})),
+			),
+		),
+	]);
+
+	return { myProfile, friends };
+}
+
 export async function friendsLoader() {
 	// Runs before the Friends page renders, the page reads it with useLoaderData().
 	// Returns a list like [{ userId: 2 }, { userId: 5 }].
