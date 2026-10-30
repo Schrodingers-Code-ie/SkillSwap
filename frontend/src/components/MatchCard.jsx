@@ -53,13 +53,13 @@ export default function MatchCard({ match }) {
 					{error}
 				</p>
 			)}
-			<div className="match-card flex items-center gap-4 rounded-card border border-container-border bg-card-bg px-5 py-4">
+			<div className="match-card grid grid-cols-[auto_1fr] items-center gap-x-4 gap-y-3 md:flex md:gap-4 rounded-card border border-container-border bg-card-bg px-5 py-4">
 				<div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-3 border-card-bg bg-avatar-bg text-lg font-main font-g-medium text-dark-button-text shadow-avatar">
 					{getInitials(match.matchPersonName)}
 				</div>
 
-				<div className="min-w-0 flex-1">
-					<div className="flex gap-4 items-center">
+				<div className="contents md:block md:min-w-0 md:flex-1">
+					<div className="flex min-w-0 flex-wrap items-center gap-x-4">
 						<span className="font-main font-g-medium text-title">
 							{match.matchPersonName}
 						</span>
@@ -68,15 +68,15 @@ export default function MatchCard({ match }) {
 						</span>
 					</div>
 
-					<div className="mt-2 flex flex-wrap items-center gap-2">
+					<div className="col-span-2 md:col-span-1 my-1 min-[701px]:my-2 flex flex-wrap items-center gap-2">
 						{match.skillsTheyCanTeachMe.slice(0, 2).map((skill) => (
-							<SkillBubble key={skill} variant="green">
+							<SkillBubble key={skill} color="green">
 								{skill}
 							</SkillBubble>
 						))}
 						{/* If there's more than 2 bubbles, indicate it but don't show all of them */}
 						{match.skillsTheyCanTeachMe.length > 2 && (
-							<SkillBubble variant="green">
+							<SkillBubble color="green">
 								+{match.skillsTheyCanTeachMe.length - 2}
 							</SkillBubble>
 						)}
@@ -88,12 +88,12 @@ export default function MatchCard({ match }) {
 							)}
 
 						{match.skillsICanTeachThem.slice(0, 2).map((skill) => (
-							<SkillBubble key={skill} variant="yellow">
+							<SkillBubble key={skill} color="yellow">
 								{skill}
 							</SkillBubble>
 						))}
 						{match.skillsICanTeachThem.length > 2 && (
-							<SkillBubble variant="yellow">
+							<SkillBubble color="yellow">
 								+{match.skillsICanTeachThem.length - 2}
 							</SkillBubble>
 						)}
@@ -102,7 +102,7 @@ export default function MatchCard({ match }) {
 
 				<button
 					type="button"
-					className={`flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full w-43 py-3 font-main font-g-medium transition ${buttonStyles}`}
+					className={`col-span-2 md:col-span-1 justify-self-start flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full w-33 md:w-43 py-2 md:py-3 font-main font-g-medium transition ${buttonStyles}`}
 					onClick={handleButtonClick}
 				>
 					{status === 'idle' && (

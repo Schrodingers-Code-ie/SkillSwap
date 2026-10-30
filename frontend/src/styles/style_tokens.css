@@ -37,20 +37,12 @@
 	--color-dark-button-pressed-bg: var(--raw-dark-brown);
 	--color-light-button-pressed-bg: var(--raw-dark-grey);
 	--shadow-dark-button-hover: 0 6px 16px rgba(77, 70, 56, 0.35);
-<<<<<<< HEAD
 	/* Background for Skill Bubbles: ------------------------------ */
 	--color-green-bubble-bg: var(--raw-bg-dark-green);
 	--color-orange-bubble-bg: var(--raw-dirty-yellow);
 	--color-grey-bubble-bg: var(--raw-bg-dark-grey);
 	/* Chat messages: ------------------------------ */
 	--color-received-message-bg: var(--raw-message-cream);
-=======
-	--shadow-light-hover: 0 4px 10px rgba(77, 70, 56, 0.15);
-	--color-red-button-bg: var(--raw-bg-light-red);
-	--color-red-button-pressed-bg: var(--raw-active-bg-light-red);
-	--color-red-button-border: var(--raw-dirty-red);
-	--color-grey-button-border: var(--raw-bg-dark-grey);
->>>>>>> ac2671b (SCRUM-79 Add -> Sent -> Cancel? button)
 
 	/* Inputs, cards and border radius: ------------------------------ */
 	--color-input-bg: var(--raw-input-bg-cream);

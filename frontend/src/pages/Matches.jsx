@@ -39,14 +39,14 @@ export default function Matches() {
 	}, [userId]); // Fetching the matches once when the component loads. LATER: refresh when filters/sorting are changed
 
 	return (
-		<div className="search-page-container px-12 py-8 flex justify-center">
-			<div className="filters-section max-w-xl w-full text-center">
+		<div className="search-page-container px-5 min-[701px]:px-12 py-4 min-[701px]:py-8 flex justify-center">
+			{/* <div className="filters-section max-w-xl w-full text-center">
 				FILTERS
-			</div>
-			<div className="suggestions-section w-full mx-10 max-w-3xl">
-				<div className="header mb-4 flex items-start justify-between gap-6">
+			</div> */}
+			<div className="suggestions-section w-full min-[701px]:mx-10 max-w-3xl">
+				<div className="header mb-4 min-[701px]:flex items-start justify-between min-[701px]:gap-6">
 					<div className="titles">
-						<h1 className="text-title text-3xl font-main font-g-medium">
+						<h1 className="text-title text-[28px] min-[701px]:text-3xl font-main font-g-medium">
 							Suggested matches
 						</h1>
 						<p className="text-subtitle text-base font-main font-g-regular py-3">
@@ -55,7 +55,7 @@ export default function Matches() {
 							swap skills with
 						</p>
 					</div>
-					<div className="sort-dropdown mt-6 flex shrink-0 items-center gap-4 rounded-full border border-container-border bg-card-bg px-5 py-3 text-main-content font-main">
+					<div className="w-60 min-[701px]:w-auto sort-dropdown min-[701px]:mt-6 flex shrink-0 items-center gap-4 rounded-full border border-container-border bg-card-bg px-5 py-3 text-main-content font-main">
 						<span className="font-main font-g-medium pr-4">
 							Sort
 						</span>
@@ -75,7 +75,14 @@ export default function Matches() {
 							to see people with who you can match.
 						</div>
 					)}
-					{error && <div>{error}</div>}
+					{error && (
+						<p
+							role="alert"
+							className="rounded-input bg-error-box-bg px-3 py-3 font-main text-sm leading-5 text-error-box-text"
+						>
+							{error}
+						</p>
+					)}
 
 					{!error && hasSkills && matches.length === 0 ? (
 						<div className="text-subtitle text-base font-main font-g-regular">
@@ -91,9 +98,9 @@ export default function Matches() {
 					)}
 				</div>
 			</div>
-			<div className="side-profile-section max-w-xl w-full text-center">
+			{/* <div className="side-profile-section max-w-xl w-full text-center">
 				SIDE PROFILE
-			</div>
+			</div> */}
 		</div>
 	);
 }

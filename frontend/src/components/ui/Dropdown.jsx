@@ -24,7 +24,7 @@ export default function Dropdown() {
 			</button>
 
 			{isOpen && (
-				<div className="absolute right-0 top-full z-10 mt-4 min-w-40 overflow-hidden rounded-input border border-container-border bg-card-bg py-1 shadow-avatar">
+				<div className="absolute sm:right-0 top-full mt-4 min-w-40 overflow-hidden rounded-input border border-container-border bg-card-bg py-1 shadow-avatar">
 					{OPTIONS.map((option) => (
 						/* Make each option a button we can click */
 						<button
