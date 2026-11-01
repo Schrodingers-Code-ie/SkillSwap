@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import arrow from '../../assets/dropdown_arrow.png';
+import arrow from '../../assets/dropdown_arrow.svg';
 
 const OPTIONS = ['Best match', 'Worst match'];
 
