@@ -46,7 +46,7 @@ export default function MatchCard({ match }) {
 
 	// useEffect plays the role of a timer here for "Cancel?" to go back to "Sent"
 	useEffect(() => {
-		if (status !== 'cancel' && busy) return; // If the button is not "Cancel?" or a call is running, don't start the timer
+		if (status !== 'cancel' || busy) return; // If the button is not "Cancel?" or a call is running, don't start the timer
 
 		const timer = setTimeout(() => setStatus('sent'), 2000); // 2s timer
 
