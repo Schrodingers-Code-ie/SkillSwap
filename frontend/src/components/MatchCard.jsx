@@ -1,6 +1,6 @@
 import SkillBubble from './ui/SkillBubble.jsx';
 import { api } from '../api/client.js';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import plus_icon from '../assets/plus_icon.svg';
 import tick_icon from '../assets/tick_icon.svg';
 import cross_icon from '../assets/cross_icon.svg';
@@ -35,6 +35,7 @@ export default function MatchCard({ match }) {
 				await api.delete(`/requests/${requestId}`);
 				setRequestId(null);
 				setStatus('idle');
+				setError(null);
 			}
 		} catch (err) {
 			setError(err.message);
@@ -42,6 +43,15 @@ export default function MatchCard({ match }) {
 			setBusy(false);
 		}
 	}
+
+	// useEffect plays the role of a timer here for "Cancel?" to go back to "Sent"
+	useEffect(() => {
+		if (status !== 'cancel' && busy) return; // If the button is not "Cancel?" or a call is running, don't start the timer
+
+		const timer = setTimeout(() => setStatus('sent'), 2000); // 2s timer
+
+		return () => clearTimeout(timer); // Clear the timer once finished
+	}, [status, busy]);
 
 	const buttonStyles =
 		status === 'idle'
