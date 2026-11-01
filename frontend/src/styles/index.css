@@ -59,6 +59,13 @@
 		77 70 56 / 6%
 	); /* Bg color for "choose skills" container */
 	--raw-bg-dark-grey: rgb(77 70 56 / 7%); /* Bg color for grey buttons */
+	--raw-bg-light-red: rgb(
+		255 105 65 / 10%
+	); /* Bg color for red "cancel" button */
+	--raw-active-bg-light-red: rgb(
+		255 105 65 / 23%
+	); /* Bg color for active red "cancel" button */
+	--raw-dirty-red: #a23a1e; /* Border color for red "cancel" button */
 	--raw-border-grey: rgb(
 		77 70 56 / 8%
 	); /* Border color for all cream containers */
