@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, NavLink, useNavigate, useRouteLoaderData } from 'react-router';
-import { api } from '../api/client.js';
+import { Link, NavLink, useRouteLoaderData } from 'react-router';
+import useLogout from '../hooks/useLogout';
 import Profile from './ui/Profile.jsx';
 import RequestsBell from './RequestsBell';
 
@@ -51,9 +51,8 @@ export default function Header() {
 // The profile/avatar circle. Clicking it opens a small menu with "My profile" and "Log out"
 function AccountMenu({ user }) {
 	const [open, setOpen] = useState(false);
-	const [error, setError] = useState(null);
 	const menuRef = useRef(null);
-	const navigate = useNavigate();
+	const { logout: handleLogout, error } = useLogout();
 
 	// Close the menu when clicking outside it or pressing Escape
 	useEffect(() => {
@@ -71,17 +70,6 @@ function AccountMenu({ user }) {
 			document.removeEventListener('keydown', handleKey);
 		};
 	}, [open]);
-
-	async function handleLogout() {
-		setError(null);
-		try {
-			// Spring ends the session on the server, so the cookie stops working
-			await api.post('/auth/logout');
-			navigate('/login');
-		} catch {
-			setError("Couldn't log out, try again.");
-		}
-	}
 
 	return (
 		<div className="relative" ref={menuRef}>
