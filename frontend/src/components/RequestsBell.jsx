@@ -121,11 +121,12 @@ export default function RequestsBell() {
 									<Card className="w-full">
 										<div className="flex items-center gap-3">
 											<div className="size-10 shrink-0 rounded-full bg-dark-button-bg text-dark-button-text flex items-center justify-center text-sm font-g-medium">
-												U{request.senderId}
+												{initialOf(request.senderUsername)}
 											</div>
 											<p className="text-main-content">
 												<span className="text-title font-g-medium">
-													User {request.senderId}
+													{request.senderUsername ??
+														`User ${request.senderId}`}
 												</span>{' '}
 												wants to swap skills with you
 											</p>
@@ -185,4 +186,9 @@ function BellIcon() {
 			<path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
 		</svg>
 	);
+}
+
+// First letter of the username for the avatar circle, "?" if we don't know it
+function initialOf(username) {
+	return username?.[0]?.toUpperCase() ?? '?';
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import ie.schrodingerscode.skillswap.auth.CurrentUser;
+import ie.schrodingerscode.skillswap.auth.application.UserNames;
 import ie.schrodingerscode.skillswap.connection.application.SwapRequestService;
 import ie.schrodingerscode.skillswap.connection.domain.SwapRequest;
 import ie.schrodingerscode.skillswap.connection.web.dto.ConnectionResponse;
@@ -31,23 +32,34 @@ public class SwapRequestController {
 
     private final SwapRequestService service;
     private final CurrentUser currentUser;
+    private final UserNames userNames;
 
-    public SwapRequestController(SwapRequestService service, CurrentUser currentUser) {
+    public SwapRequestController(SwapRequestService service, CurrentUser currentUser, UserNames userNames) {
         this.service = service;
         this.currentUser = currentUser;
+        this.userNames = userNames;
+    }
+
+    //turns a request into JSON, with both usernames looked up in auth
+    private SwapRequestResponse toResponse(SwapRequest request) {
+        return SwapRequestResponse.from(request, username(request.getSenderId()), username(request.getReceiverId()));
+    }
+
+    private String username(long userId) {
+        return userNames.usernameOf(userId).orElse(null);
     }
 
     @PostMapping("/requests")
     @ResponseStatus(HttpStatus.CREATED)
     public SwapRequestResponse send(@Valid @RequestBody SendRequestBody body) {
         SwapRequest request = service.send(currentUser.getId(), body.receiverId());
-        return SwapRequestResponse.from(request);
+        return toResponse(request);
     }
 
     @PostMapping("/requests/{id}/accept")
     public SwapRequestResponse accept(@PathVariable("id") long id) {
         SwapRequest request = service.accept(id, currentUser.getId());
-        return SwapRequestResponse.from(request);
+        return toResponse(request);
     }
 
     @PostMapping("/requests/{id}/decline")
@@ -69,11 +81,11 @@ public class SwapRequestController {
 
         List<SwapRequestResponse> incoming = pending.stream()
                 .filter(r -> r.getReceiverId() == me)
-                .map(SwapRequestResponse::from)
+                .map(this::toResponse)
                 .toList();
         List<SwapRequestResponse> outgoing = pending.stream()
                 .filter(r -> r.getSenderId() == me)
-                .map(SwapRequestResponse::from)
+                .map(this::toResponse)
                 .toList();
 
         return new PendingRequestsResponse(incoming, outgoing);
@@ -83,7 +95,7 @@ public class SwapRequestController {
     public List<ConnectionResponse> connections() {
         long me = currentUser.getId();
         return service.connections(me).stream()
-                .map(r -> new ConnectionResponse(r.otherUser(me)))
+                .map(r -> new ConnectionResponse(r.otherUser(me), username(r.otherUser(me))))
                 .toList();
     }
 }

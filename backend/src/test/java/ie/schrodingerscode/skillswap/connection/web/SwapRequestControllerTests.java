@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import ie.schrodingerscode.skillswap.auth.CurrentUser;
+import ie.schrodingerscode.skillswap.auth.application.UserNames;
 import ie.schrodingerscode.skillswap.common.exception.UnauthorizedException;
 import ie.schrodingerscode.skillswap.connection.application.SwapRequestService;
 import ie.schrodingerscode.skillswap.connection.domain.RequestStatus;
@@ -51,6 +53,10 @@ class SwapRequestControllerTests {
     //fake logged-in user, each test says who is logged in (or that nobody is)
     @MockitoBean
     private CurrentUser currentUser;
+
+    //fake username lookup, unknown users give empty (the JSON then has null)
+    @MockitoBean
+    private UserNames userNames;
 
     private void loggedInAs(long userId) {
         when(currentUser.getId()).thenReturn(userId);
@@ -224,5 +230,32 @@ class SwapRequestControllerTests {
         mockMvc.perform(get("/api/connections"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].userId").value(1));
+    }
+
+    @Test
+    void requestsShowTheUsernames() throws Exception {
+        when(service.pendingRequests(50L)).thenReturn(List.of(savedRequest(2, 52, 50)));
+        when(userNames.usernameOf(52L)).thenReturn(Optional.of("bea"));
+        when(userNames.usernameOf(50L)).thenReturn(Optional.of("ann"));
+
+        loggedInAs(50);
+        mockMvc.perform(get("/api/requests"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.incoming[0].senderUsername").value("bea"))
+                .andExpect(jsonPath("$.incoming[0].receiverUsername").value("ann"));
+    }
+
+    @Test
+    void connectionsShowTheOtherUsersName() throws Exception {
+        SwapRequest accepted = savedRequest(5, 1, 2);
+        accepted.accept(2);
+        when(service.connections(1L)).thenReturn(List.of(accepted));
+        when(userNames.usernameOf(2L)).thenReturn(Optional.of("bea"));
+
+        loggedInAs(1);
+        mockMvc.perform(get("/api/connections"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].userId").value(2))
+                .andExpect(jsonPath("$[0].username").value("bea"));
     }
 }

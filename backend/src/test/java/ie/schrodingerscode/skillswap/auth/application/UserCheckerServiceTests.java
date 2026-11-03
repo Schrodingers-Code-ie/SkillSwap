@@ -22,6 +22,18 @@ class UserCheckerServiceTests {
     }
 
     @Test
+    void usernameOfSavedUser() {
+        User saved = repository.save(User.register(new Email("ann@mail.com"), "ann", "hash", true));
+
+        assertThat(new UserCheckerService(repository).usernameOf(saved.getId())).contains("ann");
+    }
+
+    @Test
+    void unknownUserHasNoUsername() {
+        assertThat(new UserCheckerService(repository).usernameOf(999)).isEmpty();
+    }
+
+    @Test
     void unknownUserDoesNotExist() {
         assertThat(checker.exists(999)).isFalse();
     }
