@@ -9,10 +9,10 @@ export default function LevelPicker({ value, onChange }) {
 					type="button"
 					onClick={() => onChange(level.value)}
 					aria-pressed={value === level.value}
-					className={`rounded-xl px-4 py-3 text-sm transition ${
+					className={`rounded-input px-4 py-3 text-sm transition ${
 						value === level.value
-							? 'bg-[#4a4136] text-white shadow'
-							: 'bg-[#e7e3df] text-[#4a4136] hover:bg-[#ddd8d3]'
+							? 'bg-dark-button-bg text-dark-button-text'
+							: 'bg-black/5 text-strong-text hover:bg-black/10'
 					}`}
 				>
 					{level.label}

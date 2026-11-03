@@ -28,18 +28,16 @@ export default function SkillForm({ catalogue, takenIds, withLevel, onAdd }) {
 			setSelected(null);
 			setLevel(null);
 		} catch {
-			// the page shows the error message; keep the form as it is
+			// the modal shows the error message
 		} finally {
 			setBusy(false);
 		}
 	}
 
 	return (
-		<div className="space-y-4 rounded-3xl bg-[#f0ece8] p-6">
+		<div className="space-y-4 rounded-card bg-black/5 p-6">
 			<div className="relative">
-				<label className="mb-2 block text-sm text-[#3d362c]">
-					Skill
-				</label>
+				<label className="mb-2 block text-sm">Skill</label>
 				<input
 					value={query}
 					onChange={(e) => {
@@ -47,10 +45,10 @@ export default function SkillForm({ catalogue, takenIds, withLevel, onAdd }) {
 						setSelected(null);
 					}}
 					placeholder="Start typing, e.g. Python, guitar, Spanish"
-					className="w-full rounded-xl border border-[#e3ddd6] bg-[#fffdf9] px-4 py-3 outline-none"
+					className="w-full rounded-input border border-card-border bg-card-bg px-4 py-3 outline-none"
 				/>
 				{suggestions.length > 0 && (
-					<ul className="absolute z-10 mt-1 w-full rounded-2xl border border-[#e3ddd6] bg-[#fbf9f5] py-2 shadow-lg">
+					<ul className="absolute z-10 mt-1 w-full rounded-card border border-card-border bg-card-bg py-2 shadow-container">
 						{suggestions.map((s) => (
 							<li key={s.id}>
 								<button
@@ -59,7 +57,7 @@ export default function SkillForm({ catalogue, takenIds, withLevel, onAdd }) {
 										setSelected(s);
 										setQuery(s.name);
 									}}
-									className="w-full px-4 py-2 text-left hover:bg-[#f0ece8]"
+									className="w-full px-4 py-2 text-left hover:bg-black/5"
 								>
 									{s.name}
 								</button>
@@ -71,9 +69,7 @@ export default function SkillForm({ catalogue, takenIds, withLevel, onAdd }) {
 
 			{withLevel && (
 				<div>
-					<label className="mb-2 block text-sm text-[#3d362c]">
-						Your level
-					</label>
+					<label className="mb-2 block text-sm">Your level</label>
 					<LevelPicker value={level} onChange={setLevel} />
 				</div>
 			)}
@@ -82,7 +78,7 @@ export default function SkillForm({ catalogue, takenIds, withLevel, onAdd }) {
 				type="button"
 				onClick={submit}
 				disabled={!canAdd}
-				className="rounded-full bg-[#e3ded9] px-6 py-3 text-[#3d362c] shadow-sm disabled:opacity-50"
+				className="rounded-full bg-card-border px-6 py-3 text-strong-text disabled:opacity-50"
 			>
 				Add skill
 			</button>

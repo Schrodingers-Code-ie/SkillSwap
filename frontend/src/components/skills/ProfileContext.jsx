@@ -1,46 +1,52 @@
 import { useCallback, useEffect, useState } from 'react';
-import { getMe, getProfile } from '../../api/skills';
+import { useRouteLoaderData } from 'react-router';
+import { getProfile } from '../../api/skills';
 import { ProfileContext } from './profile-context';
 
+const isMissing = (p) =>
+	p.teachSkills.length === 0 || p.learnSkills.length === 0;
+
 export function ProfileProvider({ children }) {
+	const user = useRouteLoaderData('protected');
 	const [profile, setProfile] = useState(null);
 	const [error, setError] = useState('');
 	const [loading, setLoading] = useState(true);
+	const [setupOpen, setSetupOpen] = useState(false);
 
-	// used by the skills pop-up after every add or remove
-	const reload = useCallback(async () => {
-		const me = await getMe();
-		setProfile(await getProfile(me.id));
+	const apply = useCallback((data) => {
+		setProfile(data);
+		if (isMissing(data)) setSetupOpen(true); // stays true until "Finish setup"
 	}, []);
 
-	// first load: state is only set after the requests finish
+	const reload = useCallback(
+		async () => apply(await getProfile(user.id)),
+		[apply, user.id],
+	);
+
 	useEffect(() => {
 		let active = true;
-		(async () => {
-			try {
-				const me = await getMe();
-				const data = await getProfile(me.id);
-				if (active) setProfile(data);
-			} catch (e) {
-				if (active) setError(e.message);
-			} finally {
-				if (active) setLoading(false);
-			}
-		})();
+		getProfile(user.id)
+			.then((data) => active && apply(data))
+			.catch((e) => active && setError(e.message))
+			.finally(() => active && setLoading(false));
 		return () => {
 			active = false;
 		};
-	}, []);
+	}, [user.id, apply]);
 
-	// matching pairs teach with learn, so the user needs at least one of each
-	const missingSkills =
-		!!profile &&
-		(profile.teachSkills.length === 0 || profile.learnSkills.length === 0);
+	const value = {
+		user,
+		profile,
+		error,
+		loading,
+		reload,
+		setupOpen,
+		finishSetup: () => setSetupOpen(false),
+		missingSkills: !!profile && isMissing(profile),
+	};
 
 	return (
-		<ProfileContext.Provider
-			value={{ profile, error, loading, reload, missingSkills }}
-		>
+		<ProfileContext.Provider value={value}>
 			{children}
 		</ProfileContext.Provider>
 	);

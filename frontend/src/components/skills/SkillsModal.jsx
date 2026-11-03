@@ -6,17 +6,20 @@ import {
 	removeLearnSkill,
 	removeTeachSkill,
 } from '../../api/skills';
+import useLogout from '../../hooks/useLogout';
 import { useProfile } from './profile-context';
 import SkillCard from './SkillCard';
 import SkillForm from './SkillForm';
 
-// onClose is only passed when the user may close it (they already have one of each)
+// onClose is only used in edit mode (opened from "Edit your skills")
 export default function SkillsModal({ onClose }) {
-	const { profile, reload } = useProfile();
+	const { profile, reload, setupOpen, finishSetup, missingSkills } =
+		useProfile();
+	const { logout, error: logoutError } = useLogout();
 	const [catalogue, setCatalogue] = useState([]);
 	const [error, setError] = useState('');
 	const [step, setStep] = useState(() =>
-		profile.teachSkills.length === 0 ? 1 : 2,
+		setupOpen && profile.teachSkills.length > 0 ? 2 : 1,
 	);
 
 	useEffect(() => {
@@ -33,7 +36,7 @@ export default function SkillsModal({ onClose }) {
 		setError('');
 		try {
 			await action();
-			await reload(); // the page always shows what is in the database
+			await reload();
 		} catch (e) {
 			setError(e.message);
 			throw e;
@@ -46,24 +49,42 @@ export default function SkillsModal({ onClose }) {
 				role="dialog"
 				aria-modal="true"
 				aria-labelledby="skills-title"
-				className="w-full max-w-3xl rounded-[2rem] bg-[#fbf9f5] p-10 shadow-xl"
+				className="w-full max-w-3xl rounded-container-card bg-card-bg p-10 text-left shadow-container"
 			>
-				<div className="mb-6 flex items-center gap-4 text-xs font-semibold tracking-wide text-[#4a4136]">
-					STEP {step} OF 2
-					<span className="flex gap-1">
-						<span className="h-1 w-20 rounded bg-[#3d362c]" />
-						<span
-							className={`h-1 w-20 rounded ${step === 2 ? 'bg-[#3d362c]' : 'bg-[#e3ddd6]'}`}
-						/>
-					</span>
+				<div className="mb-6 flex items-center justify-between">
+					<div className="flex items-center gap-4 text-xs font-semibold tracking-wide text-strong-text">
+						STEP {step} OF 2
+						<span className="flex gap-1">
+							<span className="h-1 w-20 rounded bg-dark-button-bg" />
+							<span
+								className={`h-1 w-20 rounded ${step === 2 ? 'bg-dark-button-bg' : 'bg-card-border'}`}
+							/>
+						</span>
+					</div>
+					{setupOpen && (
+						<div className="text-right">
+							<button
+								type="button"
+								onClick={logout}
+								className="text-sm text-subtitle underline"
+							>
+								Log out
+							</button>
+							{logoutError && (
+								<p className="text-xs text-error">
+									{logoutError}
+								</p>
+							)}
+						</div>
+					)}
 				</div>
 
-				<h2 id="skills-title" className="text-3xl text-[#4a4136]">
+				<h2 id="skills-title" className="text-2xl text-strong-text">
 					{teaching
 						? 'What can you teach?'
 						: 'What do you want to learn?'}
 				</h2>
-				<p className="mb-6 mt-2 text-[#6b6154]">
+				<p className="mb-6 mt-2 text-sm text-subtitle">
 					{teaching
 						? 'Add each skill you are happy to share and how good you are at it.'
 						: 'Add the skills you want to pick up.'}
@@ -84,12 +105,12 @@ export default function SkillsModal({ onClose }) {
 				/>
 
 				{error && (
-					<p role="alert" className="mt-3 text-sm text-red-700">
+					<p role="alert" className="mt-3 text-sm text-error">
 						{error}
 					</p>
 				)}
 
-				<h3 className="mb-3 mt-8 text-sm text-[#3d362c]">
+				<h3 className="mb-3 mt-8 text-sm text-strong-text">
 					{teaching
 						? 'Skills you can teach'
 						: 'Skills you want to learn'}{' '}
@@ -97,7 +118,7 @@ export default function SkillsModal({ onClose }) {
 				</h3>
 				<div className="max-h-64 space-y-3 overflow-y-auto">
 					{items.length === 0 && (
-						<p className="text-sm text-[#8a8173]">No skills yet.</p>
+						<p className="text-sm text-subtitle">No skills yet.</p>
 					)}
 					{items.map((s) => (
 						<SkillCard
@@ -115,10 +136,11 @@ export default function SkillsModal({ onClose }) {
 					))}
 				</div>
 
-				<div className="mt-8 flex items-center justify-between border-t border-[#e3ddd6] pt-6">
+				<div className="mt-8 flex items-center justify-between border-t border-card-border pt-6">
 					{step === 2 ? (
 						<button
-							className="underline"
+							type="button"
+							className="text-strong-text underline"
 							onClick={() => setStep(1)}
 						>
 							Back
@@ -128,21 +150,22 @@ export default function SkillsModal({ onClose }) {
 					)}
 					{teaching ? (
 						<button
+							type="button"
 							disabled={profile.teachSkills.length === 0}
 							onClick={() => setStep(2)}
-							className="rounded-full bg-[#4a4136] px-8 py-3 text-white shadow disabled:opacity-40"
+							className="rounded-full bg-dark-button-bg px-8 py-3 text-dark-button-text disabled:opacity-40"
 						>
 							Continue
 						</button>
 					) : (
-						onClose && (
-							<button
-								onClick={onClose}
-								className="rounded-full bg-[#4a4136] px-8 py-3 text-white shadow"
-							>
-								Done
-							</button>
-						)
+						<button
+							type="button"
+							disabled={missingSkills}
+							onClick={setupOpen ? finishSetup : onClose}
+							className="rounded-full bg-dark-button-bg px-8 py-3 text-dark-button-text disabled:opacity-40"
+						>
+							{setupOpen ? 'Finish setup' : 'Done'}
+						</button>
 					)}
 				</div>
 			</div>
