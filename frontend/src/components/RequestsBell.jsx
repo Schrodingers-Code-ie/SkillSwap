@@ -121,7 +121,9 @@ export default function RequestsBell() {
 									<Card className="w-full">
 										<div className="flex items-center gap-3">
 											<div className="size-10 shrink-0 rounded-full bg-dark-button-bg text-dark-button-text flex items-center justify-center text-sm font-g-medium">
-												{initialOf(request.senderUsername)}
+												{initialOf(
+													request.senderUsername,
+												)}
 											</div>
 											<p className="text-main-content">
 												<span className="text-title font-g-medium">
