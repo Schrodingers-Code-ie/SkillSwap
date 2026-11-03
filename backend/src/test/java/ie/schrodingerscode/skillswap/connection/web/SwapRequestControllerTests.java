@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ import ie.schrodingerscode.skillswap.connection.domain.exception.NotRequestSende
 import ie.schrodingerscode.skillswap.connection.domain.exception.ReceiverNotFoundException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.RequestNotFoundException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.SelfRequestException;
+import ie.schrodingerscode.skillswap.profile.application.DisplayNames;
 
 /**
  * Web layer tests with the application service mocked, as in STRUCTURE.md.
@@ -51,6 +53,10 @@ class SwapRequestControllerTests {
     //fake logged-in user, each test says who is logged in (or that nobody is)
     @MockitoBean
     private CurrentUser currentUser;
+
+    //fake display name lookup, unknown users are left out of the map (the JSON then has null)
+    @MockitoBean
+    private DisplayNames displayNames;
 
     private void loggedInAs(long userId) {
         when(currentUser.getId()).thenReturn(userId);
@@ -224,5 +230,31 @@ class SwapRequestControllerTests {
         mockMvc.perform(get("/api/connections"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].userId").value(1));
+    }
+
+    @Test
+    void requestsShowTheDisplayNames() throws Exception {
+        when(service.pendingRequests(50L)).thenReturn(List.of(savedRequest(2, 52, 50)));
+        when(displayNames.displayNamesOf(List.of(52L, 50L))).thenReturn(Map.of(52L, "Bea Brown", 50L, "Ann Smith"));
+
+        loggedInAs(50);
+        mockMvc.perform(get("/api/requests"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.incoming[0].senderDisplayName").value("Bea Brown"))
+                .andExpect(jsonPath("$.incoming[0].receiverDisplayName").value("Ann Smith"));
+    }
+
+    @Test
+    void connectionsShowTheOtherUsersName() throws Exception {
+        SwapRequest accepted = savedRequest(5, 1, 2);
+        accepted.accept(2);
+        when(service.connections(1L)).thenReturn(List.of(accepted));
+        when(displayNames.displayNamesOf(List.of(2L))).thenReturn(Map.of(2L, "Bea Brown"));
+
+        loggedInAs(1);
+        mockMvc.perform(get("/api/connections"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].userId").value(2))
+                .andExpect(jsonPath("$[0].displayName").value("Bea Brown"));
     }
 }

@@ -8,6 +8,8 @@ import ie.schrodingerscode.skillswap.profile.domain.Profile;
 import ie.schrodingerscode.skillswap.profile.domain.ProfileRepository;
 import ie.schrodingerscode.skillswap.profile.domain.TeachSkill;
 import ie.schrodingerscode.skillswap.skill.domain.SkillRepository;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,5 +93,17 @@ class ProfilePersistenceTests {
     void skillCatalogueComesFromTheDatabase() {
         assertThat(skills.findAll()).hasSize(25);
         assertThat(skills.findById(1)).get().extracting("name").isEqualTo("Guitar");
+    }
+
+    @Test
+    void displayNamesOfLoadsOnlyExistingProfiles() {
+        long ann = createUser();
+        long bea = createUser();
+        profiles.save(new Profile(ann, "Ann Smith", null));
+        profiles.save(new Profile(bea, "Bea Brown", null));
+
+        Map<Long, String> names = profiles.displayNamesOf(List.of(ann, bea, 999_999L));
+
+        assertThat(names).isEqualTo(Map.of(ann, "Ann Smith", bea, "Bea Brown"));
     }
 }
