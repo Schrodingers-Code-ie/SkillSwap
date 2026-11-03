@@ -5,7 +5,10 @@ import ie.schrodingerscode.skillswap.profile.domain.ProfileRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 class JpaProfileRepository implements ProfileRepository {
@@ -29,5 +32,15 @@ class JpaProfileRepository implements ProfileRepository {
                 .orElseGet(() -> new ProfileEntity(profile.getUserId()));
         entity.updateFrom(profile);
         jpa.save(entity);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Map<Long, String> displayNamesOf(Collection<Long> userIds) {
+        if (userIds.isEmpty()) {
+            return Map.of();
+        }
+        return jpa.findNames(userIds).stream()
+                .collect(Collectors.toMap(row -> (Long) row[0], row -> (String) row[1]));
     }
 }

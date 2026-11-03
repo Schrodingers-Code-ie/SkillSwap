@@ -3,7 +3,7 @@ import { useLoaderData } from 'react-router';
 import Card from '../components/ui/Card';
 
 // Connections come from friendsLoader in router/loaders.jsx.
-// Each friend comes with their username ("User 5" only if it's missing).
+// Each friend comes with their display name ("User 5" only if it's missing).
 // Layout follows the Search page in Figma: 50px from the left like the logo, 660px cards.
 export default function Friends() {
 	const friends = useLoaderData();
@@ -23,7 +23,7 @@ export default function Friends() {
 						<li key={friend.userId}>
 							<FriendCard
 								userId={friend.userId}
-								username={friend.username}
+								name={friend.displayName}
 							/>
 						</li>
 					))}
@@ -34,14 +34,14 @@ export default function Friends() {
 }
 
 // Same style as the match cards on the Search page in Figma
-function FriendCard({ userId, username }) {
+function FriendCard({ userId, name }) {
 	return (
 		<Card className="w-full flex items-center gap-4">
 			<div className="size-[50px] shrink-0 rounded-full bg-dark-button-bg text-dark-button-text flex items-center justify-center font-g-medium">
-				{username?.[0]?.toUpperCase() ?? '?'}
+				{name?.[0]?.toUpperCase() ?? '?'}
 			</div>
 			<span className="text-title font-g-medium">
-				{username ?? `User ${userId}`}
+				{name ?? `User ${userId}`}
 			</span>
 		</Card>
 	);

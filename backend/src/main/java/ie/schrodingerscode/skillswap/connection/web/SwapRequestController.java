@@ -1,6 +1,8 @@
 package ie.schrodingerscode.skillswap.connection.web;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,13 +15,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import ie.schrodingerscode.skillswap.auth.CurrentUser;
-import ie.schrodingerscode.skillswap.auth.application.UserNames;
 import ie.schrodingerscode.skillswap.connection.application.SwapRequestService;
 import ie.schrodingerscode.skillswap.connection.domain.SwapRequest;
 import ie.schrodingerscode.skillswap.connection.web.dto.ConnectionResponse;
 import ie.schrodingerscode.skillswap.connection.web.dto.PendingRequestsResponse;
 import ie.schrodingerscode.skillswap.connection.web.dto.SendRequestBody;
 import ie.schrodingerscode.skillswap.connection.web.dto.SwapRequestResponse;
+import ie.schrodingerscode.skillswap.profile.application.DisplayNames;
 import jakarta.validation.Valid;
 
 /**
@@ -32,21 +34,29 @@ public class SwapRequestController {
 
     private final SwapRequestService service;
     private final CurrentUser currentUser;
-    private final UserNames userNames;
+    private final DisplayNames displayNames;
 
-    public SwapRequestController(SwapRequestService service, CurrentUser currentUser, UserNames userNames) {
+    public SwapRequestController(SwapRequestService service, CurrentUser currentUser, DisplayNames displayNames) {
         this.service = service;
         this.currentUser = currentUser;
-        this.userNames = userNames;
+        this.displayNames = displayNames;
     }
 
-    //turns a request into JSON, with both usernames looked up in auth
+    //loads the display names of everyone in these requests with one query
+    private Map<Long, String> namesFor(List<SwapRequest> requests) {
+        return displayNames.displayNamesOf(requests.stream()
+                .flatMap(r -> Stream.of(r.getSenderId(), r.getReceiverId()))
+                .distinct()
+                .toList());
+    }
+
+    //turns a request into JSON, with both display names taken from the names map
+    private static SwapRequestResponse toResponse(SwapRequest request, Map<Long, String> names) {
+        return SwapRequestResponse.from(request, names.get(request.getSenderId()), names.get(request.getReceiverId()));
+    }
+
     private SwapRequestResponse toResponse(SwapRequest request) {
-        return SwapRequestResponse.from(request, username(request.getSenderId()), username(request.getReceiverId()));
-    }
-
-    private String username(long userId) {
-        return userNames.usernameOf(userId).orElse(null);
+        return toResponse(request, namesFor(List.of(request)));
     }
 
     @PostMapping("/requests")
@@ -78,14 +88,15 @@ public class SwapRequestController {
     public PendingRequestsResponse pending() {
         long me = currentUser.getId();
         List<SwapRequest> pending = service.pendingRequests(me);
+        Map<Long, String> names = namesFor(pending);
 
         List<SwapRequestResponse> incoming = pending.stream()
                 .filter(r -> r.getReceiverId() == me)
-                .map(this::toResponse)
+                .map(r -> toResponse(r, names))
                 .toList();
         List<SwapRequestResponse> outgoing = pending.stream()
                 .filter(r -> r.getSenderId() == me)
-                .map(this::toResponse)
+                .map(r -> toResponse(r, names))
                 .toList();
 
         return new PendingRequestsResponse(incoming, outgoing);
@@ -94,8 +105,12 @@ public class SwapRequestController {
     @GetMapping("/connections")
     public List<ConnectionResponse> connections() {
         long me = currentUser.getId();
-        return service.connections(me).stream()
-                .map(r -> new ConnectionResponse(r.otherUser(me), username(r.otherUser(me))))
+        List<Long> friendIds = service.connections(me).stream()
+                .map(r -> r.otherUser(me))
+                .toList();
+        Map<Long, String> names = displayNames.displayNamesOf(friendIds);
+        return friendIds.stream()
+                .map(id -> new ConnectionResponse(id, names.get(id)))
                 .toList();
     }
 }

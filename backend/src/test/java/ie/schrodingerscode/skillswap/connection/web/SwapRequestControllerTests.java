@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import ie.schrodingerscode.skillswap.auth.CurrentUser;
-import ie.schrodingerscode.skillswap.auth.application.UserNames;
 import ie.schrodingerscode.skillswap.common.exception.UnauthorizedException;
 import ie.schrodingerscode.skillswap.connection.application.SwapRequestService;
 import ie.schrodingerscode.skillswap.connection.domain.RequestStatus;
@@ -34,6 +33,7 @@ import ie.schrodingerscode.skillswap.connection.domain.exception.NotRequestSende
 import ie.schrodingerscode.skillswap.connection.domain.exception.ReceiverNotFoundException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.RequestNotFoundException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.SelfRequestException;
+import ie.schrodingerscode.skillswap.profile.application.DisplayNames;
 
 /**
  * Web layer tests with the application service mocked, as in STRUCTURE.md.
@@ -54,9 +54,9 @@ class SwapRequestControllerTests {
     @MockitoBean
     private CurrentUser currentUser;
 
-    //fake username lookup, unknown users give empty (the JSON then has null)
+    //fake display name lookup, unknown users are left out of the map (the JSON then has null)
     @MockitoBean
-    private UserNames userNames;
+    private DisplayNames displayNames;
 
     private void loggedInAs(long userId) {
         when(currentUser.getId()).thenReturn(userId);
@@ -233,16 +233,15 @@ class SwapRequestControllerTests {
     }
 
     @Test
-    void requestsShowTheUsernames() throws Exception {
+    void requestsShowTheDisplayNames() throws Exception {
         when(service.pendingRequests(50L)).thenReturn(List.of(savedRequest(2, 52, 50)));
-        when(userNames.usernameOf(52L)).thenReturn(Optional.of("bea"));
-        when(userNames.usernameOf(50L)).thenReturn(Optional.of("ann"));
+        when(displayNames.displayNamesOf(List.of(52L, 50L))).thenReturn(Map.of(52L, "Bea Brown", 50L, "Ann Smith"));
 
         loggedInAs(50);
         mockMvc.perform(get("/api/requests"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.incoming[0].senderUsername").value("bea"))
-                .andExpect(jsonPath("$.incoming[0].receiverUsername").value("ann"));
+                .andExpect(jsonPath("$.incoming[0].senderDisplayName").value("Bea Brown"))
+                .andExpect(jsonPath("$.incoming[0].receiverDisplayName").value("Ann Smith"));
     }
 
     @Test
@@ -250,12 +249,12 @@ class SwapRequestControllerTests {
         SwapRequest accepted = savedRequest(5, 1, 2);
         accepted.accept(2);
         when(service.connections(1L)).thenReturn(List.of(accepted));
-        when(userNames.usernameOf(2L)).thenReturn(Optional.of("bea"));
+        when(displayNames.displayNamesOf(List.of(2L))).thenReturn(Map.of(2L, "Bea Brown"));
 
         loggedInAs(1);
         mockMvc.perform(get("/api/connections"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].userId").value(2))
-                .andExpect(jsonPath("$[0].username").value("bea"));
+                .andExpect(jsonPath("$[0].displayName").value("Bea Brown"));
     }
 }
