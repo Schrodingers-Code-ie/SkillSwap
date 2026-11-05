@@ -1,5 +1,7 @@
-import Dropdown from '../components/ui/Dropdown.jsx';
-import MatchCard from '../components/MatchCard.jsx';
+import Dropdown from '../components/search/Dropdown.jsx';
+import MatchCard from '../components/search/MatchCard.jsx';
+import FilterCheckbox from '../components/search/FilterCheckbox.jsx';
+
 import { useEffect, useState } from 'react';
 import { api } from '../api/client.js';
 import { useRouteLoaderData } from 'react-router';
@@ -40,9 +42,37 @@ export default function Matches() {
 
 	return (
 		<div className="search-page-container px-5 min-[701px]:px-12 py-4 min-[701px]:py-8 flex justify-center">
-			{/* <div className="filters-section max-w-xl w-full text-center">
-				FILTERS
-			</div> */}
+			<div className="filters-section max-w-xs w-full text-center text-left">
+				<h1 className="text-title text-[28px] min-[701px]:text-2xl font-main font-g-semibold">
+					FILTERS
+				</h1>
+				<div className="filter-for-teach pt-5">
+					<p className="text-subtitle text-base font-main font-g-semibold pb-1">
+						I WANT TO LEARN
+					</p>
+					<p className="text-subtitle text-base font-main font-g-regular">
+						Only show people who teach the ticked skills.
+					</p>
+					<div className="checkboxes select-none mt-6">
+						<FilterCheckbox label="Cooking" />
+						<FilterCheckbox label="Baking" />
+						<FilterCheckbox label="Java" />
+					</div>
+				</div>
+				<div className="divider border-t-1 w-full my-7 border-border"></div>
+				<div className="filter-for-learn">
+					<p className="text-subtitle text-base font-main font-g-semibold pb-1">
+						I CAN TEACH
+					</p>
+					<p className="text-subtitle text-base font-main font-g-regular">
+						People who want these rank higher.
+					</p>
+					<div className="checkboxes select-none mt-6">
+						<FilterCheckbox label="Web Design" />
+						<FilterCheckbox label="Cocktail Making" />
+					</div>
+				</div>
+			</div>
 			<div className="suggestions-section w-full min-[701px]:mx-10 max-w-3xl">
 				<div className="header mb-4 min-[701px]:flex items-start justify-between min-[701px]:gap-6">
 					<div className="titles">
@@ -98,9 +128,9 @@ export default function Matches() {
 					)}
 				</div>
 			</div>
-			{/* <div className="side-profile-section max-w-xl w-full text-center">
+			<div className="side-profile-section max-w-lg w-full text-center border">
 				SIDE PROFILE
-			</div> */}
+			</div>
 		</div>
 	);
 }
