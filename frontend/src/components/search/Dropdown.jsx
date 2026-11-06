@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import arrow from '../../assets/dropdown_arrow.svg';
 
 const OPTIONS = ['Best match', 'Worst match'];
@@ -6,6 +6,23 @@ const OPTIONS = ['Best match', 'Worst match'];
 export default function Dropdown({ setSortingOption }) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [selected, setSelected] = useState(OPTIONS[0]); // Displaying currently selected sort option
+	const dropdownRef = useRef(null);
+
+	useEffect(() => {
+		if (!isOpen) return;
+		function handleClick(e) {
+			if (!dropdownRef.current.contains(e.target)) setIsOpen(false);
+		}
+		function handleKey(e) {
+			if (e.key === 'Escape') setIsOpen(false);
+		}
+		document.addEventListener('mousedown', handleClick);
+		document.addEventListener('keydown', handleKey);
+		return () => {
+			document.removeEventListener('mousedown', handleClick);
+			document.removeEventListener('keydown', handleKey);
+		};
+	}, [isOpen]);
 
 	return (
 		<div className="dropdown relative">
@@ -24,7 +41,10 @@ export default function Dropdown({ setSortingOption }) {
 			</button>
 
 			{isOpen && (
-				<div className="absolute sm:right-0 top-full mt-4 min-w-40 overflow-hidden rounded-input border border-container-border bg-card-bg py-1 shadow-avatar">
+				<div
+					ref={dropdownRef}
+					className="absolute sm:right-0 top-full mt-4 min-w-40 overflow-hidden rounded-input border border-container-border bg-card-bg py-1 shadow-avatar"
+				>
 					{OPTIONS.map((option) => (
 						/* Make each option a button we can click */
 						<button
