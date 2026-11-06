@@ -1,6 +1,8 @@
-import Dropdown from '../components/ui/Dropdown.jsx';
-import MatchCard from '../components/MatchCard.jsx';
-import { useEffect, useState } from 'react';
+import Dropdown from '../components/search/Dropdown.jsx';
+import MatchCard from '../components/search/MatchCard.jsx';
+import Filters from '../components/search/Filters.jsx';
+
+import { useEffect, useState, useMemo } from 'react';
 import { api } from '../api/client.js';
 import { useRouteLoaderData } from 'react-router';
 import { Link } from 'react-router';
@@ -10,10 +12,18 @@ export default function Matches() {
 	const [error, setError] = useState(null);
 	const [hasSkills, setHasSkills] = useState(null);
 
+	const [learnSkills, setLearnSkills] = useState([]);
+	const [teachSkills, setTeachSkills] = useState([]);
+	const [selectedLearn, setSelectedLearn] = useState(new Set());
+	const [selectedTeach, setSelectedTeach] = useState(new Set());
+
+	const [sortingOption, setSortingOption] = useState('Best match'); // Default sorting option
+
 	const user = useRouteLoaderData('protected');
 	const userId = user.id;
 
 	useEffect(() => {
+		// useEffect is used for side effects outside of React, e.g. fetching data
 		let ignore = false;
 
 		api.get(`/users/${userId}/profile`)
@@ -23,8 +33,11 @@ export default function Matches() {
 					profile.teachSkills.length != 0;
 				if (ignore) return;
 				setHasSkills(foundSkills);
+				setLearnSkills(profile.learnSkills);
+				setTeachSkills(profile.teachSkills);
 
 				if (!foundSkills) return; // Nothing to match, so skip the request for matches
+
 				return api.get('/matches').then((data) => {
 					if (!ignore) setMatches(data);
 				});
@@ -38,11 +51,57 @@ export default function Matches() {
 		};
 	}, [userId]); // Fetching the matches once when the component loads. LATER: refresh when filters/sorting are changed
 
+	function clearFilters() {
+		setSelectedLearn(new Set());
+		setSelectedTeach(new Set());
+	}
+
+	const visibleMatches = useMemo(() => {
+		// useMemo is the same as useEffect, but used for renders with existing state or props
+		let result = matches;
+
+		if (selectedLearn.size > 0) {
+			result = result.filter((match) =>
+				match.skillsTheyCanTeachMe.some((name) =>
+					selectedLearn.has(name),
+				),
+			);
+		}
+
+		if (selectedTeach.size > 0) {
+			result = result.filter((match) =>
+				match.skillsICanTeachThem.some((name) =>
+					selectedTeach.has(name),
+				),
+			);
+		}
+		console.log('ran again');
+
+		if (sortingOption == 'Best match') {
+			result = [...result].sort(
+				(a, b) => b.matchingScore - a.matchingScore,
+			);
+		} else {
+			result = [...result].sort(
+				(a, b) => a.matchingScore - b.matchingScore,
+			);
+		}
+
+		return result;
+	}, [matches, selectedLearn, selectedTeach, sortingOption]);
+
 	return (
 		<div className="search-page-container px-5 min-[701px]:px-12 py-4 min-[701px]:py-8 flex justify-center">
-			{/* <div className="filters-section max-w-xl w-full text-center">
-				FILTERS
-			</div> */}
+			<Filters
+				learnSkills={learnSkills}
+				teachSkills={teachSkills}
+				selectedLearn={selectedLearn}
+				selectedTeach={selectedTeach}
+				setSelectedLearn={setSelectedLearn}
+				setSelectedTeach={setSelectedTeach}
+				clearFilters={clearFilters}
+			/>
+
 			<div className="suggestions-section w-full min-[701px]:mx-10 max-w-3xl">
 				<div className="header mb-4 min-[701px]:flex items-start justify-between min-[701px]:gap-6">
 					<div className="titles">
@@ -50,16 +109,16 @@ export default function Matches() {
 							Suggested matches
 						</h1>
 						<p className="text-subtitle text-base font-main font-g-regular py-3">
-							{matches.length}{' '}
-							{matches.length == 1 ? 'person' : 'people'} you can
-							swap skills with
+							{visibleMatches.length}{' '}
+							{visibleMatches.length == 1 ? 'person' : 'people'}{' '}
+							you can swap skills with
 						</p>
 					</div>
 					<div className="w-60 min-[701px]:w-auto sort-dropdown min-[701px]:mt-6 flex shrink-0 items-center gap-4 rounded-full border border-container-border bg-card-bg px-5 py-3 text-main-content font-main">
 						<span className="font-main font-g-medium pr-4">
 							Sort
 						</span>
-						<Dropdown />
+						<Dropdown setSortingOption={setSortingOption} />
 					</div>
 				</div>
 
@@ -84,12 +143,23 @@ export default function Matches() {
 						</p>
 					)}
 
-					{!error && hasSkills && matches.length === 0 ? (
+					{!error &&
+					hasSkills &&
+					visibleMatches.length === 0 &&
+					(selectedLearn.size != 0 || selectedTeach.size != 0) ? (
 						<div className="text-subtitle text-base font-main font-g-regular">
-							No matching suggestions for you.
+							Seems like there are no suggestions for the filters
+							you chose.{' '}
+							<u
+								className="cursor-pointer"
+								onClick={() => clearFilters()}
+							>
+								Clear the filters
+							</u>{' '}
+							or change them.
 						</div>
 					) : (
-						matches.map((match) => (
+						visibleMatches.map((match) => (
 							<MatchCard
 								key={match.matchPersonId}
 								match={match}
@@ -98,7 +168,7 @@ export default function Matches() {
 					)}
 				</div>
 			</div>
-			{/* <div className="side-profile-section max-w-xl w-full text-center">
+			{/* <div className="side-profile-section max-w-lg w-full text-center border">
 				SIDE PROFILE
 			</div> */}
 		</div>

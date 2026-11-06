@@ -1,9 +1,9 @@
-import SkillBubble from './ui/SkillBubble.jsx';
-import { api } from '../api/client.js';
+import SkillBubble from '../ui/SkillBubble.jsx';
+import { api } from '../../api/client.js';
 import { useEffect, useState } from 'react';
-import plus_icon from '../assets/plus_icon.svg';
-import tick_icon from '../assets/tick_icon.svg';
-import cross_icon from '../assets/cross_icon.svg';
+import plus_icon from '../../assets/plus_icon.svg';
+import tick_icon from '../../assets/tick_icon.svg';
+import cross_icon from '../../assets/cross_icon.svg';
 
 export default function MatchCard({ match }) {
 	// 3 states of the same buttom to show different text: idle = "Add", sent = "Sent", cancel = "Cancel"
