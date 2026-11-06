@@ -17,6 +17,8 @@ export default function Matches() {
 	const [selectedLearn, setSelectedLearn] = useState(new Set());
 	const [selectedTeach, setSelectedTeach] = useState(new Set());
 
+	const [sortingOption, setSortingOption] = useState('Best match'); // Default sorting option
+
 	const user = useRouteLoaderData('protected');
 	const userId = user.id;
 
@@ -73,10 +75,20 @@ export default function Matches() {
 				),
 			);
 		}
+		console.log('ran again');
 
-		result = [...result].sort((a, b) => b.matchingScore - a.matchingScore);
+		if (sortingOption == 'Best match') {
+			result = [...result].sort(
+				(a, b) => b.matchingScore - a.matchingScore,
+			);
+		} else {
+			result = [...result].sort(
+				(a, b) => a.matchingScore - b.matchingScore,
+			);
+		}
+
 		return result;
-	}, [matches, selectedLearn, selectedTeach]);
+	}, [matches, selectedLearn, selectedTeach, sortingOption]);
 
 	return (
 		<div className="search-page-container px-5 min-[701px]:px-12 py-4 min-[701px]:py-8 flex justify-center">
@@ -106,7 +118,7 @@ export default function Matches() {
 						<span className="font-main font-g-medium pr-4">
 							Sort
 						</span>
-						<Dropdown />
+						<Dropdown setSortingOption={setSortingOption} />
 					</div>
 				</div>
 

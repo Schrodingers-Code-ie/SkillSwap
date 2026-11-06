@@ -3,7 +3,7 @@ import arrow from '../../assets/dropdown_arrow.svg';
 
 const OPTIONS = ['Best match', 'Worst match'];
 
-export default function Dropdown() {
+export default function Dropdown({ setSortingOption }) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [selected, setSelected] = useState(OPTIONS[0]); // Displaying currently selected sort option
 
@@ -33,6 +33,7 @@ export default function Dropdown() {
 							onClick={() => {
 								setSelected(option);
 								setIsOpen(false);
+								setSortingOption(option);
 							}}
 							className="block w-full cursor-pointer px-4 py-2 text-left text-main-content hover:bg-nav-bg"
 						>
