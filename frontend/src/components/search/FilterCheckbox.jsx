@@ -1,12 +1,14 @@
 import checkbox_tick from '../../assets/checkbox_tick.svg';
 
-export default function FilterCheckbox({ label }) {
+export default function FilterCheckbox({ label, checked, onChange }) {
 	return (
 		<label className="skill-checkbox flex items-center gap-3 my-4">
 			<span className="relative flex h-5 w-5 shrink-0">
 				<input
 					type="checkbox"
 					value=""
+					checked={checked}
+					onChange={onChange}
 					className="peer h-5 w-5 appearance-none rounded border-1 border-checkbox-border bg-white transition-colors checked:bg-page-bg"
 				/>
 				<img

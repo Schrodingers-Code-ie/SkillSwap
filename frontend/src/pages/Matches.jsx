@@ -2,7 +2,7 @@ import Dropdown from '../components/search/Dropdown.jsx';
 import MatchCard from '../components/search/MatchCard.jsx';
 import FilterCheckbox from '../components/search/FilterCheckbox.jsx';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { api } from '../api/client.js';
 import { useRouteLoaderData } from 'react-router';
 import { Link } from 'react-router';
@@ -12,10 +12,16 @@ export default function Matches() {
 	const [error, setError] = useState(null);
 	const [hasSkills, setHasSkills] = useState(null);
 
+	const [learnSkills, setLearnSkills] = useState([]);
+	const [teachSkills, setTeachSkills] = useState([]);
+	const [selectedLearn, setSelectedLearn] = useState(new Set());
+	const [selectedTeach, setSelectedTeach] = useState(new Set());
+
 	const user = useRouteLoaderData('protected');
 	const userId = user.id;
 
 	useEffect(() => {
+		// useEffect is used for side effects outside of React, e.g. fetching data
 		let ignore = false;
 
 		api.get(`/users/${userId}/profile`)
@@ -25,8 +31,11 @@ export default function Matches() {
 					profile.teachSkills.length != 0;
 				if (ignore) return;
 				setHasSkills(foundSkills);
+				setLearnSkills(profile.learnSkills);
+				setTeachSkills(profile.teachSkills);
 
 				if (!foundSkills) return; // Nothing to match, so skip the request for matches
+
 				return api.get('/matches').then((data) => {
 					if (!ignore) setMatches(data);
 				});
@@ -40,12 +49,59 @@ export default function Matches() {
 		};
 	}, [userId]); // Fetching the matches once when the component loads. LATER: refresh when filters/sorting are changed
 
+	function toggleSkill(setSelected, skillName) {
+		setSelected((prev) => {
+			const next = new Set(prev); // Keep the old info from the set
+			if (next.has(skillName))
+				next.delete(skillName); // Remove the skill if it was unchecked
+			else next.add(skillName); // Add a skill, because it was clicked for the first time
+			return next;
+		});
+	}
+
+	function clearFilters() {
+		setSelectedLearn(new Set());
+		setSelectedTeach(new Set());
+	}
+
+	const visibleMatches = useMemo(() => {
+		// useMemo is the same as useEffect, but used for renders with existing state or props
+		let result = matches;
+
+		if (selectedLearn.size > 0) {
+			result = result.filter((match) =>
+				match.skillsTheyCanTeachMe.some((name) =>
+					selectedLearn.has(name),
+				),
+			);
+		}
+
+		if (selectedTeach.size > 0) {
+			result = result.filter((match) =>
+				match.skillsICanTeachThem.some((name) =>
+					selectedTeach.has(name),
+				),
+			);
+		}
+
+		result = [...result].sort((a, b) => b.matchingScore - a.matchingScore);
+		return result;
+	}, [matches, selectedLearn, selectedTeach]);
+
 	return (
 		<div className="search-page-container px-5 min-[701px]:px-12 py-4 min-[701px]:py-8 flex justify-center">
 			<div className="filters-section max-w-xs w-full text-center text-left">
-				<h1 className="text-title text-[28px] min-[701px]:text-2xl font-main font-g-semibold">
-					FILTERS
-				</h1>
+				<div className="header flex justify-between items-baseline">
+					<h1 className="text-title text-[28px] min-[701px]:text-2xl font-main font-g-semibold">
+						FILTERS
+					</h1>
+					<u
+						className="cursor-pointer text-subtitle text-sm font-main font-g-regular"
+						onClick={() => clearFilters()}
+					>
+						Clear the filters
+					</u>
+				</div>
 				<div className="filter-for-teach pt-5">
 					<p className="text-subtitle text-base font-main font-g-semibold pb-1">
 						I WANT TO LEARN
@@ -54,9 +110,21 @@ export default function Matches() {
 						Only show people who teach the ticked skills.
 					</p>
 					<div className="checkboxes select-none mt-6">
-						<FilterCheckbox label="Cooking" />
-						<FilterCheckbox label="Baking" />
-						<FilterCheckbox label="Java" />
+						{learnSkills.map((skill) => (
+							<FilterCheckbox
+								key={skill.skillId}
+								label={skill.name}
+								checked={selectedLearn.has(skill.name)}
+								onChange={() =>
+									toggleSkill(setSelectedLearn, skill.name)
+								}
+							/>
+						))}
+						{learnSkills.length == 0 && (
+							<p className="text-subtitle text-small font-main font-g-regular">
+								Nothing in your learn skills section.
+							</p>
+						)}
 					</div>
 				</div>
 				<div className="divider border-t-1 w-full my-7 border-border"></div>
@@ -68,8 +136,21 @@ export default function Matches() {
 						People who want these rank higher.
 					</p>
 					<div className="checkboxes select-none mt-6">
-						<FilterCheckbox label="Web Design" />
-						<FilterCheckbox label="Cocktail Making" />
+						{teachSkills.map((skill) => (
+							<FilterCheckbox
+								key={skill.skillId}
+								label={skill.name}
+								checked={selectedTeach.has(skill.name)}
+								onChange={() =>
+									toggleSkill(setSelectedTeach, skill.name)
+								}
+							/>
+						))}
+						{teachSkills.length == 0 && (
+							<p className="text-subtitle text-small font-main font-g-regular">
+								Nothing in your teach skills section.
+							</p>
+						)}
 					</div>
 				</div>
 			</div>
@@ -80,9 +161,9 @@ export default function Matches() {
 							Suggested matches
 						</h1>
 						<p className="text-subtitle text-base font-main font-g-regular py-3">
-							{matches.length}{' '}
-							{matches.length == 1 ? 'person' : 'people'} you can
-							swap skills with
+							{visibleMatches.length}{' '}
+							{visibleMatches.length == 1 ? 'person' : 'people'}{' '}
+							you can swap skills with
 						</p>
 					</div>
 					<div className="w-60 min-[701px]:w-auto sort-dropdown min-[701px]:mt-6 flex shrink-0 items-center gap-4 rounded-full border border-container-border bg-card-bg px-5 py-3 text-main-content font-main">
@@ -114,12 +195,23 @@ export default function Matches() {
 						</p>
 					)}
 
-					{!error && hasSkills && matches.length === 0 ? (
+					{!error &&
+					hasSkills &&
+					visibleMatches.length === 0 &&
+					(selectedLearn.size != 0 || selectedTeach.size != 0) ? (
 						<div className="text-subtitle text-base font-main font-g-regular">
-							No matching suggestions for you.
+							Seems like there are no suggestions for the filters
+							you chose.{' '}
+							<u
+								className="cursor-pointer"
+								onClick={() => clearFilters()}
+							>
+								Clear the filters
+							</u>{' '}
+							or change them.
 						</div>
 					) : (
-						matches.map((match) => (
+						visibleMatches.map((match) => (
 							<MatchCard
 								key={match.matchPersonId}
 								match={match}
@@ -128,9 +220,9 @@ export default function Matches() {
 					)}
 				</div>
 			</div>
-			<div className="side-profile-section max-w-lg w-full text-center border">
+			{/* <div className="side-profile-section max-w-lg w-full text-center border">
 				SIDE PROFILE
-			</div>
+			</div> */}
 		</div>
 	);
 }
