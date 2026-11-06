@@ -1,6 +1,6 @@
 import Dropdown from '../components/search/Dropdown.jsx';
 import MatchCard from '../components/search/MatchCard.jsx';
-import FilterCheckbox from '../components/search/FilterCheckbox.jsx';
+import Filters from '../components/search/Filters.jsx';
 
 import { useEffect, useState, useMemo } from 'react';
 import { api } from '../api/client.js';
@@ -49,16 +49,6 @@ export default function Matches() {
 		};
 	}, [userId]); // Fetching the matches once when the component loads. LATER: refresh when filters/sorting are changed
 
-	function toggleSkill(setSelected, skillName) {
-		setSelected((prev) => {
-			const next = new Set(prev); // Keep the old info from the set
-			if (next.has(skillName))
-				next.delete(skillName); // Remove the skill if it was unchecked
-			else next.add(skillName); // Add a skill, because it was clicked for the first time
-			return next;
-		});
-	}
-
 	function clearFilters() {
 		setSelectedLearn(new Set());
 		setSelectedTeach(new Set());
@@ -90,70 +80,16 @@ export default function Matches() {
 
 	return (
 		<div className="search-page-container px-5 min-[701px]:px-12 py-4 min-[701px]:py-8 flex justify-center">
-			<div className="filters-section max-w-xs w-full text-center text-left">
-				<div className="header flex justify-between items-baseline">
-					<h1 className="text-title text-[28px] min-[701px]:text-2xl font-main font-g-semibold">
-						FILTERS
-					</h1>
-					<u
-						className="cursor-pointer text-subtitle text-sm font-main font-g-regular"
-						onClick={() => clearFilters()}
-					>
-						Clear the filters
-					</u>
-				</div>
-				<div className="filter-for-teach pt-5">
-					<p className="text-subtitle text-base font-main font-g-semibold pb-1">
-						I WANT TO LEARN
-					</p>
-					<p className="text-subtitle text-base font-main font-g-regular">
-						Only show people who teach the ticked skills.
-					</p>
-					<div className="checkboxes select-none mt-6">
-						{learnSkills.map((skill) => (
-							<FilterCheckbox
-								key={skill.skillId}
-								label={skill.name}
-								checked={selectedLearn.has(skill.name)}
-								onChange={() =>
-									toggleSkill(setSelectedLearn, skill.name)
-								}
-							/>
-						))}
-						{learnSkills.length == 0 && (
-							<p className="text-subtitle text-small font-main font-g-regular">
-								Nothing in your learn skills section.
-							</p>
-						)}
-					</div>
-				</div>
-				<div className="divider border-t-1 w-full my-7 border-border"></div>
-				<div className="filter-for-learn">
-					<p className="text-subtitle text-base font-main font-g-semibold pb-1">
-						I CAN TEACH
-					</p>
-					<p className="text-subtitle text-base font-main font-g-regular">
-						People who want these rank higher.
-					</p>
-					<div className="checkboxes select-none mt-6">
-						{teachSkills.map((skill) => (
-							<FilterCheckbox
-								key={skill.skillId}
-								label={skill.name}
-								checked={selectedTeach.has(skill.name)}
-								onChange={() =>
-									toggleSkill(setSelectedTeach, skill.name)
-								}
-							/>
-						))}
-						{teachSkills.length == 0 && (
-							<p className="text-subtitle text-small font-main font-g-regular">
-								Nothing in your teach skills section.
-							</p>
-						)}
-					</div>
-				</div>
-			</div>
+			<Filters
+				learnSkills={learnSkills}
+				teachSkills={teachSkills}
+				selectedLearn={selectedLearn}
+				selectedTeach={selectedTeach}
+				setSelectedLearn={setSelectedLearn}
+				setSelectedTeach={setSelectedTeach}
+				clearFilters={clearFilters}
+			/>
+
 			<div className="suggestions-section w-full min-[701px]:mx-10 max-w-3xl">
 				<div className="header mb-4 min-[701px]:flex items-start justify-between min-[701px]:gap-6">
 					<div className="titles">
