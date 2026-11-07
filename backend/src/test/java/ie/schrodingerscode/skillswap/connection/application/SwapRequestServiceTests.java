@@ -125,4 +125,21 @@ class SwapRequestServiceTests {
         assertThatThrownBy(() -> service.cancel(999, 1))
                 .isInstanceOf(RequestNotFoundException.class);
     }
+
+    @Test
+    void connectionIdsOfReturnsOnlyAcceptedConnectionsWhoeverSent() {
+        SwapRequest iSent = service.send(1, 2);
+        service.accept(iSent.getId(), 2); //1 sent, 2 accepted: connected
+        SwapRequest theySent = service.send(3, 1);
+        service.accept(theySent.getId(), 1); //3 sent, 1 accepted: connected
+        service.send(1, 4); //still pending: not a connection
+
+        assertThat(service.connectionIdsOf(1)).containsExactlyInAnyOrder(2L, 3L);
+        assertThat(service.connectionIdsOf(2)).containsExactly(1L);
+    }
+
+    @Test
+    void connectionIdsOfIsEmptyWithNoConnections() {
+        assertThat(service.connectionIdsOf(1)).isEmpty();
+    }
 }
