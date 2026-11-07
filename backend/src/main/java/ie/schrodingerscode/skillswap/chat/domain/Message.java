@@ -31,4 +31,22 @@ public record Message(Long id, long senderId, long receiverId, MessageText text,
         return new Message(newId, senderId, receiverId, text, sentAt);
     }
 
+    /**
+     * Helper
+     * Returns the id of the other person in this message.
+     * For a message between 1 and 5, otherUser(1) is 5 and otherUser(5) is 1.
+     *
+     * @param me the user asking
+     * @throws IllegalArgumentException if me is neither the sender nor the receiver
+     */
+    public long otherUser(long me) {
+        if (senderId == me) {
+            return receiverId;
+        }
+        if (receiverId == me) {
+            return senderId;
+        }
+        throw new IllegalArgumentException("User " + me + " is not part of this message");
+    }
+
 }

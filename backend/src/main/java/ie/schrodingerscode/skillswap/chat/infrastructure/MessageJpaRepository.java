@@ -15,4 +15,13 @@ public interface MessageJpaRepository extends JpaRepository<MessageEntity, Long>
             """, nativeQuery = true)
 
     List<MessageEntity> findConversation(@Param("a") long a, @Param("b") long b);
+
+    @Query(value = """
+                SELECT DISTINCT ON (LEAST(sender_id, receiver_id), GREATEST(sender_id, receiver_id)) *
+                FROM messages
+                WHERE sender_id = :me OR receiver_id = :me
+                ORDER BY LEAST(sender_id, receiver_id), GREATEST(sender_id, receiver_id), sent_at DESC, id DESC
+            """, nativeQuery = true)
+
+    List<MessageEntity> findLatestPerConversation(@Param("me") long me);
 }

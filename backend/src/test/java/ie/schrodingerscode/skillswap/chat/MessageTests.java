@@ -42,4 +42,19 @@ public class MessageTests {
                 .isInstanceOf(NullPointerException.class);
     }
 
+    /* otherUser gives the other person, whichever side is asking. */
+    @Test
+    void otherUserWorksFromBothSides() {
+        Message message = Message.create(1, 5, new MessageText("Hi"), now);
+        assertThat(message.otherUser(1)).isEqualTo(5);
+        assertThat(message.otherUser(5)).isEqualTo(1);
+    }
+
+    /* Asking as someone outside the message is a mistake, so it fails. */
+    @Test
+    void otherUserRejectsStranger() {
+        Message message = Message.create(1, 5, new MessageText("Hi"), now);
+        assertThatThrownBy(() -> message.otherUser(3)).isInstanceOf(IllegalArgumentException.class);
+    }
+
 }

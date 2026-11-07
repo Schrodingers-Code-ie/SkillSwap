@@ -92,4 +92,34 @@ class JpaMessageRepositoryTests {
         Message saved = save(a, b, "hi", Instant.parse("2026-01-01T10:00:00.123456789Z"));
         assertThat(repo.findConversation(a, b)).containsExactly(saved);
     }
+
+    @Test
+    void latestPerConversationGivesNewestMessageOfEachChat() {
+        save(a, b, "old", t0);
+        Message newestWithB = save(b, a, "newest with b", t0.plusSeconds(20));
+        save(a, b, "middle", t0.plusSeconds(10));
+        save(a, c, "old with c", t0);
+        Message newestWithC = save(c, a, "newest with c", t0.plusSeconds(5));
+
+        assertThat(repo.findLatestPerConversation(a)).containsExactlyInAnyOrder(newestWithB, newestWithC);
+    }
+
+    @Test
+    void latestPerConversationSameTimeTakesHigherId() {
+        save(a, b, "first", t0);
+        Message second = save(b, a, "second", t0);
+        assertThat(repo.findLatestPerConversation(a)).containsExactly(second);
+    }
+
+    @Test
+    void latestPerConversationLeavesOutOtherPeoplesChats() {
+        Message mine = save(a, b, "mine", t0);
+        save(b, c, "not mine", t0.plusSeconds(10));
+        assertThat(repo.findLatestPerConversation(a)).containsExactly(mine);
+    }
+
+    @Test
+    void latestPerConversationWithNoMessagesIsEmpty() {
+        assertThat(repo.findLatestPerConversation(a)).isEmpty();
+    }
 }
