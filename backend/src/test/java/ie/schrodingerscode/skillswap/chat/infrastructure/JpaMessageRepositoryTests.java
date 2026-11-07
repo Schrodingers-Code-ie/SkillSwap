@@ -1,4 +1,4 @@
-package ie.schrodingerscode.skillswap.chat;
+package ie.schrodingerscode.skillswap.chat.infrastructure;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

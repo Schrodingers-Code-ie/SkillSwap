@@ -1,7 +1,4 @@
-package ie.schrodingerscode.skillswap.chat;
-
-import ie.schrodingerscode.skillswap.chat.domain.Message;
-import ie.schrodingerscode.skillswap.chat.domain.MessageText;
+package ie.schrodingerscode.skillswap.chat.domain;
 
 import java.time.Instant;
 

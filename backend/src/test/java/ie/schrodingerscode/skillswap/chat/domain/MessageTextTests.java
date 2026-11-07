@@ -1,10 +1,9 @@
-package ie.schrodingerscode.skillswap.chat;
+package ie.schrodingerscode.skillswap.chat.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.Test;
 
-import ie.schrodingerscode.skillswap.chat.domain.MessageText;
 import ie.schrodingerscode.skillswap.chat.domain.exception.InvalidMessageTextException;
 
 public class MessageTextTests {
