@@ -24,16 +24,6 @@ export default function Matches() {
 	const user = useRouteLoaderData('protected');
 	const userId = user.id;
 
-	// Get all the sent swap requests in the parent to apply correct button state for cards in-between filters
-	useEffect(() => {
-		api.get('/requests').then((requests) => {
-			const outgoingRequests = requests.outgoing;
-			setOutgoing(
-				new Map(outgoingRequests.map((r) => [r.receiverId, r.id])),
-			);
-		});
-	}, []);
-
 	// Same thing happens in the database, but we also keep a local copy to avoid fetching the data for every card
 	function handleRequestChange(personId, requestId) {
 		setOutgoing((prev) => {
@@ -170,6 +160,16 @@ export default function Matches() {
 							{error}
 						</p>
 					)}
+
+					{!error &&
+						hasSkills &&
+						visibleMatches.length === 0 &&
+						selectedLearn.size == 0 &&
+						selectedTeach.size == 0 && (
+							<div className="text-subtitle text-base font-main font-g-regular">
+								No people currently match your skills.
+							</div>
+						)}
 
 					{!error &&
 					hasSkills &&

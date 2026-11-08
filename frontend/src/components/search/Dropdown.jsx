@@ -25,7 +25,7 @@ export default function Dropdown({ setSortingOption }) {
 	}, [isOpen]);
 
 	return (
-		<div className="dropdown relative">
+		<div ref={dropdownRef} className="dropdown relative">
 			<button
 				type="button"
 				onClick={() => setIsOpen(!isOpen)}
@@ -41,10 +41,7 @@ export default function Dropdown({ setSortingOption }) {
 			</button>
 
 			{isOpen && (
-				<div
-					ref={dropdownRef}
-					className="absolute sm:right-0 top-full mt-4 min-w-40 overflow-hidden rounded-input border border-container-border bg-card-bg py-1 shadow-avatar"
-				>
+				<div className="absolute sm:right-0 top-full mt-4 min-w-40 overflow-hidden rounded-input border border-container-border bg-card-bg py-1 shadow-avatar">
 					{OPTIONS.map((option) => (
 						/* Make each option a button we can click */
 						<button
