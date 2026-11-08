@@ -5,11 +5,10 @@ import plus_icon from '../../assets/plus_icon.svg';
 import tick_icon from '../../assets/tick_icon.svg';
 import cross_icon from '../../assets/cross_icon.svg';
 
-export default function MatchCard({ match }) {
+export default function MatchCard({ match, requestId, onRequestChange }) {
 	// 3 states of the same buttom to show different text: idle = "Add", sent = "Sent", cancel = "Cancel"
-	const [status, setStatus] = useState('idle');
+	const [status, setStatus] = useState(requestId ? 'sent' : 'idle');
 	const [busy, setBusy] = useState(false);
-	const [requestId, setRequestId] = useState(null);
 	const [error, setError] = useState(null);
 
 	async function handleButtonClick() {
@@ -27,13 +26,13 @@ export default function MatchCard({ match }) {
 				const createdSwapRequest = await api.post('/requests', {
 					receiverId: match.matchPersonId,
 				});
-				setRequestId(createdSwapRequest.id);
+				onRequestChange(match.matchPersonId, createdSwapRequest.id); // Creates a new entry, see onRequestChange
 				setStatus('sent');
 				setError(null);
 			} else {
 				// Clicked on "Cancel?" so cancel the request
 				await api.delete(`/requests/${requestId}`);
-				setRequestId(null);
+				onRequestChange(match.matchPersonId, null); // Enters a delete block inside onRequestChange
 				setStatus('idle');
 				setError(null);
 			}

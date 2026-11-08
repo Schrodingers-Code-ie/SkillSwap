@@ -19,9 +19,33 @@ export default function Matches() {
 
 	const [sortingOption, setSortingOption] = useState('Best match'); // Default sorting option
 
+	const [outgoing, setOutgoing] = useState(new Map());
+
 	const user = useRouteLoaderData('protected');
 	const userId = user.id;
 
+	// Get all the sent swap requests in the parent to apply correct button state for cards in-between filters
+	useEffect(() => {
+		api.get('/requests').then((requests) => {
+			const outgoingRequests = requests.outgoing;
+			setOutgoing(
+				new Map(outgoingRequests.map((r) => [r.receiverId, r.id])),
+			);
+		});
+	}, []);
+
+	// Same thing happens in the database, but we also keep a local copy to avoid fetching the data for every card
+	function handleRequestChange(personId, requestId) {
+		setOutgoing((prev) => {
+			const next = new Map(prev);
+			if (requestId)
+				next.set(personId, requestId); // Add a new request
+			else next.delete(personId); // Delete an existing request
+			return next;
+		});
+	}
+
+	// Fetching user's skills and matches for them
 	useEffect(() => {
 		// useEffect is used for side effects outside of React, e.g. fetching data
 		let ignore = false;
@@ -59,6 +83,19 @@ export default function Matches() {
 	const visibleMatches = useMemo(() => {
 		// useMemo is the same as useEffect, but used for renders with existing state or props
 		let result = matches;
+		let topMatches = [];
+
+		if (selectedTeach.size > 0) {
+			topMatches = result.filter((match) =>
+				match.skillsICanTeachThem.some((name) =>
+					selectedTeach.has(name),
+				),
+			);
+
+			result = result.filter(function (e) {
+				return this.indexOf(e) < 0;
+			}, topMatches);
+		}
 
 		if (selectedLearn.size > 0) {
 			result = result.filter((match) =>
@@ -67,15 +104,6 @@ export default function Matches() {
 				),
 			);
 		}
-
-		if (selectedTeach.size > 0) {
-			result = result.filter((match) =>
-				match.skillsICanTeachThem.some((name) =>
-					selectedTeach.has(name),
-				),
-			);
-		}
-		console.log('ran again');
 
 		if (sortingOption == 'Best match') {
 			result = [...result].sort(
@@ -87,7 +115,7 @@ export default function Matches() {
 			);
 		}
 
-		return result;
+		return [...topMatches, ...result];
 	}, [matches, selectedLearn, selectedTeach, sortingOption]);
 
 	return (
@@ -163,6 +191,10 @@ export default function Matches() {
 							<MatchCard
 								key={match.matchPersonId}
 								match={match}
+								requestId={
+									outgoing.get(match.matchPersonId) ?? null
+								}
+								onRequestChange={handleRequestChange}
 							/>
 						))
 					)}
