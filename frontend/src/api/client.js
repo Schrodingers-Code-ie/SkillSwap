@@ -10,7 +10,22 @@
 //
 // Paths are relative to /api, and Vite forwards them to the backend.
 
+function getCsrfToken() {
+	const match = document.cookie.match(/(?:^|; )XSRF-TOKEN=([^;]*)/);
+	return match ? decodeURIComponent(match[1]) : null;
+}
+
 async function request(path, options = {}) {
+	const method = options.method ?? 'GET';
+	if (method !== 'GET') {
+		const token = getCsrfToken();
+		if (token) {
+			options = {
+				...options,
+				headers: { ...options.headers, 'X-XSRF-TOKEN': token },
+			};
+		}
+	}
 	const response = await fetch(`/api${path}`, options);
 
 	// Some responses (e.g. 204 No Content) have no body.

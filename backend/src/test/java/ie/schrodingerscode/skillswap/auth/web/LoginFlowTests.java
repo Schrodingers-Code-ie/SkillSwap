@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -70,11 +71,20 @@ class LoginFlowTests {
     void logoutEndsTheSession() throws Exception {
         MockHttpSession session = login("ann@mail.com", PASSWORD);
 
-        mockMvc.perform(post("/api/auth/logout").session(session))
+        mockMvc.perform(post("/api/auth/logout").with(csrf()).session(session))
                 .andExpect(status().isNoContent());
 
         mockMvc.perform(get("/api/auth/me").session(session))
                 .andExpect(status().isUnauthorized());
+    }
+
+    //logged in but no CSRF token, like a request forged by another website
+    @Test
+    void postWithoutCsrfTokenIsRejected() throws Exception {
+        MockHttpSession session = login("ann@mail.com", PASSWORD);
+
+        mockMvc.perform(post("/api/auth/logout").session(session))
+                .andExpect(status().isForbidden());
     }
 
     @Test

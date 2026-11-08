@@ -24,6 +24,7 @@ import jakarta.transaction.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -95,13 +96,13 @@ class JdbcUsersReaderTests {
         MockHttpSession session = login(email); // Log them in, keeping the session cookie
 
         for (String skill : learn) {
-            mockMvc.perform(post("/api/me/learn-skills").session(session) // Add skills the same way you would in Postman
+            mockMvc.perform(post("/api/me/learn-skills").with(csrf()).session(session) // Add skills the same way you would in Postman
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{\"skillId\":" + SKILL_ID.get(skill) + "}"))
                     .andExpect(status().isCreated());
         }
         for (String skill : teach) {
-            mockMvc.perform(post("/api/me/teach-skills").session(session)
+            mockMvc.perform(post("/api/me/teach-skills").with(csrf()).session(session)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{\"skillId\":" + SKILL_ID.get(skill)
                             + ",\"proficiency\":\"BEGINNER\"}"))
@@ -144,7 +145,7 @@ class JdbcUsersReaderTests {
     void userInSwapRequestsDoesntShowAsMatchTest() throws Exception {
         // Sending a request from Ulven to Jane
         MockHttpSession session = login("ulven@mail.com");
-        mockMvc.perform(post("/api/requests").session(session)
+        mockMvc.perform(post("/api/requests").with(csrf()).session(session)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"receiverId\": " + janeId + "}"))
                 .andExpect(status().isCreated());
