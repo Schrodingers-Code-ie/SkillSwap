@@ -73,24 +73,19 @@ export default function Matches() {
 	const visibleMatches = useMemo(() => {
 		// useMemo is the same as useEffect, but used for renders with existing state or props
 		let result = matches;
-		let topMatches = [];
-
-		if (selectedTeach.size > 0) {
-			topMatches = result.filter((match) =>
-				match.skillsICanTeachThem.some((name) =>
-					selectedTeach.has(name),
-				),
-			);
-
-			result = result.filter(function (e) {
-				return this.indexOf(e) < 0;
-			}, topMatches);
-		}
 
 		if (selectedLearn.size > 0) {
 			result = result.filter((match) =>
 				match.skillsTheyCanTeachMe.some((name) =>
 					selectedLearn.has(name),
+				),
+			);
+		}
+
+		if (selectedTeach.size > 0) {
+			result = result.filter((match) =>
+				match.skillsICanTeachThem.some((name) =>
+					selectedTeach.has(name),
 				),
 			);
 		}
@@ -105,7 +100,7 @@ export default function Matches() {
 			);
 		}
 
-		return [...topMatches, ...result];
+		return result;
 	}, [matches, selectedLearn, selectedTeach, sortingOption]);
 
 	return (
