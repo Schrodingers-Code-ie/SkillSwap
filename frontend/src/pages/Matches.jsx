@@ -1,6 +1,7 @@
 import Dropdown from '../components/search/Dropdown.jsx';
 import MatchCard from '../components/search/MatchCard.jsx';
 import Filters from '../components/search/Filters.jsx';
+import ProfileSidePanel from '../components/search/ProfileSidePanel.jsx';
 
 import { useEffect, useState, useMemo } from 'react';
 import { api } from '../api/client.js';
@@ -20,6 +21,8 @@ export default function Matches() {
 	const [sortingOption, setSortingOption] = useState('Best match'); // Default sorting option
 
 	const [outgoing, setOutgoing] = useState(new Map());
+
+	const [selectedId, setSelectedId] = useState(null); // Person shown in the side profile panel
 
 	const user = useRouteLoaderData('protected');
 	const userId = user.id;
@@ -102,6 +105,11 @@ export default function Matches() {
 
 		return result;
 	}, [matches, selectedLearn, selectedTeach, sortingOption]);
+
+	// The first match is shown by default, and also when the filters hide the selected person
+	const selectedMatch =
+		visibleMatches.find((match) => match.matchPersonId === selectedId) ??
+		visibleMatches[0];
 
 	return (
 		<div className="search-page-container px-5 min-[701px]:px-12 py-4 min-[701px]:py-8 flex justify-center">
@@ -190,14 +198,29 @@ export default function Matches() {
 									outgoing.get(match.matchPersonId) ?? null
 								}
 								onRequestChange={handleRequestChange}
+								selected={match === selectedMatch}
+								onSelect={() =>
+									setSelectedId(match.matchPersonId)
+								}
 							/>
 						))
 					)}
 				</div>
 			</div>
-			{/* <div className="side-profile-section max-w-lg w-full text-center border">
-				SIDE PROFILE
-			</div> */}
+			{/* No matches = empty panel. Shown only on screens 1440px and wider */}
+			{/* key: a new person gets a fresh panel, so old errors don't stay */}
+			<ProfileSidePanel
+				key={selectedMatch?.matchPersonId ?? 'empty'}
+				match={selectedMatch ?? null}
+				myLearnSkills={learnSkills}
+				requestId={
+					selectedMatch
+						? (outgoing.get(selectedMatch.matchPersonId) ?? null)
+						: null
+				}
+				onRequestChange={handleRequestChange}
+				className="hidden min-[1440px]:flex"
+			/>
 		</div>
 	);
 }
