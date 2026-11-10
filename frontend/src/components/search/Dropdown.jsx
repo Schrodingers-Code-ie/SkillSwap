@@ -1,14 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import arrow from '../../assets/dropdown_arrow.svg';
 
 const OPTIONS = ['Best match', 'Worst match'];
 
-export default function Dropdown() {
+export default function Dropdown({ setSortingOption }) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [selected, setSelected] = useState(OPTIONS[0]); // Displaying currently selected sort option
+	const dropdownRef = useRef(null);
+
+	useEffect(() => {
+		if (!isOpen) return;
+		function handleClick(e) {
+			if (!dropdownRef.current.contains(e.target)) setIsOpen(false);
+		}
+		function handleKey(e) {
+			if (e.key === 'Escape') setIsOpen(false);
+		}
+		document.addEventListener('mousedown', handleClick);
+		document.addEventListener('keydown', handleKey);
+		return () => {
+			document.removeEventListener('mousedown', handleClick);
+			document.removeEventListener('keydown', handleKey);
+		};
+	}, [isOpen]);
 
 	return (
-		<div className="dropdown relative">
+		<div ref={dropdownRef} className="dropdown relative">
 			<button
 				type="button"
 				onClick={() => setIsOpen(!isOpen)}
@@ -33,6 +50,7 @@ export default function Dropdown() {
 							onClick={() => {
 								setSelected(option);
 								setIsOpen(false);
+								setSortingOption(option);
 							}}
 							className="block w-full cursor-pointer px-4 py-2 text-left text-main-content hover:bg-nav-bg"
 						>

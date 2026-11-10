@@ -78,6 +78,7 @@
 	); /* Border for active inputs */
 	--raw-button-text-cream: #f4efe8; /* Text color for brown buttons */
 	--raw-inactive-grey: #c9c9c9; /* Text color for inactive buttons */
+	--raw-grey: #757575;
 }
 
 * {
