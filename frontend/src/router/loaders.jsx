@@ -27,6 +27,14 @@ export async function protectedLoader() {
 	return user;
 }
 
+// Runs before /login and /signup (see router.jsx).
+// Logged in: go to /matches. Logged out: the form shows as usual.
+export async function guestLoader() {
+	const user = await getCurrentUser();
+	if (user) return redirect('/matches');
+	return null;
+}
+
 export async function chatLoader() {
 	const [me, connections] = await Promise.all([
 		api.get('/auth/me'),
