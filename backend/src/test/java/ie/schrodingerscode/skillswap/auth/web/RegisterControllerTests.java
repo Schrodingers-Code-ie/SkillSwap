@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -32,6 +33,7 @@ import java.time.Instant;
  * These only check JSON in/out and status codes. The rules are tested in UserTests and RegisterUserTests.
  */
 @WebMvcTest(RegisterController.class)
+@AutoConfigureMockMvc(addFilters = false) //security is tested in LoginFlowTests, here we only test the controller
 class RegisterControllerTests {
 
     @Autowired

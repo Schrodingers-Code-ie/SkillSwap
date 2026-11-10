@@ -13,7 +13,7 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 
 /**
  * Who can call what. Login keeps you logged in with a session cookie (see LoginController).
- * TODO: CSRF is still off, turned on in SCRUM-74.
+ * CSRF: token in the XSRF-TOKEN cookie, frontend sends it back in the X-XSRF-TOKEN header.
  */
 @Configuration
 public class SecurityConfig {
@@ -21,7 +21,7 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.spa().ignoringRequestMatchers("/api/auth/register", "/api/auth/login"))
                 //spring uses the first rule that matches, so public rules go first
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login").permitAll()

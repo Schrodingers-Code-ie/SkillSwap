@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 //@WebMvcTest starts only the web layer (no database), so it runs fast without Docker
 @WebMvcTest(GlobalExceptionHandlerTests.TestController.class)
+@AutoConfigureMockMvc(addFilters = false) //security is tested in LoginFlowTests, here we only test the controller
 @Import(GlobalExceptionHandlerTests.TestController.class) //@WebMvcTest skips classes nested in tests, so add it by hand
 class GlobalExceptionHandlerTests {
 
