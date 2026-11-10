@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { useRouteLoaderData } from 'react-router';
 import { api } from '../../api/client.js';
+import { dayLabel, timeLabel } from '../../utils/time.js';
 import Profile from '../ui/Profile';
 import arrowUpIcon from '../../assets/arrow-up.svg';
 
@@ -201,30 +202,4 @@ function mergeById(current, incoming) {
 
 function dayKey(iso) {
 	return new Date(iso).toDateString();
-}
-
-function dayLabel(iso) {
-	const date = new Date(iso);
-	const startOfDay = (d) =>
-		new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
-	const daysAgo = Math.round(
-		(startOfDay(new Date()) - startOfDay(date)) / 86_400_000,
-	);
-
-	if (daysAgo === 0) return 'Today';
-	if (daysAgo === 1) return 'Yesterday';
-	if (daysAgo < 7)
-		return date.toLocaleDateString('en-IE', { weekday: 'long' });
-	return date.toLocaleDateString('en-IE', {
-		day: 'numeric',
-		month: 'short',
-		year: 'numeric',
-	});
-}
-
-function timeLabel(iso) {
-	return new Date(iso).toLocaleTimeString('en-IE', {
-		hour: '2-digit',
-		minute: '2-digit',
-	});
 }
