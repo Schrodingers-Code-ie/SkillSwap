@@ -63,7 +63,7 @@ export default function Filters({
 					I CAN TEACH
 				</p>
 				<p className="text-subtitle text-base font-main font-g-regular">
-					People who want these rank higher.
+					Only show people who want to learn the ticked skill.
 				</p>
 				<div className="checkboxes select-none mt-6">
 					{teachSkills.map((skill) => (
