@@ -7,6 +7,7 @@ import Spinner from '../components/Spinner';
 import {
 	chatLoader,
 	friendsLoader,
+	guestLoader,
 	homeLoader,
 	protectedLoader,
 } from './loaders';
@@ -29,6 +30,9 @@ const router = createBrowserRouter([
 			// Public routes. AuthLayout stays on screen while you switch between them
 			{
 				element: <AuthLayout />,
+				loader: guestLoader,
+				ErrorBoundary: ErrorPage,
+				HydrateFallback: Spinner,
 				children: [
 					{
 						path: '/login',
