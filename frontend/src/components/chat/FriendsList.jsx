@@ -81,10 +81,17 @@ export default function FriendsList({
 										)}
 									</span>
 
-									{/* Bottom line: last message, one line, cut off with … */}
+									{/* Bottom line: last message on the left, cut off with …, and a fixed slot on the right for the unread badge */}
 									{friend.lastMessage && (
-										<span className="block truncate text-xs text-subtitle">
-											{friend.lastMessage.text}
+										<span className="mt-0.5 flex items-center gap-2">
+											<span className="min-w-0 flex-1 truncate text-xs text-subtitle">
+												{friend.lastMessage.text}
+											</span>
+											{/* Empty for now; the unread-counts ticket puts the badge here */}
+											<span
+												aria-hidden="true"
+												className="w-5 shrink-0"
+											/>
 										</span>
 									)}
 								</span>
