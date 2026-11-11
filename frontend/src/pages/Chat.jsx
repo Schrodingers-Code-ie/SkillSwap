@@ -43,6 +43,21 @@ export default function Chat() {
 		};
 	}, []);
 
+	// Called by Conversation after you send a message, so that friend jumps to
+	// the top with your text as the preview straight away, without waiting for the next poll
+	function handleSend(message) {
+		setChats((current) => {
+			const friend = current.find(
+				(chat) => chat.userId === message.receiverId,
+			);
+			if (!friend) return current; // not in the list (shouldn't happen): change nothing
+			const others = current.filter(
+				(chat) => chat.userId !== message.receiverId,
+			);
+			return [{ ...friend, lastMessage: message }, ...others];
+		});
+	}
+
 	return (
 		<div className="grid grid-cols-1 grid-rows-[auto_75dvh_auto] gap-6 px-4 pb-6 font-main [grid-template-areas:'list'_'chat'_'panel'] md:h-[calc(100dvh-72px)] md:grid-cols-[280px_minmax(0,1fr)] md:grid-rows-[minmax(12rem,1fr)_minmax(0,auto)] md:[grid-template-areas:'list_chat'_'panel_chat'] lg:pl-[52px] lg:pr-[52px] xl:grid-cols-[320px_minmax(0,1fr)_320px] xl:grid-rows-1 xl:[grid-template-areas:'list_chat_panel']">
 			{/* Friend List on the left */}
@@ -59,6 +74,7 @@ export default function Chat() {
 				<Conversation
 					key={selected.userId}
 					friend={selected}
+					onSend={handleSend}
 					className="[grid-area:chat]"
 				/>
 			) : (

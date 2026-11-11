@@ -9,8 +9,10 @@ const POLL_MS = 3000; // time between polls
 const MAX_LENGTH = 2000; // same limit as MessageText on the backend
 
 // Middle column of the Chat page
-// friend: open friend's profile
-export default function Conversation({ friend, className = '' }) {
+// friend: the open friend's chat entry ({ userId, displayName, lastMessage })
+// onSend: called with the saved message after a successful send, so the Chat page
+//         can move this friend to the top of the list straight away
+export default function Conversation({ friend, onSend, className = '' }) {
 	// The logged-in user, loaded by protectedLoader (route with id protected)
 	const me = useRouteLoaderData('protected');
 
@@ -72,6 +74,7 @@ export default function Conversation({ friend, className = '' }) {
 			setMessages((current) => mergeById(current, [saved]));
 			setDraft('');
 			setSendError(null);
+			onSend(saved); // tell the Chat page, so this friend moves to the top
 		} catch (err) {
 			setSendError(
 				err.status && err.status < 500
