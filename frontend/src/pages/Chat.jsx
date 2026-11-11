@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLoaderData } from 'react-router';
 import { api } from '../api/client.js';
 import FriendsList from '../components/chat/FriendsList';
@@ -42,6 +42,34 @@ export default function Chat() {
 			clearInterval(timer);
 		};
 	}, []);
+
+	// Profiles (with skills) of friends you've opened, by userId: { 2: {...}, 3: {...} }
+	// /api/chats has no skills, so each profile is loaded the first time you select that friend
+	const [profiles, setProfiles] = useState({});
+	// userIds already requested, so each profile is fetched only once
+	const requested = useRef(new Set());
+
+	// Load the selected friend's profile if it hasn't been requested yet.
+	// Depends only on selectedId, so the 5-second poll never fetches profiles.
+	useEffect(() => {
+		if (selectedId === null || requested.current.has(selectedId)) return;
+		const id = selectedId;
+		requested.current.add(id);
+
+		async function loadProfile() {
+			try {
+				const profile = await api.get(`/users/${id}/profile`);
+				setProfiles((current) => ({ ...current, [id]: profile }));
+			} catch {
+				requested.current.delete(id); // try again next time this friend is selected
+				setProfiles((current) => ({
+					...current,
+					[id]: { failed: true },
+				}));
+			}
+		}
+		loadProfile();
+	}, [selectedId]);
 
 	// Called by Conversation after you send a message, so that friend jumps to
 	// the top with your text as the preview straight away, without waiting for the next poll
@@ -87,6 +115,7 @@ export default function Chat() {
 			{selected ? (
 				<ProfilePanel
 					friend={selected}
+					profile={profiles[selected.userId]}
 					myProfile={myProfile}
 					className="[grid-area:panel] min-h-0 overflow-y-auto scrollbar-soft"
 				/>
