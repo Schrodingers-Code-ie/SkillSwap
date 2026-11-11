@@ -1,15 +1,47 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLoaderData } from 'react-router';
+import { api } from '../api/client.js';
 import FriendsList from '../components/chat/FriendsList';
 import Conversation from '../components/chat/Conversation';
 import ProfilePanel from '../components/chat/ProfilePanel';
 
+const POLL_MS = 5000; // how often the chat list is refreshed
+
 // Figma: Chat page. Friend list on the left, messages in the middle, profile on the right
 export default function Chat() {
-	const { myProfile, chats } = useLoaderData();
+	// initialChats: from GET /api/chats in chatLoader, already sorted newest first
+	const { myProfile, chats: initialChats } = useLoaderData();
+	// The list on screen. Starts with what the loader fetched, then each poll replaces it
+	const [chats, setChats] = useState(initialChats);
 
-	const [selectedId, setSelectedId] = useState(chats[0]?.userId ?? null);
+	const [selectedId, setSelectedId] = useState(
+		initialChats[0]?.userId ?? null,
+	);
 	const selected = chats.find((chat) => chat.userId === selectedId);
+
+	// Refresh the chat list every POLL_MS while the Chat page is open
+	useEffect(() => {
+		let cancelled = false;
+
+		async function refresh() {
+			try {
+				const fresh = await api.get('/chats');
+				if (cancelled) return; // page closed while waiting: ignore the late answer
+				setChats(fresh);
+				// If nothing was selected (list was empty), open the first chat that appears
+				setSelectedId((current) => current ?? fresh[0]?.userId ?? null);
+			} catch {
+				// Keep showing the last list; the next poll tries again
+			}
+		}
+
+		const timer = setInterval(refresh, POLL_MS);
+
+		return () => {
+			cancelled = true;
+			clearInterval(timer);
+		};
+	}, []);
 
 	return (
 		<div className="grid grid-cols-1 grid-rows-[auto_75dvh_auto] gap-6 px-4 pb-6 font-main [grid-template-areas:'list'_'chat'_'panel'] md:h-[calc(100dvh-72px)] md:grid-cols-[280px_minmax(0,1fr)] md:grid-rows-[minmax(12rem,1fr)_minmax(0,auto)] md:[grid-template-areas:'list_chat'_'panel_chat'] lg:pl-[52px] lg:pr-[52px] xl:grid-cols-[320px_minmax(0,1fr)_320px] xl:grid-rows-1 xl:[grid-template-areas:'list_chat_panel']">
