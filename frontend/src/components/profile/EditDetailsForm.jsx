@@ -3,9 +3,11 @@ import { updateProfile } from '../../api/skills';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
 
+// Same limits as the backend (Profile.MAX_NAME_LENGTH / MAX_BIO_LENGTH)
 const MAX_NAME = 100;
 const MAX_BIO = 500;
 
+// onSaved runs after the backend has saved, e.g. to reload the profile and close the form
 export default function EditDetailsForm({ profile, onSaved, onCancel }) {
 	const id = useId();
 	const [name, setName] = useState(profile.displayName);
@@ -30,6 +32,7 @@ export default function EditDetailsForm({ profile, onSaved, onCancel }) {
 			setSaving(false);
 			return;
 		}
+		// saved, so close the form even if reloading the page data fails
 		onSaved();
 	}
 
@@ -49,6 +52,7 @@ export default function EditDetailsForm({ profile, onSaved, onCancel }) {
 					setNameError('');
 				}}
 				maxLength={MAX_NAME}
+				counter={`${name.length} / ${MAX_NAME}`}
 				error={nameError}
 				autoFocus
 				className="w-full"

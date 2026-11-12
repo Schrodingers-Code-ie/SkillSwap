@@ -65,25 +65,28 @@ export default function Profile() {
 					/>
 				) : (
 					<>
-						{/* Edit sits to the right of the name, so the name stays centred (Figma) */}
-						<div className="relative mx-auto mt-5 w-fit">
-							<h1 className="text-2xl text-title">
+						{/* Long names and bios wrap onto more lines instead of
+						running off the page. On wider screens Edit sits to the
+						right of the name, and the name is kept narrow enough to
+						leave room for it on both sides, so it stays centred. */}
+						<div className="relative mx-auto mt-5 w-fit max-w-full sm:max-w-[min(560px,calc(100%-256px))]">
+							<h1 className="text-2xl text-title [overflow-wrap:anywhere]">
 								{profile.displayName}
 							</h1>
 							<button
 								type="button"
 								onClick={() => setEditingDetails(true)}
 								aria-label="Edit name and bio"
-								className="absolute left-full top-1/2 ml-6 h-7 -translate-y-1/2 cursor-pointer rounded-input bg-light-button-bg px-5 text-[13px] text-light-button-text transition hover:shadow-light-hover active:bg-light-button-pressed-bg sm:ml-14"
+								className="mt-2 h-7 cursor-pointer rounded-input bg-light-button-bg px-5 text-[13px] text-light-button-text transition hover:shadow-light-hover active:bg-light-button-pressed-bg sm:absolute sm:left-full sm:top-0.5 sm:ml-14 sm:mt-0"
 							>
 								Edit
 							</button>
 						</div>
-						<p className="mt-1 text-sm text-subtitle">
+						<p className="mt-1 text-sm text-subtitle [overflow-wrap:anywhere]">
 							@{user.username}
 						</p>
 						{profile.bio && (
-							<p className="mx-auto mt-4 max-w-md whitespace-pre-line text-sm text-title">
+							<p className="mx-auto mt-4 max-w-[350px] whitespace-pre-line text-sm leading-[19px] text-title [overflow-wrap:anywhere]">
 								{profile.bio}
 							</p>
 						)}
