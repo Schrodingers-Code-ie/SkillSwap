@@ -6,21 +6,29 @@ import {
 	removeLearnSkill,
 	removeTeachSkill,
 } from '../../api/skills';
+import cross_icon from '../../assets/cross_icon.svg';
 import useLogout from '../../hooks/useLogout';
 import { useProfile } from './profile-context';
 import SkillCard from './SkillCard';
 import SkillForm from './SkillForm';
 
-// onClose is only used in edit mode (opened from "Edit your skills")
+const DARK_BUTTON =
+	'h-[39px] w-[144px] cursor-pointer rounded-full bg-dark-button-bg text-[15px] text-dark-button-text shadow-dark-button transition hover:shadow-dark-button-hover active:bg-dark-button-pressed-bg disabled:cursor-default disabled:opacity-40 disabled:shadow-none';
+
+// onClose is only used in edit mode (opened from "Edit your skills").
+// In setup mode (skills missing) the pop-up can't be dismissed.
 export default function SkillsModal({ onClose }) {
 	const { profile, reload, setupOpen, finishSetup, missingSkills } =
 		useProfile();
 	const { logout, error: logoutError } = useLogout();
 	const [catalogue, setCatalogue] = useState([]);
 	const [error, setError] = useState('');
+	const [removing, setRemoving] = useState(false);
 	const [step, setStep] = useState(() =>
 		setupOpen && profile.teachSkills.length > 0 ? 2 : 1,
 	);
+
+	const closable = !setupOpen;
 
 	useEffect(() => {
 		getSkills()
@@ -28,45 +36,104 @@ export default function SkillsModal({ onClose }) {
 			.catch((e) => setError(e.message));
 	}, []);
 
+	// Stop the page behind the pop-up from scrolling while it's open. The
+	// padding fills the gap left by the hidden scrollbar, so nothing shifts.
+	useEffect(() => {
+		const { body, documentElement } = document;
+		const scrollbar = window.innerWidth - documentElement.clientWidth;
+		const previous = {
+			overflow: body.style.overflow,
+			paddingRight: body.style.paddingRight,
+		};
+		body.style.overflow = 'hidden';
+		if (scrollbar > 0) body.style.paddingRight = `${scrollbar}px`;
+		return () => {
+			body.style.overflow = previous.overflow;
+			body.style.paddingRight = previous.paddingRight;
+		};
+	}, []);
+
+	useEffect(() => {
+		if (!closable) return;
+		const onKey = (e) => e.key === 'Escape' && onClose();
+		document.addEventListener('keydown', onKey);
+		return () => document.removeEventListener('keydown', onKey);
+	}, [closable, onClose]);
+
 	const teaching = step === 1;
 	const items = teaching ? profile.teachSkills : profile.learnSkills;
 	const takenIds = new Set(items.map((s) => s.skillId));
 
+	// The change is saved once action() resolves. If only the reload fails,
+	// show the error but don't reject, so the form still clears and a retry
+	// doesn't send the same skill again (409).
 	async function run(action) {
 		setError('');
 		try {
 			await action();
-			await reload();
 		} catch (e) {
 			setError(e.message);
 			throw e;
 		}
+		try {
+			await reload();
+		} catch (e) {
+			setError(e.message);
+		}
+	}
+
+	async function remove(skillId) {
+		if (removing) return;
+		setRemoving(true);
+		try {
+			await run(() =>
+				teaching
+					? removeTeachSkill(skillId)
+					: removeLearnSkill(skillId),
+			);
+		} catch {
+			// error is already shown
+		} finally {
+			setRemoving(false);
+		}
+	}
+
+	// Also closes edit mode: opening from "Edit your skills" and removing the
+	// last skill switches into setup mode, and both need closing in one click.
+	function finish() {
+		finishSetup();
+		onClose?.();
 	}
 
 	return (
-		<div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/40 p-6">
+		<div
+			className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overscroll-contain bg-black/40 p-6"
+			onMouseDown={(e) => {
+				if (closable && e.target === e.currentTarget) onClose();
+			}}
+		>
 			<div
 				role="dialog"
 				aria-modal="true"
 				aria-labelledby="skills-title"
-				className="w-full max-w-3xl rounded-container-card bg-card-bg p-10 text-left shadow-container"
+				className="w-full max-w-[760px] rounded-container-card border border-container-border bg-card-bg p-9 text-left shadow-container"
 			>
-				<div className="mb-6 flex items-center justify-between">
-					<div className="flex items-center gap-4 text-xs font-semibold tracking-wide text-strong-text">
-						STEP {step} OF 2
+				<div className="mb-5 flex items-start justify-between">
+					<div className="flex items-center gap-[30px] pt-1 text-[11px] font-g-medium uppercase tracking-wider text-subtitle">
+						Step {step} of 2
 						<span className="flex gap-1">
-							<span className="h-1 w-20 rounded bg-dark-button-bg" />
+							<span className="h-1 w-[58px] rounded-full bg-strong-text" />
 							<span
-								className={`h-1 w-20 rounded ${step === 2 ? 'bg-dark-button-bg' : 'bg-card-border'}`}
+								className={`h-1 w-[58px] rounded-full ${step === 2 ? 'bg-strong-text' : 'bg-dark-button-bg/12'}`}
 							/>
 						</span>
 					</div>
-					{setupOpen && (
+					{setupOpen ? (
 						<div className="text-right">
 							<button
 								type="button"
 								onClick={logout}
-								className="text-sm text-subtitle underline"
+								className="cursor-pointer text-sm text-subtitle underline"
 							>
 								Log out
 							</button>
@@ -76,15 +143,24 @@ export default function SkillsModal({ onClose }) {
 								</p>
 							)}
 						</div>
+					) : (
+						<button
+							type="button"
+							onClick={onClose}
+							aria-label="Close"
+							className="-mr-2 -mt-2 flex size-8 cursor-pointer items-center justify-center rounded-full hover:bg-light-button-bg"
+						>
+							<img src={cross_icon} alt="" className="size-4" />
+						</button>
 					)}
 				</div>
 
-				<h2 id="skills-title" className="text-2xl text-strong-text">
+				<h2 id="skills-title" className="text-2xl text-title">
 					{teaching
 						? 'What can you teach?'
 						: 'What do you want to learn?'}
 				</h2>
-				<p className="mb-6 mt-2 text-sm text-subtitle">
+				<p className="mb-6 mt-2.5 text-sm text-subtitle">
 					{teaching
 						? 'Add each skill you are happy to share and how good you are at it.'
 						: 'Add the skills you want to pick up.'}
@@ -110,13 +186,13 @@ export default function SkillsModal({ onClose }) {
 					</p>
 				)}
 
-				<h3 className="mb-3 mt-8 text-sm text-strong-text">
+				<h3 className="mb-3.5 mt-5 text-[13px] text-title">
 					{teaching
 						? 'Skills you can teach'
 						: 'Skills you want to learn'}{' '}
 					({items.length})
 				</h3>
-				<div className="max-h-64 space-y-3 overflow-y-auto">
+				<div className="scrollbar-soft max-h-64 space-y-3 overflow-y-auto overscroll-contain">
 					{items.length === 0 && (
 						<p className="text-sm text-subtitle">No skills yet.</p>
 					)}
@@ -125,22 +201,17 @@ export default function SkillsModal({ onClose }) {
 							key={s.skillId}
 							name={s.name}
 							proficiency={s.proficiency}
-							onRemove={() =>
-								run(() =>
-									teaching
-										? removeTeachSkill(s.skillId)
-										: removeLearnSkill(s.skillId),
-								)
-							}
+							disabled={removing}
+							onRemove={() => remove(s.skillId)}
 						/>
 					))}
 				</div>
 
-				<div className="mt-8 flex items-center justify-between border-t border-card-border pt-6">
+				<div className="mt-6 flex items-center justify-between border-t border-card-border pt-3">
 					{step === 2 ? (
 						<button
 							type="button"
-							className="text-strong-text underline"
+							className="cursor-pointer text-sm text-strong-text underline"
 							onClick={() => setStep(1)}
 						>
 							Back
@@ -153,7 +224,7 @@ export default function SkillsModal({ onClose }) {
 							type="button"
 							disabled={profile.teachSkills.length === 0}
 							onClick={() => setStep(2)}
-							className="rounded-full bg-dark-button-bg px-8 py-3 text-dark-button-text disabled:opacity-40"
+							className={DARK_BUTTON}
 						>
 							Continue
 						</button>
@@ -161,8 +232,8 @@ export default function SkillsModal({ onClose }) {
 						<button
 							type="button"
 							disabled={missingSkills}
-							onClick={setupOpen ? finishSetup : onClose}
-							className="rounded-full bg-dark-button-bg px-8 py-3 text-dark-button-text disabled:opacity-40"
+							onClick={setupOpen ? finish : onClose}
+							className={DARK_BUTTON}
 						>
 							{setupOpen ? 'Finish setup' : 'Done'}
 						</button>

@@ -1,18 +1,22 @@
 import { LEVELS } from './levels';
 
-export default function LevelPicker({ value, onChange }) {
+export default function LevelPicker({ value, onChange, labelId }) {
 	return (
-		<div className="grid grid-cols-3 gap-2">
+		<div
+			role="group"
+			aria-labelledby={labelId}
+			className="grid grid-cols-3 gap-2"
+		>
 			{LEVELS.map((level) => (
 				<button
 					key={level.value}
 					type="button"
 					onClick={() => onChange(level.value)}
 					aria-pressed={value === level.value}
-					className={`rounded-input px-4 py-3 text-sm transition ${
+					className={`h-[39px] cursor-pointer rounded-input text-sm transition ${
 						value === level.value
-							? 'bg-dark-button-bg text-dark-button-text'
-							: 'bg-black/5 text-strong-text hover:bg-black/10'
+							? 'bg-dark-button-bg text-dark-button-text shadow-dark-button'
+							: 'bg-light-button-bg text-light-button-text hover:bg-light-button-pressed-bg'
 					}`}
 				>
 					{level.label}

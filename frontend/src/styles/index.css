@@ -76,6 +76,12 @@
 	--raw-active-border-light-grey: rgb(
 		77 70 56 / 40%
 	); /* Border for active inputs */
+	--raw-border-mid-grey: rgb(
+		77 70 56 / 30%
+	); /* Divider between sections on the profile page */
+	--raw-border-deep-grey: rgb(
+		58 52 42 / 20%
+	); /* Border for skill cards in the skills pop-up */
 	--raw-button-text-cream: #f4efe8; /* Text color for brown buttons */
 	--raw-inactive-grey: #c9c9c9; /* Text color for inactive buttons */
 	--raw-grey: #757575;
