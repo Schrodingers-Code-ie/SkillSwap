@@ -5,6 +5,7 @@ const SIZES = {
 	sm: 'size-[38px] text-[13px]',
 	md: 'size-[42px] text-sm',
 	lg: 'size-[68px] text-[22px]',
+	xl: 'size-[119px] text-[40px]',
 };
 
 // name: the text the initials come from

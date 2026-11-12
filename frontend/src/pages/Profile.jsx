@@ -1,42 +1,48 @@
 import { useState } from 'react';
 import { removeLearnSkill, removeTeachSkill } from '../api/skills';
+import Spinner from '../components/Spinner';
 import SkillCard from '../components/skills/SkillCard';
 import SkillsModal from '../components/skills/SkillsModal';
 import { useProfile } from '../components/skills/profile-context';
-
-const initials = (name) =>
-	name
-		.split(' ')
-		.filter(Boolean)
-		.map((w) => w[0])
-		.slice(0, 2)
-		.join('')
-		.toUpperCase();
+import ProfileCircle from '../components/ui/Profile';
 
 export default function Profile() {
 	const { user, profile, error, loading, reload, setupOpen } = useProfile();
 	const [editing, setEditing] = useState(false);
 	const [actionError, setActionError] = useState('');
+	const [removing, setRemoving] = useState(false);
 
-	if (loading) return <p className="p-10">Loading…</p>;
+	if (loading) {
+		return (
+			<div className="flex justify-center p-10">
+				<Spinner />
+			</div>
+		);
+	}
 	if (!profile) return <p className="p-10 text-error">{error}</p>;
 
 	async function remove(action, id) {
+		if (removing) return;
+		setRemoving(true);
 		setActionError('');
 		try {
 			await action(id);
 			await reload();
 		} catch (e) {
 			setActionError(e.message);
+		} finally {
+			setRemoving(false);
 		}
 	}
 
 	return (
 		<section className="mx-auto max-w-5xl rounded-container-card bg-card-bg p-10 shadow-container">
 			<div className="text-center">
-				<div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-avatar-bg text-3xl font-g-semibold text-dark-button-text shadow-avatar">
-					{initials(profile.displayName)}
-				</div>
+				<ProfileCircle
+					name={profile.displayName}
+					size="xl"
+					className="mx-auto"
+				/>
 				<h1 className="mt-4 text-2xl text-strong-text">
 					{profile.displayName}
 				</h1>
@@ -49,37 +55,45 @@ export default function Profile() {
 				<button
 					type="button"
 					onClick={() => setEditing(true)}
-					className="mt-6 rounded-full bg-card-border px-5 py-2 text-sm text-strong-text"
+					className="mt-6 h-7 cursor-pointer rounded-input bg-light-button-bg px-5 text-[13px] text-light-button-text transition hover:shadow-light-hover active:bg-light-button-pressed-bg"
 				>
 					Edit your skills
 				</button>
 			</div>
 
-			<div className="mx-auto mt-8 max-w-3xl space-y-3 text-left">
-				<h2 className="text-sm text-strong-text">
+			<div className="mx-auto mt-2 max-w-[688px] text-left">
+				<h2 className="mb-3.5 text-[13px] text-title">
 					Skills you can teach ({profile.teachSkills.length})
 				</h2>
-				{profile.teachSkills.map((s) => (
-					<SkillCard
-						key={s.skillId}
-						name={s.name}
-						proficiency={s.proficiency}
-						onRemove={() => remove(removeTeachSkill, s.skillId)}
-					/>
-				))}
-				<hr className="my-6 border-container-border" />
-				<h2 className="text-sm text-strong-text">
+				<div className="space-y-3">
+					{profile.teachSkills.map((s) => (
+						<SkillCard
+							key={s.skillId}
+							name={s.name}
+							proficiency={s.proficiency}
+							variant="profile"
+							disabled={removing}
+							onRemove={() => remove(removeTeachSkill, s.skillId)}
+						/>
+					))}
+				</div>
+				<hr className="my-7 border-divider" />
+				<h2 className="mb-3.5 text-[13px] text-title">
 					Skills you want to learn ({profile.learnSkills.length})
 				</h2>
-				{profile.learnSkills.map((s) => (
-					<SkillCard
-						key={s.skillId}
-						name={s.name}
-						onRemove={() => remove(removeLearnSkill, s.skillId)}
-					/>
-				))}
+				<div className="space-y-3">
+					{profile.learnSkills.map((s) => (
+						<SkillCard
+							key={s.skillId}
+							name={s.name}
+							variant="profile"
+							disabled={removing}
+							onRemove={() => remove(removeLearnSkill, s.skillId)}
+						/>
+					))}
+				</div>
 				{actionError && (
-					<p role="alert" className="text-sm text-error">
+					<p role="alert" className="mt-3 text-sm text-error">
 						{actionError}
 					</p>
 				)}
