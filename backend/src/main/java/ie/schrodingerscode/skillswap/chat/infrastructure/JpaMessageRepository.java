@@ -25,4 +25,9 @@ public class JpaMessageRepository implements MessageRepository {
     public List<Message> findConversation(long userA, long userB) {
         return jpa.findConversation(userA, userB).stream().map(MessageEntity::toDomain).toList();
     }
+
+    @Override
+    public List<Message> findLatestPerConversation(long userId) {
+        return jpa.findLatestPerConversation(userId).stream().map(MessageEntity::toDomain).toList();
+    }
 }

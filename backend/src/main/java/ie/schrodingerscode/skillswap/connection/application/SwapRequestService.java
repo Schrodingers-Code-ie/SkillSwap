@@ -17,7 +17,7 @@ import ie.schrodingerscode.skillswap.connection.domain.exception.RequestNotFound
  * The rules themselves (who can accept, what state is allowed) are inside SwapRequest, not here.
  */
 @Service
-public class SwapRequestService implements ConnectionChecker {
+public class SwapRequestService implements ConnectionChecker, ConnectionLister {
 
     private final SwapRequestRepository repository;
     private final UserChecker users;
@@ -77,6 +77,13 @@ public class SwapRequestService implements ConnectionChecker {
         return repository.findByPair(UserPair.of(userA, userB))
                 .map(SwapRequest::isAccepted)
                 .orElse(false);
+    }
+
+    @Override
+    public List<Long> connectionIdsOf(long userId) {
+        return connections(userId).stream()
+                .map(request -> request.otherUser(userId))
+                .toList();
     }
 
     private SwapRequest findRequest(long requestId) {

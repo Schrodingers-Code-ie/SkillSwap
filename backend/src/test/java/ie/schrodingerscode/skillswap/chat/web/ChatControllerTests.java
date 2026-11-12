@@ -1,4 +1,4 @@
-package ie.schrodingerscode.skillswap.chat;
+package ie.schrodingerscode.skillswap.chat.web;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -24,7 +24,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import ie.schrodingerscode.skillswap.auth.CurrentUser;
 import ie.schrodingerscode.skillswap.chat.application.GetMessageHistory;
 import ie.schrodingerscode.skillswap.chat.application.SendMessage;
-import ie.schrodingerscode.skillswap.chat.web.ChatController;
 import ie.schrodingerscode.skillswap.chat.domain.Message;
 import ie.schrodingerscode.skillswap.chat.domain.MessageText;
 import ie.schrodingerscode.skillswap.chat.domain.exception.InvalidMessageTextException;

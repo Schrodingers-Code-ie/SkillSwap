@@ -1,4 +1,4 @@
-package ie.schrodingerscode.skillswap.chat;
+package ie.schrodingerscode.skillswap.chat.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import ie.schrodingerscode.skillswap.chat.domain.exception.InvalidMessageTextException;
 import ie.schrodingerscode.skillswap.chat.domain.Message;
 import ie.schrodingerscode.skillswap.chat.domain.exception.NotConnectedException;
-import ie.schrodingerscode.skillswap.chat.application.SendMessage;
+import ie.schrodingerscode.skillswap.chat.infrastructure.InMemoryMessageRepository;
 
 /** Tests message sending, connection checks, and text validation. */
 class SendMessageTests {

@@ -36,27 +36,14 @@ export async function guestLoader() {
 }
 
 export async function chatLoader() {
-	const [me, connections] = await Promise.all([
+	const [me, chats] = await Promise.all([
 		api.get('/auth/me'),
-		api.get('/connections'),
+		api.get('/chats'),
 	]);
+	// Own profile is needed for the skill matching in the profile panel
+	const myProfile = await api.get(`/users/${me.id}/profile`);
 
-	const [myProfile, friends] = await Promise.all([
-		api.get(`/users/${me.id}/profile`),
-		Promise.all(
-			connections.map((connection) =>
-				api.get(`/users/${connection.userId}/profile`).catch(() => ({
-					// Default placeholder, so one broken profile shouldn't break the whole page
-					userId: connection.userId,
-					displayName: 'Unknown user',
-					teachSkills: [],
-					learnSkills: [],
-				})),
-			),
-		),
-	]);
-
-	return { myProfile, friends };
+	return { myProfile, chats };
 }
 
 export async function friendsLoader() {

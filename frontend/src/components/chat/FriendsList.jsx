@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import Profile from '../ui/Profile';
 import searchIcon from '../../assets/search.svg';
+import { previewTimeLabel } from '../../utils/time.js';
 
 // Left column of the Chat page
-// friends: profiles from the Chat page loader
+// friends: chat entries from GET /api/chats, already sorted (newest message first, then friends without messages by name).
+// 			Each one: { userId, displayName, lastMessage }
+//          lastMessage is { id, senderId, text, sentAt } or null when you've never messaged
 // selectedId: userId of the open chat, decides which row gets the highlight
 // onSelect: called with a userId when a friend is clicked
 export default function FriendsList({
@@ -57,8 +60,40 @@ export default function FriendsList({
 								}`}
 							>
 								<Profile name={friend.displayName} />
-								<span className="truncate text-sm font-g-medium text-strong-text">
-									{friend.displayName}
+								{/* Text part of the row. min-w-0 lets it shrink so truncate can cut long text */}
+								<span className="min-w-0 flex-1">
+									{/* Top line: name on the left, time of the last message on the right */}
+									<span className="flex items-baseline justify-between gap-2">
+										<span className="truncate text-sm font-g-medium text-strong-text">
+											{friend.displayName}
+										</span>
+										{friend.lastMessage && (
+											<time
+												dateTime={
+													friend.lastMessage.sentAt
+												}
+												className="shrink-0 text-[11px] text-subtitle"
+											>
+												{previewTimeLabel(
+													friend.lastMessage.sentAt,
+												)}
+											</time>
+										)}
+									</span>
+
+									{/* Bottom line: last message on the left, cut off with …, and a fixed slot on the right for the unread badge */}
+									{friend.lastMessage && (
+										<span className="mt-0.5 flex items-center gap-2">
+											<span className="min-w-0 flex-1 truncate text-xs text-subtitle">
+												{friend.lastMessage.text}
+											</span>
+											{/* Empty for now; the unread-counts ticket puts the badge here */}
+											<span
+												aria-hidden="true"
+												className="w-5 shrink-0"
+											/>
+										</span>
+									)}
 								</span>
 							</button>
 						</li>

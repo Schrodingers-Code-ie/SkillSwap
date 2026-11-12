@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { useRouteLoaderData } from 'react-router';
 import { api } from '../../api/client.js';
+import { dayLabel, timeLabel } from '../../utils/time.js';
 import Profile from '../ui/Profile';
 import arrowUpIcon from '../../assets/arrow-up.svg';
 
@@ -8,8 +9,10 @@ const POLL_MS = 3000; // time between polls
 const MAX_LENGTH = 2000; // same limit as MessageText on the backend
 
 // Middle column of the Chat page
-// friend: open friend's profile
-export default function Conversation({ friend, className = '' }) {
+// friend: the open friend's chat entry ({ userId, displayName, lastMessage })
+// onSend: called with the saved message after a successful send, so the Chat page
+//         can move this friend to the top of the list straight away
+export default function Conversation({ friend, onSend, className = '' }) {
 	// The logged-in user, loaded by protectedLoader (route with id protected)
 	const me = useRouteLoaderData('protected');
 
@@ -71,6 +74,7 @@ export default function Conversation({ friend, className = '' }) {
 			setMessages((current) => mergeById(current, [saved]));
 			setDraft('');
 			setSendError(null);
+			onSend(saved); // tell the Chat page, so this friend moves to the top
 		} catch (err) {
 			setSendError(
 				err.status && err.status < 500
@@ -201,30 +205,4 @@ function mergeById(current, incoming) {
 
 function dayKey(iso) {
 	return new Date(iso).toDateString();
-}
-
-function dayLabel(iso) {
-	const date = new Date(iso);
-	const startOfDay = (d) =>
-		new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
-	const daysAgo = Math.round(
-		(startOfDay(new Date()) - startOfDay(date)) / 86_400_000,
-	);
-
-	if (daysAgo === 0) return 'Today';
-	if (daysAgo === 1) return 'Yesterday';
-	if (daysAgo < 7)
-		return date.toLocaleDateString('en-IE', { weekday: 'long' });
-	return date.toLocaleDateString('en-IE', {
-		day: 'numeric',
-		month: 'short',
-		year: 'numeric',
-	});
-}
-
-function timeLabel(iso) {
-	return new Date(iso).toLocaleTimeString('en-IE', {
-		hour: '2-digit',
-		minute: '2-digit',
-	});
 }

@@ -17,4 +17,10 @@ public interface MessageRepository {
      * Used in implementation of loading message history.
      */
     List<Message> findConversation(long userA, long userB);
+
+    /**
+     * Returns the newest message of every conversation this user is in:
+     * one message per other user (connection), in no particular order.
+     */
+    List<Message> findLatestPerConversation(long userId);
 }
