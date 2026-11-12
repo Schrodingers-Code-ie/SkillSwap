@@ -1,6 +1,7 @@
 package ie.schrodingerscode.skillswap.profile.domain;
 
 import ie.schrodingerscode.skillswap.profile.domain.exception.DuplicateSkillException;
+import ie.schrodingerscode.skillswap.profile.domain.exception.InvalidProfileDetailsException;
 import ie.schrodingerscode.skillswap.profile.domain.exception.ProficiencyRequiredException;
 import ie.schrodingerscode.skillswap.profile.domain.exception.SkillNotInListException;
 
@@ -99,5 +100,39 @@ class ProfileTests {
                 .isInstanceOf(UnsupportedOperationException.class);
         assertThatThrownBy(() -> profile.getLearnSkillIds().add(5L))
                 .isInstanceOf(UnsupportedOperationException.class);
+    }
+
+    @Test
+    void updateDetailsTrimsNameAndBio() {
+        profile.updateDetails("  Alice Smith ", "  Plays guitar  ");
+
+        assertThat(profile.getDisplayName()).isEqualTo("Alice Smith");
+        assertThat(profile.getBio()).isEqualTo("Plays guitar");
+    }
+
+    @Test
+    void blankBioIsStoredAsNoBio() {
+        profile.updateDetails("Alice", "   ");
+
+        assertThat(profile.getBio()).isNull();
+    }
+
+    @Test
+    void blankNameIsRejected() {
+        assertThatThrownBy(() -> profile.updateDetails("  ", "Bio"))
+                .isInstanceOf(InvalidProfileDetailsException.class);
+        assertThat(profile.getDisplayName()).isEqualTo("Alice");
+    }
+
+    @Test
+    void tooLongNameIsRejected() {
+        assertThatThrownBy(() -> profile.updateDetails("a".repeat(101), null))
+                .isInstanceOf(InvalidProfileDetailsException.class);
+    }
+
+    @Test
+    void tooLongBioIsRejected() {
+        assertThatThrownBy(() -> profile.updateDetails("Alice", "a".repeat(501)))
+                .isInstanceOf(InvalidProfileDetailsException.class);
     }
 }

@@ -1,6 +1,7 @@
 // className sizes the whole field (label + input), e.g. className="w-full".
 // error shows a red border and message under the input, hint a grey one.
 // trailing is placed inside the input on the right, e.g. an icon or a "Show" button.
+// counter is shown to the right of the label, e.g. "12 / 100".
 export default function Input({
 	type,
 	id,
@@ -10,6 +11,7 @@ export default function Input({
 	error,
 	hint,
 	trailing,
+	counter,
 	className = 'w-80',
 	...props
 }) {
@@ -17,12 +19,17 @@ export default function Input({
 
 	return (
 		<div className={className}>
-			<label
-				htmlFor={id}
-				className="mb-2.5 flex text-title font-main font-g-medium text-sm"
-			>
-				{titleText}
-			</label>
+			<div className="mb-2.5 flex items-baseline justify-between gap-3">
+				<label
+					htmlFor={id}
+					className="flex text-title font-main font-g-medium text-sm"
+				>
+					{titleText}
+				</label>
+				{counter && (
+					<span className="text-xs text-subtitle">{counter}</span>
+				)}
+			</div>
 			<div className="relative">
 				<input
 					type={type}

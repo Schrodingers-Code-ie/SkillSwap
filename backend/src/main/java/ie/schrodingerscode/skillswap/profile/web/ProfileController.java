@@ -1,10 +1,13 @@
 package ie.schrodingerscode.skillswap.profile.web;
 
+import ie.schrodingerscode.skillswap.auth.CurrentUser;
 import ie.schrodingerscode.skillswap.profile.application.GetProfileService;
 import ie.schrodingerscode.skillswap.profile.application.ProfileSkillService;
 import ie.schrodingerscode.skillswap.profile.application.ProfileView;
+import ie.schrodingerscode.skillswap.profile.application.UpdateProfileService;
 import ie.schrodingerscode.skillswap.profile.web.dto.AddLearnSkillRequest;
 import ie.schrodingerscode.skillswap.profile.web.dto.AddTeachSkillRequest;
+import ie.schrodingerscode.skillswap.profile.web.dto.UpdateProfileRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -15,15 +18,27 @@ public class ProfileController {
 
     private final GetProfileService getProfile;
     private final ProfileSkillService profileSkills;
+    private final UpdateProfileService updateProfile;
+    private final CurrentUser currentUser;
 
-    public ProfileController(GetProfileService getProfile, ProfileSkillService profileSkills) {
+    public ProfileController(GetProfileService getProfile, ProfileSkillService profileSkills,
+            UpdateProfileService updateProfile, CurrentUser currentUser) {
         this.getProfile = getProfile;
         this.profileSkills = profileSkills;
+        this.updateProfile = updateProfile;
+        this.currentUser = currentUser;
     }
 
     @GetMapping("/users/{id}/profile")
     public ProfileView profile(@PathVariable long id) {
         return getProfile.getProfile(id);
+    }
+
+    @PutMapping("/me/profile")
+    public ProfileView updateProfile(@Valid @RequestBody UpdateProfileRequest request) {
+        long userId = currentUser.getId();
+        updateProfile.updateDetails(userId, request.displayName(), request.bio());
+        return getProfile.getProfile(userId);
     }
 
     @PostMapping("/me/teach-skills")

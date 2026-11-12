@@ -1,10 +1,12 @@
 package ie.schrodingerscode.skillswap.profile.web;
 
+import ie.schrodingerscode.skillswap.auth.CurrentUser;
 import ie.schrodingerscode.skillswap.common.exception.GlobalExceptionHandler;
 import ie.schrodingerscode.skillswap.common.exception.UnauthorizedException;
 import ie.schrodingerscode.skillswap.skill.FakeSkillRepository;
 import ie.schrodingerscode.skillswap.profile.application.GetProfileService;
 import ie.schrodingerscode.skillswap.profile.application.ProfileSkillService;
+import ie.schrodingerscode.skillswap.profile.application.UpdateProfileService;
 import ie.schrodingerscode.skillswap.profile.domain.Profile;
 import ie.schrodingerscode.skillswap.profile.FakeProfileRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +19,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,22 +37,24 @@ class ProfileControllerTests {
         FakeSkillRepository skills = new FakeSkillRepository();
 
         loggedIn.set(true);
-        ProfileSkillService skillService = new ProfileSkillService(profiles, skills, () -> {
+        CurrentUser currentUser = () -> {
             if (!loggedIn.get()) {
                 throw new UnauthorizedException("Not logged in");
             }
             return USER_ID;
-        });
+        };
+        ProfileSkillService skillService = new ProfileSkillService(profiles, skills, currentUser);
 
         mvc = MockMvcBuilders
                 .standaloneSetup(new ProfileController(new GetProfileService(profiles, skills),
-                        skillService))
+                        skillService, new UpdateProfileService(profiles), currentUser))
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
     }
 
     private static final String TEACH = "/api/me/teach-skills";
     private static final String LEARN = "/api/me/learn-skills";
+    private static final String ME = "/api/me/profile";
 
     @Test
     void addTeachSkillReturns201() throws Exception {
@@ -153,5 +158,40 @@ class ProfileControllerTests {
     void unknownProfileReturns404() throws Exception {
         mvc.perform(get("/api/users/555/profile"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void updateProfileReturns200AndSavesChanges() throws Exception {
+        mvc.perform(put(ME).contentType(MediaType.APPLICATION_JSON)
+                .content("{\"displayName\": \"  Jane Doe  \", \"bio\": \"Final-year CS student\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.displayName").value("Jane Doe"))
+                .andExpect(jsonPath("$.bio").value("Final-year CS student"));
+
+        mvc.perform(get("/api/users/" + USER_ID + "/profile"))
+                .andExpect(jsonPath("$.displayName").value("Jane Doe"))
+                .andExpect(jsonPath("$.bio").value("Final-year CS student"));
+    }
+
+    @Test
+    void blankNameReturns400AndChangesNothing() throws Exception {
+        mvc.perform(put(ME).contentType(MediaType.APPLICATION_JSON)
+                .content("{\"displayName\": \"   \", \"bio\": \"New bio\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message").value("displayName: Name is required"));
+
+        mvc.perform(get("/api/users/" + USER_ID + "/profile"))
+                .andExpect(jsonPath("$.displayName").value("Test User"))
+                .andExpect(jsonPath("$.bio").value("Test bio"));
+    }
+
+    @Test
+    void updateProfileWithoutLoginReturns401() throws Exception {
+        loggedIn.set(false);
+
+        mvc.perform(put(ME).contentType(MediaType.APPLICATION_JSON)
+                .content("{\"displayName\": \"Jane Doe\"}"))
+                .andExpect(status().isUnauthorized());
     }
 }
