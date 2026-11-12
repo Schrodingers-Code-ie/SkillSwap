@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { removeLearnSkill, removeTeachSkill } from '../api/skills';
 import Spinner from '../components/Spinner';
+import EditDetailsForm from '../components/profile/EditDetailsForm';
 import SkillCard from '../components/skills/SkillCard';
 import SkillsModal from '../components/skills/SkillsModal';
 import { useProfile } from '../components/skills/profile-context';
@@ -11,6 +12,8 @@ export default function Profile() {
 	const [editing, setEditing] = useState(false);
 	const [actionError, setActionError] = useState('');
 	const [removing, setRemoving] = useState(false);
+	const [editingDetails, setEditingDetails] = useState(false);
+	const [detailsError, setDetailsError] = useState('');
 
 	if (loading) {
 		return (
@@ -21,6 +24,7 @@ export default function Profile() {
 	}
 	if (!profile) return <p className="p-10 text-error">{error}</p>;
 
+	// one delete at a time, so a double-click doesn't send two
 	async function remove(action, id) {
 		if (removing) return;
 		setRemoving(true);
@@ -35,6 +39,16 @@ export default function Profile() {
 		}
 	}
 
+	async function detailsSaved() {
+		setEditingDetails(false);
+		setDetailsError('');
+		try {
+			await reload();
+		} catch (e) {
+			setDetailsError(`Saved, but the page didn't refresh: ${e.message}`);
+		}
+	}
+
 	return (
 		<section className="mx-auto max-w-5xl rounded-container-card bg-card-bg p-10 shadow-container">
 			<div className="text-center">
@@ -43,13 +57,41 @@ export default function Profile() {
 					size="xl"
 					className="mx-auto"
 				/>
-				<h1 className="mt-4 text-2xl text-strong-text">
-					{profile.displayName}
-				</h1>
-				<p className="text-sm text-subtitle">@{user.username}</p>
-				{profile.bio && (
-					<p className="mx-auto mt-4 max-w-md text-sm text-subtitle">
-						{profile.bio}
+				{editingDetails ? (
+					<EditDetailsForm
+						profile={profile}
+						onSaved={detailsSaved}
+						onCancel={() => setEditingDetails(false)}
+					/>
+				) : (
+					<>
+						{/* Edit sits to the right of the name, so the name stays centred (Figma) */}
+						<div className="relative mx-auto mt-5 w-fit">
+							<h1 className="text-2xl text-title">
+								{profile.displayName}
+							</h1>
+							<button
+								type="button"
+								onClick={() => setEditingDetails(true)}
+								aria-label="Edit name and bio"
+								className="absolute left-full top-1/2 ml-6 h-7 -translate-y-1/2 cursor-pointer rounded-input bg-light-button-bg px-5 text-[13px] text-light-button-text transition hover:shadow-light-hover active:bg-light-button-pressed-bg sm:ml-14"
+							>
+								Edit
+							</button>
+						</div>
+						<p className="mt-1 text-sm text-subtitle">
+							@{user.username}
+						</p>
+						{profile.bio && (
+							<p className="mx-auto mt-4 max-w-md whitespace-pre-line text-sm text-title">
+								{profile.bio}
+							</p>
+						)}
+					</>
+				)}
+				{detailsError && (
+					<p role="alert" className="mt-3 text-sm text-error">
+						{detailsError}
 					</p>
 				)}
 				<button

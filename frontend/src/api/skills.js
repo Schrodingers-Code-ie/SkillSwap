@@ -11,3 +11,5 @@ export const removeTeachSkill = (skillId) =>
 	api.delete(`/me/teach-skills/${skillId}`);
 export const removeLearnSkill = (skillId) =>
 	api.delete(`/me/learn-skills/${skillId}`);
+export const updateProfile = (displayName, bio) =>
+	api.put('/me/profile', { displayName, bio });
