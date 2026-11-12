@@ -82,11 +82,11 @@ export default function RequestsBell() {
 				onClick={toggle}
 				aria-label={`Requests (${incoming.length})`}
 				aria-expanded={isOpen}
-				className="relative w-10 h-10 cursor-pointer rounded-full bg-card-bg border border-card-border flex items-center justify-center text-title"
+				className="relative size-11 cursor-pointer rounded-full bg-card-bg border border-card-border flex items-center justify-center text-title"
 			>
 				<BellIcon />
 				{incoming.length > 0 && (
-					<span className="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-dark-button-bg text-dark-button-text text-xs flex items-center justify-center">
+					<span className="absolute -top-[3px] -right-[3px] min-w-[19px] h-[19px] px-1 rounded-full bg-dark-button-bg text-dark-button-text text-xs flex items-center justify-center">
 						{incoming.length}
 					</span>
 				)}

@@ -15,8 +15,8 @@ import SkillForm from './SkillForm';
 const DARK_BUTTON =
 	'h-[39px] w-[144px] cursor-pointer rounded-full bg-dark-button-bg text-[15px] text-dark-button-text shadow-dark-button transition hover:shadow-dark-button-hover active:bg-dark-button-pressed-bg disabled:cursor-default disabled:opacity-40 disabled:shadow-none';
 
-//onClose is only used in edit mode
-//if skills are missing,the pop-up can't be closed
+// onClose is only used in edit mode (opened from "Edit your skills").
+// In setup mode (skills missing) the pop-up can't be dismissed.
 export default function SkillsModal({ onClose }) {
 	const { profile, reload, setupOpen, finishSetup, missingSkills } =
 		useProfile();
@@ -36,6 +36,23 @@ export default function SkillsModal({ onClose }) {
 			.catch((e) => setError(e.message));
 	}, []);
 
+	// Stop the page behind the pop-up from scrolling while it's open. The
+	// padding fills the gap left by the hidden scrollbar, so nothing shifts.
+	useEffect(() => {
+		const { body, documentElement } = document;
+		const scrollbar = window.innerWidth - documentElement.clientWidth;
+		const previous = {
+			overflow: body.style.overflow,
+			paddingRight: body.style.paddingRight,
+		};
+		body.style.overflow = 'hidden';
+		if (scrollbar > 0) body.style.paddingRight = `${scrollbar}px`;
+		return () => {
+			body.style.overflow = previous.overflow;
+			body.style.paddingRight = previous.paddingRight;
+		};
+	}, []);
+
 	useEffect(() => {
 		if (!closable) return;
 		const onKey = (e) => e.key === 'Escape' && onClose();
@@ -47,7 +64,9 @@ export default function SkillsModal({ onClose }) {
 	const items = teaching ? profile.teachSkills : profile.learnSkills;
 	const takenIds = new Set(items.map((s) => s.skillId));
 
-	//the change is saved once action() is done
+	// The change is saved once action() resolves. If only the reload fails,
+	// show the error but don't reject, so the form still clears and a retry
+	// doesn't send the same skill again (409).
 	async function run(action) {
 		setError('');
 		try {
@@ -79,6 +98,8 @@ export default function SkillsModal({ onClose }) {
 		}
 	}
 
+	// Also closes edit mode: opening from "Edit your skills" and removing the
+	// last skill switches into setup mode, and both need closing in one click.
 	function finish() {
 		finishSetup();
 		onClose?.();
@@ -86,7 +107,7 @@ export default function SkillsModal({ onClose }) {
 
 	return (
 		<div
-			className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/40 p-6"
+			className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overscroll-contain bg-black/40 p-6"
 			onMouseDown={(e) => {
 				if (closable && e.target === e.currentTarget) onClose();
 			}}
@@ -171,7 +192,7 @@ export default function SkillsModal({ onClose }) {
 						: 'Skills you want to learn'}{' '}
 					({items.length})
 				</h3>
-				<div className="scrollbar-soft max-h-64 space-y-3 overflow-y-auto">
+				<div className="scrollbar-soft max-h-64 space-y-3 overflow-y-auto overscroll-contain">
 					{items.length === 0 && (
 						<p className="text-sm text-subtitle">No skills yet.</p>
 					)}

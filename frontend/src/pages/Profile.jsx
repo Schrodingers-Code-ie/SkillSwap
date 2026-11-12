@@ -36,7 +36,7 @@ export default function Profile() {
 	}
 
 	return (
-		<section className="mx-auto max-w-5xl rounded-container-card bg-card-bg p-10 shadow-container">
+		<section className="mx-4 mb-4 min-h-[calc(100dvh-72px-16px)] rounded-container-card border border-container-border bg-card-bg p-6 shadow-container sm:p-10 lg:mx-[50px] lg:mb-9 lg:min-h-[calc(100dvh-72px-36px)]">
 			<div className="text-center">
 				<ProfileCircle
 					name={profile.displayName}
