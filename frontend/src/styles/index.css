@@ -76,7 +76,7 @@
 	--raw-active-border-light-grey: rgb(
 		77 70 56 / 40%
 	); /* Border for active inputs */
-		--raw-border-mid-grey: rgb(
+	--raw-border-mid-grey: rgb(
 		77 70 56 / 30%
 	); /* Divider between sections on the profile page */
 	--raw-border-deep-grey: rgb(
