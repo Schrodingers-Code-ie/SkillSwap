@@ -1,63 +1,17 @@
 import SkillBubble from '../ui/SkillBubble.jsx';
-import { api } from '../../api/client.js';
-import { useEffect, useState } from 'react';
-import plus_icon from '../../assets/plus_icon.svg';
-import tick_icon from '../../assets/tick_icon.svg';
-import cross_icon from '../../assets/cross_icon.svg';
+import RequestButton from './RequestButton.jsx';
+import { useState } from 'react';
 
-export default function MatchCard({ match, requestId, onRequestChange }) {
-	// 3 states of the same buttom to show different text: idle = "Add", sent = "Sent", cancel = "Cancel"
-	const [status, setStatus] = useState(requestId ? 'sent' : 'idle');
-	const [busy, setBusy] = useState(false);
+// selected: this card is the one shown in the side profile panel
+// onSelect: clicking anywhere on the card opens this person in the panel
+export default function MatchCard({
+	match,
+	requestId,
+	onRequestChange,
+	selected,
+	onSelect,
+}) {
 	const [error, setError] = useState(null);
-
-	async function handleButtonClick() {
-		if (busy) return; // Already doing some request, so that we can't spam clicks and brake the API call
-
-		// Sent -> Cancel is just a UI step, no request sent yet
-		if (status === 'sent') {
-			setStatus('cancel');
-			return;
-		}
-
-		setBusy(true);
-		try {
-			if (status === 'idle') {
-				const createdSwapRequest = await api.post('/requests', {
-					receiverId: match.matchPersonId,
-				});
-				onRequestChange(match.matchPersonId, createdSwapRequest.id); // Creates a new entry, see onRequestChange
-				setStatus('sent');
-				setError(null);
-			} else {
-				// Clicked on "Cancel?" so cancel the request
-				await api.delete(`/requests/${requestId}`);
-				onRequestChange(match.matchPersonId, null); // Enters a delete block inside onRequestChange
-				setStatus('idle');
-				setError(null);
-			}
-		} catch (err) {
-			setError(err.message);
-		} finally {
-			setBusy(false);
-		}
-	}
-
-	// useEffect plays the role of a timer here for "Cancel?" to go back to "Sent"
-	useEffect(() => {
-		if (status !== 'cancel' || busy) return; // If the button is not "Cancel?" or a call is running, don't start the timer
-
-		const timer = setTimeout(() => setStatus('sent'), 2000); // 2s timer
-
-		return () => clearTimeout(timer); // Clear the timer once finished
-	}, [status, busy]);
-
-	const buttonStyles =
-		status === 'idle'
-			? 'bg-dark-button-bg text-dark-button-text hover:shadow-dark-button-hover active:bg-dark-button-pressed-bg'
-			: status === 'sent'
-				? 'bg-light-button-bg border-1 border-grey-button-border text-light-button-text hover:shadow-light-hover active:bg-light-button-pressed-bg'
-				: 'text-light-button-text bg-red-button-bg border-1 border-red-button-border hover:shadow-light-hover active:bg-red-button-pressed-bg';
 
 	function getInitials(name) {
 		return name
@@ -78,7 +32,10 @@ export default function MatchCard({ match, requestId, onRequestChange }) {
 					{error}
 				</p>
 			)}
-			<div className="match-card grid grid-cols-[auto_1fr] items-center gap-x-4 gap-y-3 md:flex md:gap-4 rounded-card border border-container-border bg-card-bg px-5 py-4">
+			<div
+				onClick={onSelect}
+				className={`match-card grid grid-cols-[auto_1fr] items-center gap-x-4 gap-y-3 md:flex md:gap-4 rounded-card border bg-card-bg px-5 py-4 cursor-pointer ${selected ? 'border-title ring-1 ring-title' : 'border-container-border'}`}
+			>
 				<div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-3 border-card-bg bg-avatar-bg text-lg font-main font-g-medium text-dark-button-text shadow-avatar">
 					{getInitials(match.matchPersonName)}
 				</div>
@@ -125,31 +82,13 @@ export default function MatchCard({ match, requestId, onRequestChange }) {
 					</div>
 				</div>
 
-				<button
-					type="button"
-					className={`col-span-2 md:col-span-1 justify-self-start flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full w-33 md:w-43 py-2 md:py-3 font-main font-g-medium transition disabled:cursor-auto disabled:opacity-60 disabled:hover:shadow-none ${buttonStyles}`}
-					disabled={busy}
-					onClick={handleButtonClick}
-				>
-					{status === 'idle' && (
-						<>
-							<img src={plus_icon} alt="plus icon"></img>
-							Add
-						</>
-					)}
-					{status === 'sent' && (
-						<>
-							<img src={tick_icon} alt="tick icon"></img>
-							Sent
-						</>
-					)}
-					{status === 'cancel' && (
-						<>
-							<img src={cross_icon} alt="cross icon"></img>
-							Cancel?
-						</>
-					)}
-				</button>
+				<RequestButton
+					personId={match.matchPersonId}
+					requestId={requestId}
+					onRequestChange={onRequestChange}
+					onError={setError}
+					className="col-span-2 md:col-span-1 justify-self-start w-33 md:w-43 py-2 md:py-3"
+				/>
 			</div>
 		</>
 	);
