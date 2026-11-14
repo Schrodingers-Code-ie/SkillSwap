@@ -38,7 +38,7 @@ export default function Filters({
 	const content = (
 		<>
 			<div className="header justify-between items-baseline">
-				<h1 className="text-title text-[28px] min-[701px]:text-2xl font-main font-g-semibold">
+				<h1 className="text-title text-[28px] min-sm:text-2xl font-main font-g-semibold">
 					FILTERS
 				</h1>
 				<u

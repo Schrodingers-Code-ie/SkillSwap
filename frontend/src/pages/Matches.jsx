@@ -149,7 +149,7 @@ export default function Matches() {
 			: undefined;
 
 	return (
-		<div className="search-page-container px-5 min-[701px]:px-12 py-4 min-[701px]:py-8 flex justify-center">
+		<div className="search-page-container px-5 min-sm:px-12 py-4 min-sm:py-8 flex justify-center">
 			<Filters
 				learnSkills={learnSkills}
 				teachSkills={teachSkills}
@@ -160,10 +160,10 @@ export default function Matches() {
 				clearFilters={clearFilters}
 			/>
 
-			<div className="suggestions-section w-full min-[701px]:mx-10 max-w-3xl">
-				<div className="header mb-4 min-[701px]:flex items-start justify-between min-[701px]:gap-6">
+			<div className="suggestions-section w-full min-sm:mx-10 max-w-3xl">
+				<div className="header mb-4 min-sm:flex items-start justify-between min-sm:gap-6">
 					<div className="titles">
-						<h1 className="text-title text-[28px] min-[701px]:text-3xl font-main font-g-medium">
+						<h1 className="text-title text-[28px] min-sm:text-3xl font-main font-g-medium">
 							Suggested matches
 						</h1>
 						<p className="text-subtitle text-base font-main font-g-regular py-3">
@@ -172,7 +172,7 @@ export default function Matches() {
 							you can swap skills with
 						</p>
 					</div>
-					<div className="w-60 min-[701px]:w-auto sort-dropdown min-[701px]:mt-6 flex shrink-0 items-center gap-4 rounded-full border border-container-border bg-card-bg px-5 py-3 text-main-content font-main">
+					<div className="w-60 min-sm:w-auto sort-dropdown min-sm:mt-6 flex shrink-0 items-center gap-4 rounded-full border border-container-border bg-card-bg px-5 py-3 text-main-content font-main">
 						<span className="font-main font-g-medium pr-4">
 							Sort
 						</span>
