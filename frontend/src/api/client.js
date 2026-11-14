@@ -10,7 +10,7 @@
 //
 // Paths are relative to /api, and Vite forwards them to the backend.
 
-function getCsrfToken() {
+export function getCsrfToken() {
 	const match = document.cookie.match(/(?:^|; )XSRF-TOKEN=([^;]*)/);
 	return match ? decodeURIComponent(match[1]) : null;
 }
