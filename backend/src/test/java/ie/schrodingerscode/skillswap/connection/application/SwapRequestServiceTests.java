@@ -3,12 +3,17 @@ package ie.schrodingerscode.skillswap.connection.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import ie.schrodingerscode.skillswap.connection.domain.ConnectionCreated;
 import ie.schrodingerscode.skillswap.connection.domain.SwapRequest;
 import ie.schrodingerscode.skillswap.connection.domain.exception.DuplicateRequestException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.InvalidRequestStateException;
+import ie.schrodingerscode.skillswap.connection.domain.exception.NotRequestReceiverException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.NotRequestSenderException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.ReceiverNotFoundException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.RequestNotFoundException;
@@ -21,10 +26,14 @@ class SwapRequestServiceTests {
 
     private SwapRequestService service;
 
+    //ApplicationEventPublisher has one method, so events::add works as a fake publisher
+    private final List<Object> events = new ArrayList<>();
+
     @BeforeEach
     void setUp() {
         //fresh empty storage for every test, and every user exists except 99
-        service = new SwapRequestService(new InMemorySwapRequestRepository(), userId -> userId != UNKNOWN_USER);
+        service = new SwapRequestService(new InMemorySwapRequestRepository(), userId -> userId != UNKNOWN_USER,
+                events::add);
     }
 
     @Test
@@ -141,5 +150,24 @@ class SwapRequestServiceTests {
     @Test
     void connectionIdsOfIsEmptyWithNoConnections() {
         assertThat(service.connectionIdsOf(1)).isEmpty();
+    }
+
+    @Test
+    void acceptingPublishesConnectionCreated() {
+        SwapRequest sent = service.send(1, 2);
+
+        service.accept(sent.getId(), 2);
+
+        assertThat(events).containsExactly(new ConnectionCreated(1, 2));
+    }
+
+    @Test
+    void failedAcceptPublishesNothing() {
+        SwapRequest sent = service.send(1, 2);
+
+        //only the receiver can accept
+        assertThatThrownBy(() -> service.accept(sent.getId(), 1))
+                .isInstanceOf(NotRequestReceiverException.class);
+        assertThat(events).isEmpty();
     }
 }
