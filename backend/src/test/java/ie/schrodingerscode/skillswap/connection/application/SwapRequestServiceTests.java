@@ -3,10 +3,14 @@ package ie.schrodingerscode.skillswap.connection.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import ie.schrodingerscode.skillswap.connection.domain.SwapRequest;
+import ie.schrodingerscode.skillswap.connection.domain.exception.BlockedRequestException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.DuplicateRequestException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.InvalidRequestStateException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.NotRequestSenderException;
@@ -21,10 +25,30 @@ class SwapRequestServiceTests {
 
     private SwapRequestService service;
 
+    //fake blocks, stored as "blocker->blocked". Empty unless a test adds one
+    private final Set<String> blocks = new HashSet<>();
+
     @BeforeEach
     void setUp() {
         //fresh empty storage for every test, and every user exists except 99
-        service = new SwapRequestService(new InMemorySwapRequestRepository(), userId -> userId != UNKNOWN_USER);
+        service = new SwapRequestService(new InMemorySwapRequestRepository(), userId -> userId != UNKNOWN_USER,
+                (a, b) -> blocks.contains(a + "->" + b) || blocks.contains(b + "->" + a));
+    }
+
+    @Test
+    void cannotRequestSomeoneYouBlocked() {
+        blocks.add("1->2");
+        assertThatThrownBy(() -> service.send(1, 2))
+                .isInstanceOf(BlockedRequestException.class);
+        assertThat(service.pendingRequests(2)).isEmpty();
+    }
+
+    @Test
+    void cannotRequestSomeoneWhoBlockedYou() {
+        blocks.add("1->2");
+        assertThatThrownBy(() -> service.send(2, 1))
+                .isInstanceOf(BlockedRequestException.class);
+        assertThat(service.pendingRequests(1)).isEmpty();
     }
 
     @Test

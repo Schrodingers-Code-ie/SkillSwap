@@ -86,6 +86,14 @@ export default function Chat() {
 		});
 	}
 
+	// Called by ProfilePanel after you block the open friend: they leave the list straight away,
+	// without waiting for the next poll, and the next chat in the list opens instead
+	function handleBlocked(blockedId) {
+		const others = chats.filter((chat) => chat.userId !== blockedId);
+		setChats(others);
+		setSelectedId(others[0]?.userId ?? null);
+	}
+
 	return (
 		<div className="grid grid-cols-1 grid-rows-[auto_75dvh_auto] gap-6 px-4 pb-6 font-main [grid-template-areas:'list'_'chat'_'panel'] md:h-[calc(100dvh-72px)] md:grid-cols-[280px_minmax(0,1fr)] md:grid-rows-[minmax(12rem,1fr)_minmax(0,auto)] md:[grid-template-areas:'list_chat'_'panel_chat'] lg:pl-[52px] lg:pr-[52px] xl:grid-cols-[320px_minmax(0,1fr)_320px] xl:grid-rows-1 xl:[grid-template-areas:'list_chat_panel']">
 			{/* Friend List on the left */}
@@ -117,6 +125,7 @@ export default function Chat() {
 					friend={selected}
 					profile={profiles[selected.userId]}
 					myProfile={myProfile}
+					onBlocked={() => handleBlocked(selected.userId)}
 					className="[grid-area:panel] min-h-0 overflow-y-auto scrollbar-soft"
 				/>
 			) : (

@@ -27,6 +27,7 @@ import ie.schrodingerscode.skillswap.common.exception.UnauthorizedException;
 import ie.schrodingerscode.skillswap.connection.application.SwapRequestService;
 import ie.schrodingerscode.skillswap.connection.domain.RequestStatus;
 import ie.schrodingerscode.skillswap.connection.domain.SwapRequest;
+import ie.schrodingerscode.skillswap.connection.domain.exception.BlockedRequestException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.DuplicateRequestException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.InvalidRequestStateException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.NotRequestReceiverException;
@@ -105,6 +106,15 @@ class SwapRequestControllerTests {
         when(service.send(2L, 1L)).thenThrow(new DuplicateRequestException());
 
         sendRequest(2, 1).andExpect(status().isConflict());
+    }
+
+    @Test
+    void requestBetweenBlockedUsersReturns403WithoutSayingWhoBlocked() throws Exception {
+        when(service.send(1L, 2L)).thenThrow(new BlockedRequestException());
+
+        sendRequest(1, 2)
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.message").value("You can't send a swap request to this user"));
     }
 
     @Test
