@@ -12,7 +12,13 @@ const MAX_LENGTH = 2000; // same limit as MessageText on the backend
 // friend: the open friend's chat entry ({ userId, displayName, lastMessage })
 // onSend: called with the saved message after a successful send, so the Chat page
 //         can move this friend to the top of the list straight away
-export default function Conversation({ friend, onSend, className = '' }) {
+// pushed: messages that arrived over the WebSocket, for any chat
+export default function Conversation({
+	friend,
+	onSend,
+	pushed = [],
+	className = '',
+}) {
 	// The logged-in user, loaded by protectedLoader (route with id protected)
 	const me = useRouteLoaderData('protected');
 
@@ -24,6 +30,16 @@ export default function Conversation({ friend, onSend, className = '' }) {
 	const [draft, setDraft] = useState('');
 	const [sending, setSending] = useState(false);
 	const [sendError, setSendError] = useState(null);
+
+	// Loaded and sent messages plus pushed ones for this chat, each id once
+	const shown = mergeById(
+		messages,
+		pushed.filter(
+			(message) =>
+				message.senderId === friend.userId ||
+				message.receiverId === friend.userId,
+		),
+	);
 
 	const firstName = friend.displayName.split(' ')[0];
 	const text = draft.trim();
@@ -60,7 +76,7 @@ export default function Conversation({ friend, onSend, className = '' }) {
 	useEffect(() => {
 		const list = listRef.current;
 		if (list) list.scrollTop = list.scrollHeight;
-	}, [messages.length]);
+	}, [shown.length]);
 
 	async function handleSubmit(e) {
 		e.preventDefault();
@@ -117,17 +133,17 @@ export default function Conversation({ friend, onSend, className = '' }) {
 						</p>
 					)}
 
-					{loaded && messages.length === 0 && !error && (
+					{loaded && shown.length === 0 && !error && (
 						<p className="mt-10 text-center text-sm text-subtitle">
 							No messages yet. Say hi to {firstName}.
 						</p>
 					)}
 
-					{messages.map((message, index) => {
+					{shown.map((message, index) => {
 						const mine = message.senderId === me.id;
 						const newDay =
 							index === 0 ||
-							dayKey(messages[index - 1].sentAt) !==
+							dayKey(shown[index - 1].sentAt) !==
 								dayKey(message.sentAt);
 
 						return (
