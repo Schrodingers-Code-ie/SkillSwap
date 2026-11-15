@@ -50,11 +50,11 @@ export default function SkillForm({ catalogue, takenIds, withLevel, onAdd }) {
 	}
 
 	return (
-		<div className="rounded-card bg-light-button-bg px-[18px] pb-6 pt-4">
+		<div className="rounded-card bg-light-button-bg px-[18px] py-2 xs:pb-6 xs:pt-4">
 			<div className="relative">
 				<label
 					htmlFor={`${id}-skill`}
-					className="mb-2.5 block text-sm text-title"
+					className="mb-1 xs:mb-2.5 block text-sm text-title"
 				>
 					Skill
 				</label>
@@ -84,8 +84,11 @@ export default function SkillForm({ catalogue, takenIds, withLevel, onAdd }) {
 			</div>
 
 			{withLevel && (
-				<div className="mt-3">
-					<p id={`${id}-level`} className="mb-2.5 text-sm text-title">
+				<div className="mt-1 xs:mt-3">
+					<p
+						id={`${id}-level`}
+						className="mb-1 xs:mb-2.5 text-sm text-title"
+					>
 						Your level
 					</p>
 					<LevelPicker

@@ -95,9 +95,9 @@ export default function SkillsModal({ onClose }) {
 				role="dialog"
 				aria-modal="true"
 				aria-labelledby="skills-title"
-				className="w-full max-w-[760px] rounded-container-card border border-container-border bg-card-bg p-9 text-left shadow-container"
+				className="w-full max-w-[760px] rounded-container-card border border-container-border bg-card-bg p-4 xs:p-9 text-left shadow-container"
 			>
-				<div className="mb-5 flex items-start justify-between">
+				<div className="xs:mb-5 flex items-start justify-between">
 					<div className="flex items-center gap-[30px] pt-1 text-[11px] font-g-medium uppercase tracking-wider text-subtitle">
 						Step {step} of 2
 						<span className="flex gap-1">
@@ -134,12 +134,15 @@ export default function SkillsModal({ onClose }) {
 					)}
 				</div>
 
-				<h2 id="skills-title" className="text-2xl text-title">
+				<h2
+					id="skills-title"
+					className="text-lg sm:text-2xl text-title"
+				>
 					{teaching
 						? 'What can you teach?'
 						: 'What do you want to learn?'}
 				</h2>
-				<p className="mb-6 mt-2.5 text-sm text-subtitle">
+				<p className="my-1 xs:mb-6 xs:mt-2.5 text-sm text-subtitle">
 					{teaching
 						? 'Add each skill you are happy to share and how good you are at it.'
 						: 'Add the skills you want to pick up.'}
@@ -171,7 +174,7 @@ export default function SkillsModal({ onClose }) {
 						: 'Skills you want to learn'}{' '}
 					({items.length})
 				</h3>
-				<div className="scrollbar-soft max-h-64 space-y-3 overflow-y-auto">
+				<div className="scrollbar-soft max-h-20 xs:max-h-64 space-y-3 overflow-y-auto">
 					{items.length === 0 && (
 						<p className="text-sm text-subtitle">No skills yet.</p>
 					)}

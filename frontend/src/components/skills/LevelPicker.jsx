@@ -5,7 +5,7 @@ export default function LevelPicker({ value, onChange, labelId }) {
 		<div
 			role="group"
 			aria-labelledby={labelId}
-			className="grid grid-cols-3 gap-2"
+			className="grid grid-rows-3 xs:grid-cols-3 xs:grid-rows-1 gap-2"
 		>
 			{LEVELS.map((level) => (
 				<button

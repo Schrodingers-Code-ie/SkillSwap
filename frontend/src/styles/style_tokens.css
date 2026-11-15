@@ -86,6 +86,8 @@
 
 	--color-checkbox-border: var(--raw-grey);
 
+	--breakpoint-xs: 410px;
+
 	/* Creators line on the welcome panel, use as "animate-marquee" */
 	--animate-marquee: marquee 25s linear infinite;
 	@keyframes marquee {
