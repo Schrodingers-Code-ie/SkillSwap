@@ -31,11 +31,11 @@ export default function Chat() {
 
 	// The logged-in user, to tell who the other person in a pushed message is
 	const me = useRouteLoaderData('protected');
-	const { subscribe } = useSocket();
+	const { connected, subscribe } = useSocket();
 	// Messages pushed over the socket while this page is open, passed to Conversation
 	const [pushed, setPushed] = useState([]);
 
-	// Refresh the chat list every POLL_MS while the Chat page is open,
+	// Refresh the chat list every POLL_MS while the Chat page is open and the socket is down,
 	// and straight away when a new connection is pushed over the socket
 	useEffect(() => {
 		let cancelled = false;
@@ -52,7 +52,9 @@ export default function Chat() {
 			}
 		}
 
-		const timer = setInterval(refresh, POLL_MS);
+		// Socket (re)connected: load once to catch up on anything missed while it was down
+		if (connected) refresh();
+		const timer = connected ? null : setInterval(refresh, POLL_MS);
 		// A request was accepted: the server puts the new friend in the right place
 		const unsubscribe = subscribe('/user/queue/connections', refresh);
 
@@ -61,7 +63,7 @@ export default function Chat() {
 			clearInterval(timer);
 			unsubscribe();
 		};
-	}, [subscribe]);
+	}, [subscribe, connected]);
 
 	// New messages pushed by the backend, ones I received and ones I sent from another tab
 	useEffect(() => {

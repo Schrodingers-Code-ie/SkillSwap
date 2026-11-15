@@ -3,6 +3,7 @@ import { useRouteLoaderData } from 'react-router';
 import { api } from '../../api/client.js';
 import { dayLabel, timeLabel } from '../../utils/time.js';
 import Profile from '../ui/Profile';
+import { useSocket } from '../socket/socket-context';
 import arrowUpIcon from '../../assets/arrow-up.svg';
 
 const POLL_MS = 3000; // time between polls
@@ -21,6 +22,7 @@ export default function Conversation({
 }) {
 	// The logged-in user, loaded by protectedLoader (route with id protected)
 	const me = useRouteLoaderData('protected');
+	const { connected } = useSocket();
 
 	const [messages, setMessages] = useState([]);
 	const [loaded, setLoaded] = useState(false);
@@ -46,7 +48,7 @@ export default function Conversation({
 	const canSend = text !== '' && !sending; // text exist and no message is still sending
 	const notice = sendError ?? error;
 
-	// Polling
+	// Polling, only while the socket is down. When it (re)connects, load once to catch up
 	// Stops when the user leaves the page or switches friend
 	useEffect(() => {
 		let cancelled = false;
@@ -64,13 +66,13 @@ export default function Conversation({
 		}
 
 		load();
-		const timer = setInterval(load, POLL_MS);
+		const timer = connected ? null : setInterval(load, POLL_MS);
 
 		return () => {
 			cancelled = true;
 			clearInterval(timer);
 		};
-	}, [friend.userId]);
+	}, [friend.userId, connected]);
 
 	// Scroll to the newest message whenever one is added
 	useEffect(() => {
