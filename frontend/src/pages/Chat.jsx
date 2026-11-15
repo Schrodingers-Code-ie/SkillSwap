@@ -35,7 +35,8 @@ export default function Chat() {
 	// Messages pushed over the socket while this page is open, passed to Conversation
 	const [pushed, setPushed] = useState([]);
 
-	// Refresh the chat list every POLL_MS while the Chat page is open
+	// Refresh the chat list every POLL_MS while the Chat page is open,
+	// and straight away when a new connection is pushed over the socket
 	useEffect(() => {
 		let cancelled = false;
 
@@ -52,12 +53,15 @@ export default function Chat() {
 		}
 
 		const timer = setInterval(refresh, POLL_MS);
+		// A request was accepted: the server puts the new friend in the right place
+		const unsubscribe = subscribe('/user/queue/connections', refresh);
 
 		return () => {
 			cancelled = true;
 			clearInterval(timer);
+			unsubscribe();
 		};
-	}, []);
+	}, [subscribe]);
 
 	// New messages pushed by the backend, ones I received and ones I sent from another tab
 	useEffect(() => {
