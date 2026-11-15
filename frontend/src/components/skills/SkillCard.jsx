@@ -1,12 +1,28 @@
+import cross_icon from '../../assets/cross_icon.svg';
 import { levelLabel } from './levels';
 
-export default function SkillCard({ name, proficiency, onRemove, disabled }) {
+const BORDERS = {
+	popup: 'border-skill-card-border',
+	profile: 'border-profile-card-border',
+};
+
+export default function SkillCard({
+	name,
+	proficiency,
+	onRemove,
+	disabled,
+	variant = 'popup',
+}) {
 	return (
-		<div className="flex items-center justify-between rounded-card border border-card-border bg-card-bg px-5 py-3">
-			<div className="flex items-center gap-3">
-				<span className="font-medium text-strong-text">{name}</span>
+		<div
+			className={`flex min-h-11 items-center justify-between gap-3 rounded-card border bg-input-bg px-4 py-2 ${BORDERS[variant]}`}
+		>
+			<div className="flex min-w-0 items-center gap-2.5">
+				<span className="truncate text-[15px] font-g-semibold text-strong-text">
+					{name}
+				</span>
 				{proficiency && (
-					<span className="rounded-full bg-card-border px-3 py-0.5 text-sm">
+					<span className="inline-flex h-[19px] shrink-0 items-center rounded-full bg-teach-badge-bg px-2 text-xs font-g-medium text-orange-bubble">
 						{levelLabel(proficiency)}
 					</span>
 				)}
@@ -17,9 +33,9 @@ export default function SkillCard({ name, proficiency, onRemove, disabled }) {
 					onClick={onRemove}
 					disabled={disabled}
 					aria-label={`Remove ${name}`}
-					className="hover:opacity-60 disabled:opacity-30"
+					className="-mr-1 flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-full hover:opacity-60 disabled:cursor-default disabled:opacity-30"
 				>
-					✕
+					<img src={cross_icon} alt="" className="size-4" />
 				</button>
 			)}
 		</div>
