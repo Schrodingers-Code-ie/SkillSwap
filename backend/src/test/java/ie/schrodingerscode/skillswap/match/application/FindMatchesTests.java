@@ -68,4 +68,47 @@ public class FindMatchesTests {
         Assertions.assertThatThrownBy(() -> service.forUser(1L)) // No one passed in, so we reader.findById() in .forUser() throws
                 .isInstanceOf(UserNotFoundException.class);
     }
+
+    @Test
+    void betweenGivesTheSameSkillListsAsMatches() {
+        FindMatches service = serviceWith(me, strongMatch);
+
+        List<SkillOverlap> result = service.between(1L, List.of(2L));
+
+        Assertions.assertThat(result).hasSize(1);
+        Assertions.assertThat(result.get(0).username()).isEqualTo("StronG12");
+        Assertions.assertThat(result.get(0).skillsTheyCanTeachMe()).containsExactly("Guitar", "Spanish");
+        Assertions.assertThat(result.get(0).skillsICanTeachThem()).containsExactly("Japanese", "Piano");
+    }
+
+    @Test
+    void betweenKeepsPeopleWithNoOverlapWithEmptyLists() {
+        SkillSwapUser noOverlap = new SkillSwapUser(4, "None", "none4", Set.of("Yoga"), Set.of("Baking"));
+        FindMatches service = serviceWith(me, noOverlap);
+
+        List<SkillOverlap> result = service.between(1L, List.of(4L));
+
+        Assertions.assertThat(result).hasSize(1); // forUser() would skip them
+        Assertions.assertThat(result.get(0).skillsTheyCanTeachMe()).isEmpty();
+        Assertions.assertThat(result.get(0).skillsICanTeachThem()).isEmpty();
+    }
+
+    @Test
+    void betweenKeepsTheOrderOfTheIds() {
+        FindMatches service = serviceWith(me, strongMatch, weakMatch);
+
+        Assertions.assertThat(service.between(1L, List.of(3L, 2L)))
+                .extracting(SkillOverlap::userId)
+                .containsExactly(3L, 2L);
+    }
+
+    @Test
+    void betweenWithUnknownUserGivesEmptyLists() {
+        FindMatches service = serviceWith(me); // User 9 doesn't exist
+
+        List<SkillOverlap> result = service.between(1L, List.of(9L));
+
+        Assertions.assertThat(result.get(0).username()).isNull();
+        Assertions.assertThat(result.get(0).skillsTheyCanTeachMe()).isEmpty();
+    }
 }
