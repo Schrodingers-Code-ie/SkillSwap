@@ -9,12 +9,11 @@ import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import ie.schrodingerscode.skillswap.connection.domain.ConnectionCreated;
-import ie.schrodingerscode.skillswap.connection.web.dto.ConnectionResponse;
 import ie.schrodingerscode.skillswap.profile.application.DisplayNames;
 
 /**
  * Pushes a new connection to both people on /user/queue/connections.
- * Each one gets the other person, in the same JSON as GET /api/connections.
+ * Each one gets the other person as { userId, displayName }.
  */
 @Component
 public class PushConnectionOnCreate {
@@ -34,8 +33,8 @@ public class PushConnectionOnCreate {
         long receiver = event.receiverId();
         Map<Long, String> names = displayNames.displayNamesOf(List.of(sender, receiver));
         messaging.convertAndSendToUser(String.valueOf(sender), "/queue/connections",
-                new ConnectionResponse(receiver, names.get(receiver)));
+                new NewConnectionPush(receiver, names.get(receiver)));
         messaging.convertAndSendToUser(String.valueOf(receiver), "/queue/connections",
-                new ConnectionResponse(sender, names.get(sender)));
+                new NewConnectionPush(sender, names.get(sender)));
     }
 }

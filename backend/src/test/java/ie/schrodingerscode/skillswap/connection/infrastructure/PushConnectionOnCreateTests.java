@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import ie.schrodingerscode.skillswap.connection.domain.ConnectionCreated;
-import ie.schrodingerscode.skillswap.connection.web.dto.ConnectionResponse;
 import ie.schrodingerscode.skillswap.profile.application.DisplayNames;
 
 class PushConnectionOnCreateTests {
@@ -24,8 +23,8 @@ class PushConnectionOnCreateTests {
     void eachPersonGetsTheOtherAsTheirNewFriend() {
         push.on(new ConnectionCreated(1, 2));
 
-        verify(messaging).convertAndSendToUser("1", "/queue/connections", new ConnectionResponse(2, "Ben"));
-        verify(messaging).convertAndSendToUser("2", "/queue/connections", new ConnectionResponse(1, "Ann"));
+        verify(messaging).convertAndSendToUser("1", "/queue/connections", new NewConnectionPush(2, "Ben"));
+        verify(messaging).convertAndSendToUser("2", "/queue/connections", new NewConnectionPush(1, "Ann"));
         verifyNoMoreInteractions(messaging);
     }
 }

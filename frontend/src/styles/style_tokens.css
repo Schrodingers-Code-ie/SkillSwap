@@ -40,6 +40,7 @@
 	--color-red-button-pressed-bg: var(--raw-active-bg-light-red);
 	--shadow-dark-button-hover: 0 6px 16px rgba(77, 70, 56, 0.35);
 	--shadow-light-hover: 0 4px 10px rgba(77, 70, 56, 0.15);
+	--shadow-dark-button: 0 4px 10px rgba(77, 70, 56, 0.3);
 
 	--color-grey-button-border: var(--raw-bg-dark-grey);
 	--color-red-button-border: var(--raw-dirty-red);
@@ -48,6 +49,7 @@
 	--color-green-bubble-bg: var(--raw-bg-dark-green);
 	--color-orange-bubble-bg: var(--raw-dirty-yellow);
 	--color-grey-bubble-bg: var(--raw-bg-dark-grey);
+	--color-teach-badge-bg: var(--raw-dirty-yellow);
 	/* Chat messages: ------------------------------ */
 	--color-received-message-bg: var(--raw-message-cream);
 
@@ -63,6 +65,9 @@
 
 	--color-card-bg: var(--raw-container-cream);
 	--color-card-border: var(--raw-border-light-grey);
+	--color-skill-card-border: var(--raw-border-deep-grey);
+	--color-profile-card-border: var(--raw-active-border-light-grey);
+	--color-divider: var(--raw-border-mid-grey);
 
 	/* Big cream containers, e.g. the auth and welcome panels: ------------------------------ */
 	--color-page-bg: var(--raw-bg-cream); /* Use as "bg-page-bg" */
