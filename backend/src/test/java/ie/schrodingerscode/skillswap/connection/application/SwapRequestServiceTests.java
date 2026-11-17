@@ -36,7 +36,8 @@ class SwapRequestServiceTests {
     void setUp() {
         //fresh empty storage for every test, and every user exists except 99
         service = new SwapRequestService(new InMemorySwapRequestRepository(), userId -> userId != UNKNOWN_USER,
-                (a, b) -> blocks.contains(a + "->" + b) || blocks.contains(b + "->" + a), (meId, otherIds) -> otherIds.stream()
+                (a, b) -> blocks.contains(a + "->" + b) || blocks.contains(b + "->" + a),
+                (meId, otherIds) -> otherIds.stream()
                         .map(id -> new SkillOverlap(id, "user" + id, List.of("Guitar"), List.of()))
                         .toList());
     }

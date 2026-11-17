@@ -28,7 +28,8 @@ public class SwapRequestService implements ConnectionChecker, ConnectionLister, 
     private final BlockChecker blocks;
     private final SharedSkills sharedSkills;
 
-    public SwapRequestService(SwapRequestRepository repository, UserChecker users, BlockChecker blocks, SharedSkills sharedSkills) {
+    public SwapRequestService(SwapRequestRepository repository, UserChecker users, BlockChecker blocks,
+            SharedSkills sharedSkills) {
         this.repository = repository;
         this.users = users;
         this.blocks = blocks;
@@ -102,7 +103,7 @@ public class SwapRequestService implements ConnectionChecker, ConnectionLister, 
     public void removeBetween(long userA, long userB) {
         repository.findByPair(UserPair.of(userA, userB)).ifPresent(repository::delete);
     }
-  
+
     //friends with the skills we can swap
     public List<SkillOverlap> friendsWithSkills(long userId) {
         return sharedSkills.between(userId, connectionIdsOf(userId));
