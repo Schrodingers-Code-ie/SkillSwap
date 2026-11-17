@@ -2,6 +2,9 @@ package ie.schrodingerscode.skillswap.connection.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.tuple;
+
+import java.util.List;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,6 +20,7 @@ import ie.schrodingerscode.skillswap.connection.domain.exception.NotRequestSende
 import ie.schrodingerscode.skillswap.connection.domain.exception.ReceiverNotFoundException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.RequestNotFoundException;
 import ie.schrodingerscode.skillswap.connection.infrastructure.InMemorySwapRequestRepository;
+import ie.schrodingerscode.skillswap.match.application.SkillOverlap;
 
 //plain JUnit with the in-memory repository, no Spring needed
 class SwapRequestServiceTests {
@@ -32,7 +36,9 @@ class SwapRequestServiceTests {
     void setUp() {
         //fresh empty storage for every test, and every user exists except 99
         service = new SwapRequestService(new InMemorySwapRequestRepository(), userId -> userId != UNKNOWN_USER,
-                (a, b) -> blocks.contains(a + "->" + b) || blocks.contains(b + "->" + a));
+                (a, b) -> blocks.contains(a + "->" + b) || blocks.contains(b + "->" + a), (meId, otherIds) -> otherIds.stream()
+                        .map(id -> new SkillOverlap(id, "user" + id, List.of("Guitar"), List.of()))
+                        .toList());
     }
 
     @Test
@@ -165,5 +171,21 @@ class SwapRequestServiceTests {
     @Test
     void connectionIdsOfIsEmptyWithNoConnections() {
         assertThat(service.connectionIdsOf(1)).isEmpty();
+    }
+
+    @Test
+    void friendsWithSkillsAsksForTheSkillsOfMyConnectionsOnly() {
+        SwapRequest accepted = service.send(1, 2);
+        service.accept(accepted.getId(), 2); //connected
+        service.send(1, 3); //still pending: not a friend
+
+        assertThat(service.friendsWithSkills(1))
+                .extracting(SkillOverlap::userId, SkillOverlap::username)
+                .containsExactly(tuple(2L, "user2"));
+    }
+
+    @Test
+    void friendsWithSkillsIsEmptyWithNoConnections() {
+        assertThat(service.friendsWithSkills(1)).isEmpty();
     }
 }

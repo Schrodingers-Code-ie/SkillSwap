@@ -35,6 +35,7 @@ import ie.schrodingerscode.skillswap.connection.domain.exception.NotRequestSende
 import ie.schrodingerscode.skillswap.connection.domain.exception.ReceiverNotFoundException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.RequestNotFoundException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.SelfRequestException;
+import ie.schrodingerscode.skillswap.match.application.SkillOverlap;
 import ie.schrodingerscode.skillswap.profile.application.DisplayNames;
 
 /**
@@ -229,10 +230,8 @@ class SwapRequestControllerTests {
 
     @Test
     void connectionsShowTheOtherUser() throws Exception {
-        SwapRequest accepted = savedRequest(5, 1, 2);
-        accepted.accept(2);
-        when(service.connections(1L)).thenReturn(List.of(accepted));
-        when(service.connections(2L)).thenReturn(List.of(accepted));
+        when(service.friendsWithSkills(1L)).thenReturn(List.of(new SkillOverlap(2, "bea", List.of(), List.of())));
+        when(service.friendsWithSkills(2L)).thenReturn(List.of(new SkillOverlap(1, "ann", List.of(), List.of())));
 
         loggedInAs(1);
         mockMvc.perform(get("/api/connections"))
@@ -258,9 +257,7 @@ class SwapRequestControllerTests {
 
     @Test
     void connectionsShowTheOtherUsersName() throws Exception {
-        SwapRequest accepted = savedRequest(5, 1, 2);
-        accepted.accept(2);
-        when(service.connections(1L)).thenReturn(List.of(accepted));
+        when(service.friendsWithSkills(1L)).thenReturn(List.of(new SkillOverlap(2, "bea", List.of(), List.of())));
         when(displayNames.displayNamesOf(List.of(2L))).thenReturn(Map.of(2L, "Bea Brown"));
 
         loggedInAs(1);
@@ -268,5 +265,24 @@ class SwapRequestControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].userId").value(2))
                 .andExpect(jsonPath("$[0].displayName").value("Bea Brown"));
+    }
+
+    @Test
+    void connectionsShowUsernameAndSkills() throws Exception {
+        when(service.friendsWithSkills(1L)).thenReturn(List.of(
+                new SkillOverlap(2, "bea", List.of("Guitar", "Piano"), List.of("Spanish")),
+                new SkillOverlap(3, "carl", List.of(), List.of()))); //nothing overlaps anymore
+        when(displayNames.displayNamesOf(List.of(2L, 3L))).thenReturn(Map.of(2L, "Bea Brown", 3L, "Carl"));
+
+        loggedInAs(1);
+        mockMvc.perform(get("/api/connections"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].username").value("bea"))
+                .andExpect(jsonPath("$[0].skillsTheyCanTeachMe[0]").value("Guitar"))
+                .andExpect(jsonPath("$[0].skillsTheyCanTeachMe[1]").value("Piano"))
+                .andExpect(jsonPath("$[0].skillsICanTeachThem[0]").value("Spanish"))
+                .andExpect(jsonPath("$[1].userId").value(3))
+                .andExpect(jsonPath("$[1].skillsTheyCanTeachMe").isEmpty())
+                .andExpect(jsonPath("$[1].skillsICanTeachThem").isEmpty());
     }
 }

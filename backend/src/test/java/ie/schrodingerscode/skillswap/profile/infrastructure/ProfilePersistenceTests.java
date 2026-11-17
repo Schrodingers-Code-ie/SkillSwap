@@ -71,6 +71,20 @@ class ProfilePersistenceTests {
     }
 
     @Test
+    void updatedNameAndBioSurviveReload() {
+        long userId = createUser();
+        profiles.save(new Profile(userId, "Old Name", "Old bio"));
+
+        Profile loaded = profiles.findById(userId).orElseThrow();
+        loaded.updateDetails("New Name", "New bio");
+        profiles.save(loaded);
+
+        Profile reloaded = profiles.findById(userId).orElseThrow();
+        assertThat(reloaded.getDisplayName()).isEqualTo("New Name");
+        assertThat(reloaded.getBio()).isEqualTo("New bio");
+    }
+
+    @Test
     void teachSkillIsStoredAsText() {
         long userId = createUser();
         Profile profile = new Profile(userId, "Test User", "bio");

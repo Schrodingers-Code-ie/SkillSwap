@@ -3,6 +3,7 @@ package ie.schrodingerscode.skillswap.match.application;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ import ie.schrodingerscode.skillswap.match.domain.Match;
 import ie.schrodingerscode.skillswap.match.domain.SkillSwapUser;
 
 @Service
-public class FindMatches {
+public class FindMatches implements SharedSkills {
     private final SkillSwapUsersReader reader;
     private final MatchScorer scorer = new MatchScorer();
 
@@ -43,5 +44,23 @@ public class FindMatches {
 
         // Return the list
         return matchingUsers;
+    }
+
+    @Override
+    public List<SkillOverlap> between(long meId, List<Long> otherIds) {
+        Optional<SkillSwapUser> me = reader.findById(meId); // only load me once
+
+        return otherIds.stream()
+                .map(otherId -> {
+                    Optional<SkillSwapUser> other = reader.findById(otherId);
+                    if (me.isEmpty() || other.isEmpty()) // no profile, nothing to compare
+                        return new SkillOverlap(otherId, other.map(SkillSwapUser::username).orElse(null), List.of(),
+                                List.of());
+
+                    return new SkillOverlap(otherId, other.get().username(),
+                            List.copyOf(MatchScorer.skillsTheyCanTeachMe(me.get(), other.get())),
+                            List.copyOf(MatchScorer.skillsICanTeachThem(me.get(), other.get())));
+                })
+                .toList();
     }
 }

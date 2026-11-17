@@ -21,6 +21,7 @@ import ie.schrodingerscode.skillswap.connection.web.dto.ConnectionResponse;
 import ie.schrodingerscode.skillswap.connection.web.dto.PendingRequestsResponse;
 import ie.schrodingerscode.skillswap.connection.web.dto.SendRequestBody;
 import ie.schrodingerscode.skillswap.connection.web.dto.SwapRequestResponse;
+import ie.schrodingerscode.skillswap.match.application.SkillOverlap;
 import ie.schrodingerscode.skillswap.profile.application.DisplayNames;
 import jakarta.validation.Valid;
 
@@ -104,13 +105,10 @@ public class SwapRequestController {
 
     @GetMapping("/connections")
     public List<ConnectionResponse> connections() {
-        long me = currentUser.getId();
-        List<Long> friendIds = service.connections(me).stream()
-                .map(r -> r.otherUser(me))
-                .toList();
-        Map<Long, String> names = displayNames.displayNamesOf(friendIds);
-        return friendIds.stream()
-                .map(id -> new ConnectionResponse(id, names.get(id)))
+        List<SkillOverlap> friends = service.friendsWithSkills(currentUser.getId());
+        Map<Long, String> names = displayNames.displayNamesOf(friends.stream().map(SkillOverlap::userId).toList());
+        return friends.stream()
+                .map(friend -> ConnectionResponse.from(friend, names.get(friend.userId())))
                 .toList();
     }
 }

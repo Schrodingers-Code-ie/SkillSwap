@@ -13,6 +13,8 @@ import ie.schrodingerscode.skillswap.connection.domain.exception.BlockedRequestE
 import ie.schrodingerscode.skillswap.connection.domain.exception.DuplicateRequestException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.ReceiverNotFoundException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.RequestNotFoundException;
+import ie.schrodingerscode.skillswap.match.application.SharedSkills;
+import ie.schrodingerscode.skillswap.match.application.SkillOverlap;
 
 /**
  * Loads requests, asks the SwapRequest to do the action, and saves the result.
@@ -24,11 +26,13 @@ public class SwapRequestService implements ConnectionChecker, ConnectionLister, 
     private final SwapRequestRepository repository;
     private final UserChecker users;
     private final BlockChecker blocks;
+    private final SharedSkills sharedSkills;
 
-    public SwapRequestService(SwapRequestRepository repository, UserChecker users, BlockChecker blocks) {
+    public SwapRequestService(SwapRequestRepository repository, UserChecker users, BlockChecker blocks, SharedSkills sharedSkills) {
         this.repository = repository;
         this.users = users;
         this.blocks = blocks;
+        this.sharedSkills = sharedSkills;
     }
 
     //synchronized so two requests sent at the same moment can't both pass the duplicate check
@@ -97,6 +101,11 @@ public class SwapRequestService implements ConnectionChecker, ConnectionLister, 
     @Override
     public void removeBetween(long userA, long userB) {
         repository.findByPair(UserPair.of(userA, userB)).ifPresent(repository::delete);
+    }
+  
+    //friends with the skills we can swap
+    public List<SkillOverlap> friendsWithSkills(long userId) {
+        return sharedSkills.between(userId, connectionIdsOf(userId));
     }
 
     private SwapRequest findRequest(long requestId) {

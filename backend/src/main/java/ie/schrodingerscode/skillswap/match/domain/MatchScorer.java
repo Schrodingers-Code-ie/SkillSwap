@@ -5,13 +5,8 @@ import java.util.TreeSet;
 
 public class MatchScorer {
     public Match score(SkillSwapUser me, SkillSwapUser other) {
-        Set<String> skillsTheyCanTeachMe = new TreeSet<>(me.learn()); // Get ALL the skills *I* want to learn
-        skillsTheyCanTeachMe.retainAll(other.teach()); // Leave only the skills from my "learn" which overlap with THEIR
-                                                       // TEACH
-
-        // Same for skills I can TEACH
-        Set<String> skillsICanTeachThem = new TreeSet<>(me.teach()); // Get all skills I teach
-        skillsICanTeachThem.retainAll(other.learn()); // Leave only the ones they want to learn
+        Set<String> skillsTheyCanTeachMe = skillsTheyCanTeachMe(me, other);
+        Set<String> skillsICanTeachThem = skillsICanTeachThem(me, other);
 
         // Opposite for unmatching skills
         Set<String> unmatchedSkillsTheyTeach = new TreeSet<>(other.teach()); // All skills they teach
@@ -32,5 +27,19 @@ public class MatchScorer {
         return new Match(other.id(), other.name(), other.username(), matchingScore, skillsTheyCanTeachMe,
                 skillsICanTeachThem,
                 unmatchedSkillsTheyTeach);
+    }
+
+    // what they can teach me
+    public static Set<String> skillsTheyCanTeachMe(SkillSwapUser me, SkillSwapUser other) {
+        Set<String> skills = new TreeSet<>(me.learn());
+        skills.retainAll(other.teach());
+        return skills;
+    }
+
+    // what I can teach them
+    public static Set<String> skillsICanTeachThem(SkillSwapUser me, SkillSwapUser other) {
+        Set<String> skills = new TreeSet<>(me.teach());
+        skills.retainAll(other.learn());
+        return skills;
     }
 }
