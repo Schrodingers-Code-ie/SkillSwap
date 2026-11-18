@@ -160,7 +160,7 @@ export default function Matches() {
 				clearFilters={clearFilters}
 			/>
 
-			<div className="suggestions-section w-full min-sm:mx-10 max-w-3xl">
+			<div className="suggestions-section w-full pb-20 min-sm:pb-0 min-sm:mx-10 max-w-3xl">
 				<div className="header mb-4 min-sm:flex items-start justify-between min-sm:gap-6">
 					<div className="titles">
 						<h1 className="text-title text-[28px] min-sm:text-3xl font-main font-g-medium">

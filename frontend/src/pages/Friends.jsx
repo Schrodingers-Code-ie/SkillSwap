@@ -12,7 +12,6 @@ import ProfilePanel from '../components/chat/ProfilePanel';
 import PersonCard from '../components/ui/PersonCard.jsx';
 import cross_icon from '../assets/cross_icon.svg';
 
-// Tailwind's md breakpoint (48rem = 768px): from here the side profile is a permanent column
 const MD_QUERY = '(min-width: 1280px)';
 
 // Re-renders the component when the screen crosses the breakpoint
@@ -37,8 +36,8 @@ export default function Friends() {
 	const isLg = useMediaQuery(MD_QUERY);
 	const floating = !isLg;
 
-	// At md and above: the clicked friend, or the first friend by default
-	// Below md: only the clicked friend, and only while the floating window is open
+	// At 1280px and above: the clicked friend, or the first friend by default
+	// Below 1280px: only the clicked friend, and only while the floating window is open
 	const clickedFriend = friends.find(
 		(friend) => friend.userId === selectedId,
 	);

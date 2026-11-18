@@ -15,7 +15,7 @@ export default function Header() {
 	const user = useRouteLoaderData('protected');
 
 	return (
-		<header className="flex h-[72px] items-center gap-6 px-4 font-main lg:pl-[50px] lg:pr-[52px]">
+		<header className="flex h-[72px] items-center gap-2 px-2 sm:px-4 font-main lg:pl-[50px] lg:pr-[52px]">
 			<p className="hidden shrink-0 text-sm text-strong-text md:block lg:w-[194px]">
 				Skill Swap
 			</p>
@@ -40,7 +40,7 @@ export default function Header() {
 				))}
 			</nav>
 
-			<div className="ml-auto flex items-center gap-6">
+			<div className="ml-auto flex items-center gap-2 sm:gap-6">
 				<RequestsBell />
 				<AccountMenu user={user} />
 			</div>

@@ -71,7 +71,7 @@ export default function ProfileSidePanel({
 	// Different styles for different resolutions
 	const layoutClasses = floating
 		? 'fixed z-50 flex top-20 bottom-4 left-4 right-4 md:inset-0 md:m-auto md:w-130 md:max-w-[calc(100vw-2rem)] md:h-[min(860px,calc(100vh-4rem))]'
-		: 'hidden min-xl:flex top-8 h-[calc(100vh-72px-64px)] max-w-md w-full shrink-0 self-start';
+		: 'hidden min-xl:flex sticky top-8 h-[calc(100vh-72px-64px)] max-w-md w-full shrink-0 self-start';
 
 	return (
 		<>
@@ -169,11 +169,11 @@ export default function ProfileSidePanel({
 												{myLearnIds.has(
 													skill.skillId,
 												) && (
-													<span className="rounded-full bg-green-bubble-bg px-2 py-0.5 font-main text-[10px] font-g-medium uppercase tracking-[0.6px] text-green-bubble">
+													<span className="rounded-full bg-green-bubble-bg px-2 py-0.5 font-main text-[8px] min-[420px]:text-[10px] font-g-medium uppercase tracking-[0.6px] text-green-bubble text-center align-center">
 														You want this
 													</span>
 												)}
-												<span className="rounded-full bg-grey-bubble-bg px-1.5 py-0.5 font-main text-[10px] font-g-medium uppercase tracking-[0.6px] text-subtitle">
+												<span className="rounded-full bg-grey-bubble-bg px-1.5 py-0.5 font-main text-[8px] min-[420px]:text-[10px] font-g-medium uppercase tracking-[0.6px] text-subtitle inline-flex items-center justify-center">
 													{levelLabel(
 														skill.proficiency,
 													)}
