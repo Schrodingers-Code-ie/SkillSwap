@@ -13,7 +13,8 @@ All backend code lives in `backend/src/main/java/ie/schrodingerscode/skillswap/`
 | profile    | Profiles, teach and learn skills, skill catalogue        | S2    |
 | match      | Finding and ranking matches                              | S3    |
 | connection | Swap requests and connections                            | S4    |
-| chat       | Messaging and blocking                                   | S5    |
+| chat       | Messaging                                                | S5    |
+| block      | Blocking and unblocking users                            | S5    |
 | common     | Shared code used by 2 or more features (base exceptions) | -     |
 | config     | App-wide configuration (e.g. SecurityConfig)             | -     |
 | health     | Health check endpoint                                    | -     |

@@ -154,4 +154,19 @@ class JdbcUsersReaderTests {
                 .extracting(SkillSwapUser::name)
                 .containsExactlyInAnyOrder("Mike", "Jessica"); // Jane doesn't appear in the suggestions anymore
     }
+
+    @Test
+    void blockedUsersDontShowAsMatchesEitherWay() throws Exception {
+        // Jane blocks Ulven
+        mockMvc.perform(post("/api/blocks/" + ulvenId).with(csrf()).session(login("jane@mail.com")))
+                .andExpect(status().isNoContent());
+
+        // Both sides: Jane is gone from Ulven's matches, and Ulven from Jane's
+        assertThat(usersReader.findCandidatesFor(ulvenId))
+                .extracting(SkillSwapUser::name)
+                .containsExactlyInAnyOrder("Mike", "Jessica");
+        assertThat(usersReader.findCandidatesFor(janeId))
+                .extracting(SkillSwapUser::name)
+                .doesNotContain("Ulven");
+    }
 }

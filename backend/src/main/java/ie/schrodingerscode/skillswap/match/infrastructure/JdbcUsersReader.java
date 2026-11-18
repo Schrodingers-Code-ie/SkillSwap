@@ -88,19 +88,25 @@ public class JdbcUsersReader implements SkillSwapUsersReader {
                 .query(Long.class)
                 .list();
 
-        // Everyone I already have a swap request with (pending or accepted), whichever way it was sent
-        Set<Long> alreadyConnectedIds = new HashSet<>(jdbc
+        // People who shouldn't show up as matches:
+        // everyone I already have a swap request with (pending or accepted), whichever way it was sent,
+        // and everyone I blocked or who blocked me
+        Set<Long> excludedIds = new HashSet<>(jdbc
                 .sql("""
                                 SELECT receiver_id FROM swap_requests WHERE sender_id = :me
                                 UNION
                                 SELECT sender_id FROM swap_requests WHERE receiver_id = :me
+                                UNION
+                                SELECT blocked_id FROM blocks WHERE blocker_id = :me
+                                UNION
+                                SELECT blocker_id FROM blocks WHERE blocked_id = :me
                         """)
                 .param("me", meId)
                 .query(Long.class)
                 .list());
 
         return skillsBasesIds.stream()
-                .filter(id -> !alreadyConnectedIds.contains(id))
+                .filter(id -> !excludedIds.contains(id))
                 .map(this::findById)
                 .flatMap(Optional::stream)
                 .toList();
