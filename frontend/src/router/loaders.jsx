@@ -1,5 +1,6 @@
 import { redirect } from 'react-router';
 import { api } from '../api/client.js';
+import { loginPath } from '../utils/redirect.js';
 
 // Asks the backend who is logged in. The browser sends the session cookie by itself.
 // Returns the user, or null when nobody is logged in (the backend answers 401).
@@ -20,10 +21,14 @@ export async function homeLoader() {
 }
 
 // Runs before every logged-in page (see router.jsx).
-// Logged out: go to /login. Logged in: the page opens and can read the user with useLoaderData.
-export async function protectedLoader() {
+// Logged out: go to /login, which brings you back here after logging in.
+// Logged in: the page opens and can read the user with useLoaderData.
+export async function protectedLoader({ request }) {
 	const user = await getCurrentUser();
-	if (!user) return redirect('/login');
+	if (!user) {
+		const { pathname, search } = new URL(request.url);
+		return redirect(loginPath(pathname + search));
+	}
 	return user;
 }
 

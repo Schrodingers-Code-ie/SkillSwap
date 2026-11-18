@@ -1,3 +1,10 @@
 spring:
   application:
     name: backend
+
+server:
+  servlet:
+    session:
+      # Logged-in users are logged out after this long without a request.
+      # Spring's default is 30m. The frontend sends you to /login when it happens.
+      timeout: 2h

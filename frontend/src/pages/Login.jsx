@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import { api } from '../api/client.js';
+import { safeRedirect } from '../utils/redirect.js';
 import Button from '../components/ui/Button.jsx';
 import Input from '../components/ui/Input.jsx';
 
@@ -13,6 +14,9 @@ export default function Login() {
 	const [showPassword, setShowPassword] = useState(false);
 	const [submitting, setSubmitting] = useState(false);
 	const navigate = useNavigate();
+	// Set when you were sent here from a logged-in page, e.g. /login?redirectTo=/chat
+	const [searchParams] = useSearchParams();
+	const redirectTo = safeRedirect(searchParams.get('redirectTo'));
 
 	function handleChange(e) {
 		const { name, value } = e.target;
@@ -34,7 +38,7 @@ export default function Login() {
 				email: form.email.trim(),
 				password: form.password,
 			});
-			navigate('/matches');
+			navigate(redirectTo, { replace: true });
 		} catch (err) {
 			// 401 means wrong email or password, the backend does not say which one on purpose
 			setError(err.status === 401 ? WRONG_LOGIN : err.message);
