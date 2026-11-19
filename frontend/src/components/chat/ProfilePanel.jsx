@@ -1,14 +1,17 @@
 import Profile from '../ui/Profile';
 import SkillBubble from '../ui/SkillBubble';
+import BlockButton from './BlockButton';
 
 // Right column of the Chat page
-// friend: the open friend's profile// friend: the open friend's chat entry, used for the name (available straight away)
+// friend: the open friend's chat entry, used for the name (available straight away)
 // profile: the friend's loaded profile with skills; undefined while loading, { failed: true } on error
 // myProfile: the logged-in user's profile
+// onBlocked: called after the friend was blocked, so Chat can remove them from the list
 export default function ProfilePanel({
 	friend,
 	profile,
 	myProfile,
+	onBlocked,
 	className = '',
 }) {
 	const firstName = friend.displayName.split(' ')[0];
@@ -39,6 +42,13 @@ export default function ProfilePanel({
 					firstName={firstName}
 				/>
 			)}
+
+			{/* key: switching friend starts a fresh button, so "Block?" can't carry over to the next person */}
+			<BlockButton
+				key={friend.userId}
+				userId={friend.userId}
+				onBlocked={onBlocked}
+			/>
 		</aside>
 	);
 }
