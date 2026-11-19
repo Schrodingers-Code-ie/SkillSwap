@@ -41,7 +41,7 @@ export default function PersonCard({
 					)}
 				</div>
 
-				<div className="col-span-2 md:col-span-1 my-1 min-[701px]:my-2 flex flex-wrap items-center gap-2">
+				<div className="col-span-2 md:col-span-1 my-1 min-sm:my-2 flex flex-wrap items-center gap-2">
 					{skillsTheyCanTeachMe.slice(0, 2).map((skill) => (
 						<SkillBubble key={skill} color="green">
 							{skill}

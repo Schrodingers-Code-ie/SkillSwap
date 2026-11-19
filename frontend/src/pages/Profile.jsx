@@ -50,7 +50,7 @@ export default function Profile() {
 	}
 
 	return (
-		<section className="mx-auto max-w-5xl rounded-container-card bg-card-bg p-10 shadow-container">
+		<section className="mx-3 my-1 h-[calc(100vh-72px-24px)] min-sm:mx-10 min-sm:my-5 min-sm:h-[calc(100vh-72px-54px)] rounded-container-card bg-card-bg p-10 shadow-container overflow-y-auto">
 			<div className="text-center">
 				<ProfileCircle
 					name={profile.displayName}
@@ -122,7 +122,7 @@ export default function Profile() {
 						/>
 					))}
 				</div>
-				<hr className="my-7 border-divider" />
+				<hr className="my-7 border-divider bg-card-border" />
 				<h2 className="mb-3.5 text-[13px] text-title">
 					Skills you want to learn ({profile.learnSkills.length})
 				</h2>

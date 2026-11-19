@@ -3,10 +3,31 @@ import MatchCard from '../components/search/MatchCard.jsx';
 import Filters from '../components/search/Filters.jsx';
 import ProfileSidePanel from '../components/search/ProfileSidePanel.jsx';
 
-import { useEffect, useState, useMemo } from 'react';
+import {
+	useEffect,
+	useState,
+	useMemo,
+	useCallback,
+	useSyncExternalStore,
+} from 'react';
 import { api } from '../api/client.js';
 import { useRouteLoaderData } from 'react-router';
 import { Link } from 'react-router';
+
+// Tailwind's xl breakpoint (80rem = 1280px): from here the side profile is a permanent column
+const XL_QUERY = '(min-width: 1280px)';
+
+// Re-renders the component when the screen crosses the breakpoint
+function useMediaQuery(query) {
+	return useSyncExternalStore(
+		(onChange) => {
+			const mql = window.matchMedia(query);
+			mql.addEventListener('change', onChange);
+			return () => mql.removeEventListener('change', onChange);
+		},
+		() => window.matchMedia(query).matches,
+	);
+}
 
 export default function Matches() {
 	const [matches, setMatches] = useState([]);
@@ -23,6 +44,9 @@ export default function Matches() {
 	const [outgoing, setOutgoing] = useState(new Map());
 
 	const [selectedId, setSelectedId] = useState(null); // Person shown in the side profile panel
+	const [panelOpen, setPanelOpen] = useState(false); // Only matters below xl, where the panel is a floating window
+
+	const isXl = useMediaQuery(XL_QUERY);
 
 	const user = useRouteLoaderData('protected');
 	const userId = user.id;
@@ -37,6 +61,13 @@ export default function Matches() {
 			return next;
 		});
 	}
+
+	function handleSelect(personId) {
+		setSelectedId(personId);
+		setPanelOpen(true); // Opens the floating window below xl, no effect at xl
+	}
+
+	const closePanel = useCallback(() => setPanelOpen(false), []);
 
 	// Fetching user's skills and matches for them
 	useEffect(() => {
@@ -106,13 +137,19 @@ export default function Matches() {
 		return result;
 	}, [matches, selectedLearn, selectedTeach, sortingOption]);
 
-	// The first match is shown by default, and also when the filters hide the selected person
-	const selectedMatch =
-		visibleMatches.find((match) => match.matchPersonId === selectedId) ??
-		visibleMatches[0];
+	// At xl and above: the clicked person, or the first match by default (also when the filters hide the clicked person)
+	// Below xl: only the clicked person, and only while the floating window is open
+	const clickedMatch = visibleMatches.find(
+		(match) => match.matchPersonId === selectedId,
+	);
+	const selectedMatch = isXl
+		? (clickedMatch ?? visibleMatches[0])
+		: panelOpen
+			? clickedMatch
+			: undefined;
 
 	return (
-		<div className="search-page-container px-5 min-[701px]:px-12 py-4 min-[701px]:py-8 flex justify-center">
+		<div className="search-page-container px-5 min-sm:px-12 py-4 min-sm:py-8 flex justify-center">
 			<Filters
 				learnSkills={learnSkills}
 				teachSkills={teachSkills}
@@ -123,10 +160,10 @@ export default function Matches() {
 				clearFilters={clearFilters}
 			/>
 
-			<div className="suggestions-section w-full min-[701px]:mx-10 max-w-3xl">
-				<div className="header mb-4 min-[701px]:flex items-start justify-between min-[701px]:gap-6">
+			<div className="suggestions-section w-full pb-20 min-sm:pb-0 min-sm:mx-10 max-w-3xl">
+				<div className="header mb-4 min-sm:flex items-start justify-between min-sm:gap-6">
 					<div className="titles">
-						<h1 className="text-title text-[28px] min-[701px]:text-3xl font-main font-g-medium">
+						<h1 className="text-title text-[28px] min-sm:text-3xl font-main font-g-medium">
 							Suggested matches
 						</h1>
 						<p className="text-subtitle text-base font-main font-g-regular py-3">
@@ -135,7 +172,7 @@ export default function Matches() {
 							you can swap skills with
 						</p>
 					</div>
-					<div className="w-60 min-[701px]:w-auto sort-dropdown min-[701px]:mt-6 flex shrink-0 items-center gap-4 rounded-full border border-container-border bg-card-bg px-5 py-3 text-main-content font-main">
+					<div className="w-60 min-sm:w-auto sort-dropdown min-sm:mt-6 flex shrink-0 items-center gap-4 rounded-full border border-container-border bg-card-bg px-5 py-3 text-main-content font-main">
 						<span className="font-main font-g-medium pr-4">
 							Sort
 						</span>
@@ -200,15 +237,14 @@ export default function Matches() {
 								onRequestChange={handleRequestChange}
 								selected={match === selectedMatch}
 								onSelect={() =>
-									setSelectedId(match.matchPersonId)
+									handleSelect(match.matchPersonId)
 								}
 							/>
 						))
 					)}
 				</div>
 			</div>
-			{/* No matches = empty panel. Shown only on screens 1440px and wider */}
-			{/* key: a new person gets a fresh panel, so old errors don't stay */}
+
 			<ProfileSidePanel
 				key={selectedMatch?.matchPersonId ?? 'empty'}
 				match={selectedMatch ?? null}
@@ -219,7 +255,8 @@ export default function Matches() {
 						: null
 				}
 				onRequestChange={handleRequestChange}
-				className="hidden min-[1440px]:flex"
+				floating={!isXl}
+				onClose={closePanel}
 			/>
 		</div>
 	);

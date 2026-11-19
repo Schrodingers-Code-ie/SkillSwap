@@ -93,7 +93,7 @@ export default function RequestsBell() {
 			</button>
 
 			{isOpen && (
-				<div className="absolute right-0 mt-2 w-[400px] p-4 z-20 bg-card-bg border border-card-border rounded-card shadow-lg font-main">
+				<div className="absolute -right-10 min-sm:-right-2 mt-2 w-[300px] min-sm:w-[400px] p-4 z-20 bg-card-bg border border-card-border rounded-card shadow-lg font-main">
 					<div className="flex items-center justify-between">
 						<h2 className="text-title font-g-semibold">ACTIVITY</h2>
 						<button

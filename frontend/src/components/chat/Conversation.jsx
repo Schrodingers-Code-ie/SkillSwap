@@ -142,7 +142,7 @@ export default function Conversation({ friend, onSend, className = '' }) {
 									className={`mb-3 flex flex-col ${mine ? 'items-end' : 'items-start'}`}
 								>
 									<p
-										className={`max-w-[70%] whitespace-pre-wrap break-words rounded-message px-3.5 py-2.5 text-sm leading-5 ${
+										className={`max-w-[90%] min-sm:max-w-[70%] whitespace-pre-wrap break-words rounded-message px-3.5 py-2.5 text-sm leading-5 ${
 											mine
 												? 'bg-dark-button-bg text-dark-button-text'
 												: 'bg-received-message-bg text-strong-text'
