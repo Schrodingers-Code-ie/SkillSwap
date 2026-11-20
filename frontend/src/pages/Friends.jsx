@@ -5,7 +5,7 @@ import {
 	useCallback,
 	useSyncExternalStore,
 } from 'react';
-import { Link, useLoaderData } from 'react-router';
+import { Link, useLoaderData, useRevalidator } from 'react-router';
 
 import { api } from '../api/client.js';
 import ProfilePanel from '../components/chat/ProfilePanel';
@@ -79,6 +79,13 @@ export default function Friends() {
 	}
 
 	const closePanel = useCallback(() => setPanelOpen(false), []);
+	const revalidator = useRevalidator();
+
+	function handleBlocked() {
+		setSelectedId(null);
+		setPanelOpen(false);
+		revalidator.revalidate();
+	}
 
 	// Close the floating window with Escape
 	useEffect(() => {
@@ -175,6 +182,7 @@ export default function Friends() {
 							}}
 							profile={profiles[selected.userId]}
 							myProfile={myProfile}
+							onBlocked={handleBlocked}
 						/>
 					</aside>
 				</>
