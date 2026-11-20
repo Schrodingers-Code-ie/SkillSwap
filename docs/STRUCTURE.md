@@ -169,11 +169,9 @@ Application services take the user ID as a parameter rather than injecting
 If nobody is logged in, `getId()` throws and the API returns 401. You don't
 need to check for that yourself.
 
-**Until real login exists**, the ID comes from the `X-User-Id` request header.
-In Postman, add `X-User-Id: 1` to act as user 1. `GET /api/auth/me` returns
-that user (id, email, username, display name), or 404 if no user has that ID.
-When real login lands, only the implementation changes; code that uses
-`CurrentUser` stays the same.
+The ID comes from the login session (`SessionCurrentUser`). Log in with
+`POST /api/auth/login` and the session cookie identifies you on later requests.
+`GET /api/auth/me` returns the logged-in user (id, email, username, display name).
 
 ## Database migrations
 
