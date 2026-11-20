@@ -105,6 +105,17 @@ const router = createBrowserRouter([
 							{
 								path: '/chat',
 								loader: chatLoader,
+								// Clicking a friend only changes ?user= in the URL (see Chat.jsx).
+								// Don't run chatLoader again for that, the page already has the data
+								shouldRevalidate: ({
+									currentUrl,
+									nextUrl,
+									defaultShouldRevalidate,
+								}) =>
+									currentUrl.pathname === nextUrl.pathname &&
+									nextUrl.searchParams.has('user')
+										? false
+										: defaultShouldRevalidate,
 								lazy: async () => {
 									const module =
 										await import('../pages/Chat');

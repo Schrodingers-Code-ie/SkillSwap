@@ -129,7 +129,7 @@ export default function Friends() {
 									onSelect={() => handleSelect(friend.userId)}
 									action={
 										<Link
-											to="/chat"
+											to={`/chat?user=${friend.userId}`}
 											onClick={(event) => {
 												event.stopPropagation(); // don't open the panel too
 											}}

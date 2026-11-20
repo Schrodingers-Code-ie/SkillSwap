@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { useLoaderData, useRouteLoaderData } from 'react-router';
+import {
+	useLoaderData,
+	useRouteLoaderData,
+	useSearchParams,
+} from 'react-router';
 import { api } from '../api/client.js';
 import FriendsList from '../components/chat/FriendsList';
 import Conversation from '../components/chat/Conversation';
@@ -24,10 +28,23 @@ export default function Chat() {
 	// The list on screen. Starts with what the loader fetched, then each poll replaces it
 	const [chats, setChats] = useState(initialChats);
 
+	// /chat?user=5 (Chat button on the Friends page) opens the chat with friend 5.
+	// A missing, non-number, or unknown id falls back to the first chat
+	const [searchParams, setSearchParams] = useSearchParams();
+	const userFromUrl = Number(searchParams.get('user'));
 	const [selectedId, setSelectedId] = useState(
-		initialChats[0]?.userId ?? null,
+		initialChats.some((chat) => chat.userId === userFromUrl)
+			? userFromUrl
+			: (initialChats[0]?.userId ?? null),
 	);
 	const selected = chats.find((chat) => chat.userId === selectedId);
+
+	// Open a chat and put its id in the URL, so a refresh opens the same chat again.
+	// replace: true swaps the current history entry, so Back doesn't step through every chat you clicked
+	function selectChat(id) {
+		setSelectedId(id);
+		setSearchParams(id === null ? {} : { user: id }, { replace: true });
+	}
 
 	// The logged-in user, to tell who the other person in a pushed message is
 	const me = useRouteLoaderData('protected');
@@ -118,7 +135,7 @@ export default function Chat() {
 	function handleBlocked(blockedId) {
 		const others = chats.filter((chat) => chat.userId !== blockedId);
 		setChats(others);
-		setSelectedId(others[0]?.userId ?? null);
+		selectChat(others[0]?.userId ?? null);
 	}
 
 	return (
@@ -127,7 +144,7 @@ export default function Chat() {
 			<FriendsList
 				friends={chats}
 				selectedId={selectedId}
-				onSelect={setSelectedId}
+				onSelect={selectChat}
 				className="[grid-area:list] max-h-[45dvh] md:max-h-none"
 			/>
 
