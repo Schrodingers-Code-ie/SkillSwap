@@ -9,6 +9,30 @@
 //   await api.post('/users/me/avatar', form)
 //
 // Paths are relative to /api, and Vite forwards them to the backend.
+//
+// A 401 means the server no longer knows our session (it timed out, or the
+// backend restarted), so any 401 sends the user to /login. The exceptions are
+// listed below: there a 401 is a normal answer that the caller handles itself.
+
+import { loginPath } from '../utils/redirect.js';
+
+// 401 here is expected: wrong password, or "nobody is logged in" for the login check
+const HANDLES_401_ITSELF = ['/auth/login', '/auth/me'];
+
+let redirectingToLogin = false;
+
+function sessionExpired() {
+	const { pathname, search } = window.location;
+	const onAuthPage = pathname === '/login' || pathname === '/signup';
+	if (!redirectingToLogin && !onAuthPage) {
+		// Several requests can fail at once (e.g. a loader plus polling), only redirect once
+		redirectingToLogin = true;
+		// A full page load also clears timers and data left over from the old session
+		window.location.assign(loginPath(pathname + search));
+	}
+	// Never settles, so the page doesn't flash an error while the browser leaves
+	return new Promise(() => {});
+}
 
 function getCsrfToken() {
 	const match = document.cookie.match(/(?:^|; )XSRF-TOKEN=([^;]*)/);
@@ -27,6 +51,10 @@ async function request(path, options = {}) {
 		}
 	}
 	const response = await fetch(`/api${path}`, options);
+
+	if (response.status === 401 && !HANDLES_401_ITSELF.includes(path)) {
+		return sessionExpired();
+	}
 
 	// Some responses (e.g. 204 No Content) have no body.
 	const body = await response.json().catch(() => null);
