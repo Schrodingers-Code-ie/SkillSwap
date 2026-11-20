@@ -61,7 +61,7 @@ public class SwapRequestController {
     }
 
     /**
-     * POST /api/requests, sends a request to someone.
+     * POST /api/requests, sends a swap request.
      *
      * @param body has the receiverId
      * @return the new request, with 201
@@ -74,7 +74,7 @@ public class SwapRequestController {
     }
 
     /**
-     * POST /api/requests/{id}/accept.
+     * POST /api/requests/{id}/accept, the receiver accepts it.
      *
      * @param id the request id
      * @return the accepted request

@@ -108,7 +108,7 @@ public class SwapRequestService implements ConnectionChecker, ConnectionLister, 
     }
 
     /**
-     * Cancels a request I sent, it gets deleted.
+     * Takes back a request I sent, it gets deleted.
      *
      * @param requestId the request to cancel
      * @param userId the logged in user, has to be the sender

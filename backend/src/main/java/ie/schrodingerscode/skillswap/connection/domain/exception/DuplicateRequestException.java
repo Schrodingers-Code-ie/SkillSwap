@@ -3,7 +3,7 @@ package ie.schrodingerscode.skillswap.connection.domain.exception;
 import ie.schrodingerscode.skillswap.common.exception.ConflictException;
 
 /**
- * There is already a request between these two users (pending or accepted). Gives 409.
+ * These two already have a request between them, pending or accepted (409).
  */
 public class DuplicateRequestException extends ConflictException {
     public DuplicateRequestException() {

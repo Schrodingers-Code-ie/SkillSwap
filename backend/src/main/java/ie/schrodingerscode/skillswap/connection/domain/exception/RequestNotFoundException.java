@@ -3,7 +3,7 @@ package ie.schrodingerscode.skillswap.connection.domain.exception;
 import ie.schrodingerscode.skillswap.common.exception.NotFoundException;
 
 /**
- * No swap request with this id. Gives 404.
+ * There's no request with this id (404).
  */
 public class RequestNotFoundException extends NotFoundException {
     public RequestNotFoundException() {

@@ -3,7 +3,7 @@ package ie.schrodingerscode.skillswap.connection.domain.exception;
 import ie.schrodingerscode.skillswap.common.exception.ValidationException;
 
 /**
- * Sending a swap request to yourself. Gives 400.
+ * You can't send a request to yourself (400).
  */
 public class SelfRequestException extends ValidationException {
     public SelfRequestException() {

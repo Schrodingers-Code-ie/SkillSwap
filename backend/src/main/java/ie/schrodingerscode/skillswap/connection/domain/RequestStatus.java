@@ -1,7 +1,7 @@
 package ie.schrodingerscode.skillswap.connection.domain;
 
 /**
- * Status of a swap request.
+ * A request is either still waiting or accepted, there's no declined.
  */
 public enum RequestStatus {
     PENDING, // sent, waiting for the receiver to answer
