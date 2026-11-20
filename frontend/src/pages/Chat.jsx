@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { useLoaderData, useRouteLoaderData } from 'react-router';
+import {
+	useLoaderData,
+	useRouteLoaderData,
+	useSearchParams,
+} from 'react-router';
 import { api } from '../api/client.js';
 import FriendsList from '../components/chat/FriendsList';
 import Conversation from '../components/chat/Conversation';
@@ -24,8 +28,14 @@ export default function Chat() {
 	// The list on screen. Starts with what the loader fetched, then each poll replaces it
 	const [chats, setChats] = useState(initialChats);
 
+	// /chat?user=5 (Chat button on the Friends page) opens the chat with friend 5.
+	// A missing, non-number, or unknown id falls back to the first chat
+	const [searchParams] = useSearchParams();
+	const userFromUrl = Number(searchParams.get('user'));
 	const [selectedId, setSelectedId] = useState(
-		initialChats[0]?.userId ?? null,
+		initialChats.some((chat) => chat.userId === userFromUrl)
+			? userFromUrl
+			: (initialChats[0]?.userId ?? null),
 	);
 	const selected = chats.find((chat) => chat.userId === selectedId);
 
