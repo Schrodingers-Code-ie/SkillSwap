@@ -1,11 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
-import { useLoaderData } from 'react-router';
+import { useLoaderData, useRouteLoaderData } from 'react-router';
 import { api } from '../api/client.js';
 import FriendsList from '../components/chat/FriendsList';
 import Conversation from '../components/chat/Conversation';
 import ProfilePanel from '../components/chat/ProfilePanel';
+import { useSocket } from '../components/socket/socket-context';
 
 const POLL_MS = 5000; // how often the chat list is refreshed
+
+// The list with this friend moved to the top and message as their preview.
+// Unchanged if the friend isn't in the list, or already has this message (or a newer one) as preview
+function withFriendOnTop(chats, friendId, message) {
+	const friend = chats.find((chat) => chat.userId === friendId);
+	if (!friend || friend.lastMessage?.id >= message.id) return chats;
+	const others = chats.filter((chat) => chat.userId !== friendId);
+	return [{ ...friend, lastMessage: message }, ...others];
+}
 
 // Figma: Chat page. Friend list on the left, messages in the middle, profile on the right
 export default function Chat() {
@@ -19,7 +29,14 @@ export default function Chat() {
 	);
 	const selected = chats.find((chat) => chat.userId === selectedId);
 
-	// Refresh the chat list every POLL_MS while the Chat page is open
+	// The logged-in user, to tell who the other person in a pushed message is
+	const me = useRouteLoaderData('protected');
+	const { connected, subscribe } = useSocket();
+	// Messages pushed over the socket while this page is open, passed to Conversation
+	const [pushed, setPushed] = useState([]);
+
+	// Refresh the chat list every POLL_MS while the Chat page is open and the socket is down,
+	// and straight away when a new connection is pushed over the socket
 	useEffect(() => {
 		let cancelled = false;
 
@@ -35,13 +52,30 @@ export default function Chat() {
 			}
 		}
 
-		const timer = setInterval(refresh, POLL_MS);
+		// Socket (re)connected: load once to catch up on anything missed while it was down
+		if (connected) refresh();
+		const timer = connected ? null : setInterval(refresh, POLL_MS);
+		// A request was accepted: the server puts the new friend in the right place
+		const unsubscribe = subscribe('/user/queue/connections', refresh);
 
 		return () => {
 			cancelled = true;
 			clearInterval(timer);
+			unsubscribe();
 		};
-	}, []);
+	}, [subscribe, connected]);
+
+	// New messages pushed by the backend, ones I received and ones I sent from another tab
+	useEffect(() => {
+		return subscribe('/user/queue/messages', (message) => {
+			const friendId =
+				message.senderId === me.id
+					? message.receiverId
+					: message.senderId;
+			setChats((current) => withFriendOnTop(current, friendId, message));
+			setPushed((current) => [...current, message]);
+		});
+	}, [subscribe, me.id]);
 
 	// Profiles (with skills) of friends you've opened, by userId: { 2: {...}, 3: {...} }
 	// /api/chats has no skills, so each profile is loaded the first time you select that friend
@@ -74,16 +108,9 @@ export default function Chat() {
 	// Called by Conversation after you send a message, so that friend jumps to
 	// the top with your text as the preview straight away, without waiting for the next poll
 	function handleSend(message) {
-		setChats((current) => {
-			const friend = current.find(
-				(chat) => chat.userId === message.receiverId,
-			);
-			if (!friend) return current; // not in the list (shouldn't happen): change nothing
-			const others = current.filter(
-				(chat) => chat.userId !== message.receiverId,
-			);
-			return [{ ...friend, lastMessage: message }, ...others];
-		});
+		setChats((current) =>
+			withFriendOnTop(current, message.receiverId, message),
+		);
 	}
 
 	// Called by ProfilePanel after you block the open friend: they leave the list straight away,
@@ -111,6 +138,7 @@ export default function Chat() {
 					key={selected.userId}
 					friend={selected}
 					onSend={handleSend}
+					pushed={pushed}
 					className="[grid-area:chat]"
 				/>
 			) : (

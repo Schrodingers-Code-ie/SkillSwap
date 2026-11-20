@@ -5,17 +5,19 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
 
 import java.util.List;
-
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import ie.schrodingerscode.skillswap.connection.domain.ConnectionCreated;
 import ie.schrodingerscode.skillswap.connection.domain.SwapRequest;
 import ie.schrodingerscode.skillswap.connection.domain.exception.BlockedRequestException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.DuplicateRequestException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.InvalidRequestStateException;
+import ie.schrodingerscode.skillswap.connection.domain.exception.NotRequestReceiverException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.NotRequestSenderException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.ReceiverNotFoundException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.RequestNotFoundException;
@@ -29,6 +31,8 @@ class SwapRequestServiceTests {
 
     private SwapRequestService service;
 
+    //ApplicationEventPublisher has one method, so events::add works as a fake publisher
+    private final List<Object> events = new ArrayList<>();
     //fake blocks, stored as "blocker->blocked". Empty unless a test adds one
     private final Set<String> blocks = new HashSet<>();
 
@@ -39,7 +43,8 @@ class SwapRequestServiceTests {
                 (a, b) -> blocks.contains(a + "->" + b) || blocks.contains(b + "->" + a),
                 (meId, otherIds) -> otherIds.stream()
                         .map(id -> new SkillOverlap(id, "user" + id, List.of("Guitar"), List.of()))
-                        .toList());
+                        .toList(),
+                events::add);
     }
 
     @Test
@@ -172,6 +177,25 @@ class SwapRequestServiceTests {
     @Test
     void connectionIdsOfIsEmptyWithNoConnections() {
         assertThat(service.connectionIdsOf(1)).isEmpty();
+    }
+
+    @Test
+    void acceptingPublishesConnectionCreated() {
+        SwapRequest sent = service.send(1, 2);
+
+        service.accept(sent.getId(), 2);
+
+        assertThat(events).containsExactly(new ConnectionCreated(1, 2));
+    }
+
+    @Test
+    void failedAcceptPublishesNothing() {
+        SwapRequest sent = service.send(1, 2);
+
+        //only the receiver can accept
+        assertThatThrownBy(() -> service.accept(sent.getId(), 1))
+                .isInstanceOf(NotRequestReceiverException.class);
+        assertThat(events).isEmpty();
     }
 
     @Test

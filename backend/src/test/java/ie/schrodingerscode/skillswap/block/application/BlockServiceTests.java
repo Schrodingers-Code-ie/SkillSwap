@@ -29,7 +29,8 @@ class BlockServiceTests {
         UserChecker users = userId -> true; //every user exists
         InMemoryBlockRepository blockRepository = new InMemoryBlockRepository();
         requests = new SwapRequestService(new InMemorySwapRequestRepository(), users, new BlockLookup(blockRepository),
-                (meId, otherIds) -> List.of());
+                (meId, otherIds) -> List.of(), event -> {
+                });
         blocks = new BlockService(blockRepository, users, requests);
     }
 

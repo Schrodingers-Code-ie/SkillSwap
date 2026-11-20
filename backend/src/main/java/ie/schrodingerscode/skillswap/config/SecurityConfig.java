@@ -27,6 +27,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/health", "/api/skills").permitAll()
                         .requestMatchers("/api/**").authenticated()
+                        .requestMatchers("/ws/**").authenticated()
                         .anyRequest().permitAll())
                 //not logged in: answer 401 JSON like GlobalExceptionHandler. spring's default here is 403
                 .exceptionHandling(e -> e.authenticationEntryPoint((request, response, ex) -> {

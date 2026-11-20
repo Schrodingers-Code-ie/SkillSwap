@@ -3,12 +3,15 @@ package ie.schrodingerscode.skillswap.connection.application;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.transaction.annotation.Transactional;
 
 import ie.schrodingerscode.skillswap.auth.application.UserChecker;
 import ie.schrodingerscode.skillswap.block.application.BlockChecker;
 import ie.schrodingerscode.skillswap.connection.domain.SwapRequest;
 import ie.schrodingerscode.skillswap.connection.domain.SwapRequestRepository;
 import ie.schrodingerscode.skillswap.connection.domain.UserPair;
+import ie.schrodingerscode.skillswap.connection.domain.ConnectionCreated;
 import ie.schrodingerscode.skillswap.connection.domain.exception.BlockedRequestException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.DuplicateRequestException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.ReceiverNotFoundException;
@@ -25,15 +28,17 @@ public class SwapRequestService implements ConnectionChecker, ConnectionLister, 
 
     private final SwapRequestRepository repository;
     private final UserChecker users;
+    private final ApplicationEventPublisher events;
     private final BlockChecker blocks;
     private final SharedSkills sharedSkills;
 
     public SwapRequestService(SwapRequestRepository repository, UserChecker users, BlockChecker blocks,
-            SharedSkills sharedSkills) {
+            SharedSkills sharedSkills, ApplicationEventPublisher events) {
         this.repository = repository;
         this.users = users;
         this.blocks = blocks;
         this.sharedSkills = sharedSkills;
+        this.events = events;
     }
 
     //synchronized so two requests sent at the same moment can't both pass the duplicate check
@@ -53,10 +58,13 @@ public class SwapRequestService implements ConnectionChecker, ConnectionLister, 
         return repository.save(SwapRequest.create(senderId, receiverId));
     }
 
+    @Transactional
     public SwapRequest accept(long requestId, long userId) {
         SwapRequest request = findRequest(requestId);
         request.accept(userId);
-        return repository.save(request);
+        SwapRequest saved = repository.save(request);
+        events.publishEvent(new ConnectionCreated(saved.getSenderId(), saved.getReceiverId()));
+        return saved;
     }
 
     public void decline(long requestId, long userId) {
