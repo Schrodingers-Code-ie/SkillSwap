@@ -7,5 +7,11 @@ package ie.schrodingerscode.skillswap.auth.application;
  */
 public interface UserChecker {
 
+    /**
+     * Checks if a user exists.
+     *
+     * @param userId the user to look for
+     * @return true if there is a user with this id
+     */
     boolean exists(long userId);
 }

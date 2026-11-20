@@ -5,6 +5,8 @@ import RequestButton from './RequestButton.jsx';
 import { levelLabel } from '../skills/levels.js';
 import cross_icon from '../../assets/cross_icon.svg';
 
+// Side panel on the Search page with the full profile of the selected person
+// On smaller screens it opens as a floating window instead
 export default function ProfileSidePanel({
 	match,
 	myLearnSkills,

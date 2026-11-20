@@ -4,6 +4,9 @@ import org.springframework.stereotype.Service;
 
 import ie.schrodingerscode.skillswap.auth.domain.UserRepository;
 
+/**
+ * UserChecker that looks the user up in auth's UserRepository.
+ */
 @Service
 public class UserCheckerService implements UserChecker {
 

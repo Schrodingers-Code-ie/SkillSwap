@@ -31,7 +31,9 @@ public class SwapRequest {
         this.createdAt = createdAt;
     }
 
-    //the only way to make a new request, so a request to yourself can never exist
+    /**
+     * The only way to make a new request, so a request to yourself can never exist.
+     */
     public static SwapRequest create(long senderId, long receiverId) {
         if (senderId == receiverId) {
             throw new SelfRequestException();
@@ -39,12 +41,17 @@ public class SwapRequest {
         return new SwapRequest(null, senderId, receiverId, RequestStatus.PENDING, Instant.now());
     }
 
-    //rebuilds a request that was already saved, used by the repositories when loading
+    /**
+     * Rebuilds a request that was already saved, used by the repositories when loading.
+     */
     public static SwapRequest restore(long id, long senderId, long receiverId, RequestStatus status,
             Instant createdAt) {
         return new SwapRequest(id, senderId, receiverId, status, createdAt);
     }
 
+    /**
+     * The receiver accepts, so the two users are now connected.
+     */
     public void accept(long userId) {
         checkIsReceiver(userId); //check this first, so a stranger doesn't find out the request's status
         if (status != RequestStatus.PENDING) {
@@ -53,7 +60,9 @@ public class SwapRequest {
         status = RequestStatus.ACCEPTED;
     }
 
-    //the service deletes the request after this, we only check that declining is allowed
+    /**
+     * The service deletes the request after this, we only check that declining is allowed.
+     */
     public void decline(long userId) {
         checkIsReceiver(userId);
         if (status != RequestStatus.PENDING) {
@@ -62,7 +71,9 @@ public class SwapRequest {
         }
     }
 
-    //the sender takes back a request they sent. The service deletes it after this, like decline
+    /**
+     * The sender takes back a request they sent. The service deletes it after this, like decline.
+     */
     public void cancel(long userId) {
         if (userId != senderId) {
             throw new NotRequestSenderException();
@@ -87,7 +98,9 @@ public class SwapRequest {
         return userId == senderId || userId == receiverId;
     }
 
-    //for a connection, gives the other person (e.g. user 1 asks, gets user 2 back)
+    /**
+     * For a connection, gives the other person (e.g. user 1 asks, gets user 2 back).
+     */
     public long otherUser(long userId) {
         return userId == senderId ? receiverId : senderId;
     }

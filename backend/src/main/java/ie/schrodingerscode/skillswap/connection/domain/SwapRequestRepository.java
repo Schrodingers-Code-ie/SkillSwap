@@ -9,15 +9,21 @@ import java.util.Optional;
  */
 public interface SwapRequestRepository {
 
-    //returns the saved request, a new one comes back with the id Postgres gave it
+    /**
+     * Returns the saved request, a new one comes back with the id Postgres gave it.
+     */
     SwapRequest save(SwapRequest request);
 
     Optional<SwapRequest> findById(long id);
 
-    //any request (pending or accepted) between these two users, in either direction
+    /**
+     * Any request (pending or accepted) between these two users, in either direction.
+     */
     Optional<SwapRequest> findByPair(UserPair pair);
 
-    //every request where the user is the sender or the receiver
+    /**
+     * Every request where the user is the sender or the receiver.
+     */
     List<SwapRequest> findAllInvolving(long userId);
 
     void delete(SwapRequest request);

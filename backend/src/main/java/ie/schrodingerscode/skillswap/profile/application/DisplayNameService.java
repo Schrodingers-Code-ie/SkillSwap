@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 
 import ie.schrodingerscode.skillswap.profile.domain.ProfileRepository;
 
+/**
+ * DisplayNames that reads the names from the profiles table.
+ */
 @Service
 public class DisplayNameService implements DisplayNames {
 
