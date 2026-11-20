@@ -8,6 +8,7 @@ export default function Dropdown({ setSortingOption }) {
 	const [selected, setSelected] = useState(OPTIONS[0]); // Displaying currently selected sort option
 	const dropdownRef = useRef(null);
 
+	// Being able to close the dropwown on Escape or by clicking outside of it
 	useEffect(() => {
 		if (!isOpen) return;
 		function handleClick(e) {

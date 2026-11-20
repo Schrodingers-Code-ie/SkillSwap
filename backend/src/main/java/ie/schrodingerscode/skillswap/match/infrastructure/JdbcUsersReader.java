@@ -11,34 +11,50 @@ import org.springframework.stereotype.Component;
 import ie.schrodingerscode.skillswap.match.application.SkillSwapUsersReader;
 import ie.schrodingerscode.skillswap.match.domain.SkillSwapUser;
 
+/**
+ * Reads users from Postgres using SQL queries through JdbcClient.
+ * Implements SkillSwapUsersReader.
+ */
 @Component
 public class JdbcUsersReader implements SkillSwapUsersReader {
     private final JdbcClient jdbc;
 
+    /**
+     * Creates the reader.
+     *
+     * @param jdbc client used to run SQL queries against Postgres
+     */
     public JdbcUsersReader(JdbcClient jdbc) {
         this.jdbc = jdbc;
     }
 
+    /**
+     * Loads one user from the database. A SkillSwapUser needs more than an ID, so this runs four
+     * separate queries instead of one big one: display name (profiles table), username (users table),
+     * skills the user teaches and skills the user wants to learn (both joined with the skills table to get
+     * skill names instead of IDs).
+     *
+     * @param id the user's ID
+     * @return   the user, or an empty Optional if there is no profile for this ID
+     */
     @Override
     public Optional<SkillSwapUser> findById(long id) {
-        // We need name, learn and teach sets, so it will be 3 small queries instead of one long one
-        // Name:
         Optional<String> name = jdbc
-                .sql("SELECT full_name FROM profiles WHERE user_id = :id")
+                .sql("SELECT full_name FROM profiles WHERE user_id = :id") // name is stored in profiles table
                 .param("id", id)
                 .query(String.class)
                 .optional();
 
         if (name.isEmpty())
-            return Optional.empty(); // If the name is missing (i.e. there was no record with such id), we'll return empty right away and get an error
+            return Optional.empty(); // No profile with this id, so there is no user to return
 
         String username = jdbc
-                .sql("SELECT username FROM users WHERE id = :id")
+                .sql("SELECT username FROM users WHERE id = :id") // username is stored in users table
                 .param("id", id)
                 .query(String.class)
                 .single();
 
-        // Teach skills (join with skills table to get the names, not the IDs of skills)
+        // Teach skills (join with skills table to get the names of the skills, not their IDs):
         Set<String> teach = new HashSet<>(jdbc
                 .sql("""
                         SELECT s.name
@@ -50,7 +66,7 @@ public class JdbcUsersReader implements SkillSwapUsersReader {
                 .query(String.class)
                 .list());
 
-        // Learn skills (same process)
+        // Learn skills (same process):
         Set<String> learn = new HashSet<>(jdbc
                 .sql("""
                         SELECT s.name
@@ -62,12 +78,22 @@ public class JdbcUsersReader implements SkillSwapUsersReader {
                 .query(String.class)
                 .list());
 
-        // Assemble SkillSwapUser which we need to return with this function
+        // Assemble SkillSwapUser
         return Optional.of(new SkillSwapUser(id, name.get(), username, learn, teach)); // name.get() because of Optional
     }
 
+    /**
+     * Gets the candidate users for the current user. A candidate is a user who has at least one overlapping
+     * skill with the current user, except users who:
+     * 1) have a swap request with the current user in either direction (pending or accepted)
+     * 2) blocked the current user or were blocked by the current user
+     *
+     * @param meId ID of the current user
+     * @return     the candidate users (empty list if there are none)
+     */
     @Override
     public List<SkillSwapUser> findCandidatesFor(long meId) {
+        // IDs of all users who overlap with the current user's skills (in either direction)
         List<Long> skillsBasesIds = jdbc
                 .sql("""
                         SELECT t.user_id
@@ -88,9 +114,7 @@ public class JdbcUsersReader implements SkillSwapUsersReader {
                 .query(Long.class)
                 .list();
 
-        // People who shouldn't show up as matches:
-        // everyone I already have a swap request with (pending or accepted), whichever way it was sent,
-        // and everyone I blocked or who blocked me
+        // IDs that must be excluded: swap requests and blocks, in both directions
         Set<Long> excludedIds = new HashSet<>(jdbc
                 .sql("""
                                 SELECT receiver_id FROM swap_requests WHERE sender_id = :me
@@ -105,9 +129,10 @@ public class JdbcUsersReader implements SkillSwapUsersReader {
                 .query(Long.class)
                 .list());
 
+        // Combining two results
         return skillsBasesIds.stream()
-                .filter(id -> !excludedIds.contains(id))
-                .map(this::findById)
+                .filter(id -> !excludedIds.contains(id)) // Keep only those IDs which are not in the excludedIds
+                .map(this::findById) // On each good ID, we call findById to get the actual user (means an extra SQL query for each ID)
                 .flatMap(Optional::stream)
                 .toList();
     }

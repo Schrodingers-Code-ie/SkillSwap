@@ -3,25 +3,31 @@ package ie.schrodingerscode.skillswap.match.domain;
 import java.util.Set;
 import java.util.TreeSet;
 
+/**
+ * Decides whether two users are a match and scores the match. Two users match if they overlap in at least
+ * one direction: the other user teaches something the current user wants to learn, or wants to learn something
+ * the current user teaches. The matching score is the total number of overlapping skills in both directions,
+ * and is used to order matches.
+ */
 public class MatchScorer {
+    /**
+     * Checks whether two users are a match. If so, calculates the matching score and returns a Match.
+     *
+     * @param me    the current user
+     * @param other the other user
+     * @return      a Match or null if the users have no overlapping skills
+     */
     public Match score(SkillSwapUser me, SkillSwapUser other) {
         Set<String> skillsTheyCanTeachMe = skillsTheyCanTeachMe(me, other);
         Set<String> skillsICanTeachThem = skillsICanTeachThem(me, other);
 
-        // Opposite for unmatching skills
-        Set<String> unmatchedSkillsTheyTeach = new TreeSet<>(other.teach()); // All skills they teach
-        unmatchedSkillsTheyTeach.removeAll(skillsTheyCanTeachMe); // And remove the ones I want to learn, so that we
-                                                                  // only have the ones I DON'T want to learn
+        Set<String> unmatchedSkillsTheyTeach = new TreeSet<>(other.teach());
+        unmatchedSkillsTheyTeach.removeAll(skillsTheyCanTeachMe);
 
-        if (skillsICanTeachThem.isEmpty() && skillsTheyCanTeachMe.isEmpty()) // If BOTH sections are empty, we don't
-                                                                             // show this other person in the
-                                                                             // suggestions at all
+        // Both directions empty, therefore "other" is not a match to "me", don't save "other" to matches
+        if (skillsICanTeachThem.isEmpty() && skillsTheyCanTeachMe.isEmpty())
             return null;
 
-        // Calculating the matching score based on what we now know about overlapping
-        // skills in two sections
-        // Easiest scoring system: each overlapping skill in any section = 1 matching
-        // point
         int matchingScore = skillsICanTeachThem.size() + skillsTheyCanTeachMe.size();
 
         return new Match(other.id(), other.name(), other.username(), matchingScore, skillsTheyCanTeachMe,
@@ -29,14 +35,26 @@ public class MatchScorer {
                 unmatchedSkillsTheyTeach);
     }
 
-    // what they can teach me
+    /**
+     * Returns the skills the other user can teach the current user.
+     *
+     * @param me    the current user
+     * @param other the other user
+     * @return      a new set of skill names sorted alphabetically (empty if there is no overlap)
+     */
     public static Set<String> skillsTheyCanTeachMe(SkillSwapUser me, SkillSwapUser other) {
-        Set<String> skills = new TreeSet<>(me.learn());
-        skills.retainAll(other.teach());
+        Set<String> skills = new TreeSet<>(me.learn()); // TreeSet keeps the results sorted alphabetically
+        skills.retainAll(other.teach()); // Keep only those skills that the other person teaches
         return skills;
     }
 
-    // what I can teach them
+    /**
+     * Returns the skills the current user can teach the other user.
+     *
+     * @param me    the current user
+     * @param other the other user
+     * @return      a new set of skill names sorted alphabetically (empty if there is no overlap)
+     */
     public static Set<String> skillsICanTeachThem(SkillSwapUser me, SkillSwapUser other) {
         Set<String> skills = new TreeSet<>(me.teach());
         skills.retainAll(other.learn());
