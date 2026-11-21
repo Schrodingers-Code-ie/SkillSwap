@@ -1,4 +1,4 @@
-package ie.schrodingerscode.skillswap.chat.infrastructure;
+package ie.schrodingerscode.skillswap.chat.web;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
