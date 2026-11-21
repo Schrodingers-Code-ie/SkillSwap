@@ -14,6 +14,13 @@ import ie.schrodingerscode.skillswap.auth.domain.exception.InvalidDisplayNameExc
 import ie.schrodingerscode.skillswap.auth.domain.exception.InvalidPasswordException;
 import ie.schrodingerscode.skillswap.auth.domain.exception.UsernameAlreadyUsedException;
 
+/**
+ * Use case: create a new account from the sign up form.
+ *
+ * <p>It checks the input, hashes the password with bcrypt, saves the user and then publishes
+ * {@link UserRegistered} so the profile feature can create the profile with the display name.
+ * It does not log the user in, the frontend calls login right after.
+ */
 @Service
 public class RegisterUser {
     private final UserRepository userRepository;
@@ -27,8 +34,27 @@ public class RegisterUser {
         this.events = events;
     }
 
-    // One transaction for the user and the profile: the listener runs inside publishEvent,
-    // so if saving the profile fails the user insert is rolled back too
+    /**
+     * Checks the sign up data, saves the user and publishes {@link UserRegistered}.
+     *
+     * <p>It runs in one transaction for the user and the profile. The profile listener runs inside
+     * {@code publishEvent}, so if saving the profile fails, the user insert is rolled back too and we
+     * never end up with a user that has no profile.
+     *
+     * @param rawEmail the email as typed
+     * @param username the username as typed
+     * @param rawPassword the plain password, 8 to 72 characters
+     * @param displayName the full name shown on the profile, at most 100 characters
+     * @param confirmedAdult whether the user confirmed they are 18 or older
+     * @return the saved user with its new ID
+     * @throws ie.schrodingerscode.skillswap.auth.domain.exception.InvalidEmailException if the email is not valid (400)
+     * @throws InvalidPasswordException if the password is empty or the wrong length (400)
+     * @throws InvalidDisplayNameException if the display name is empty or too long (400)
+     * @throws ie.schrodingerscode.skillswap.auth.domain.exception.InvalidUsernameException if the username breaks the rules (400)
+     * @throws ie.schrodingerscode.skillswap.auth.domain.exception.AgeNotConfirmedException if {@code confirmedAdult} is false (400)
+     * @throws EmailAlreadyUsedException if the email already has an account (409)
+     * @throws UsernameAlreadyUsedException if the username is taken, ignoring case (409)
+     */
     @Transactional
     public User register(String rawEmail, String username, String rawPassword, String displayName,
             boolean confirmedAdult) {

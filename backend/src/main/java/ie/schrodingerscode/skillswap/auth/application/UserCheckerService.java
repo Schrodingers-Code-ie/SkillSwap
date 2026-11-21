@@ -4,6 +4,9 @@ import org.springframework.stereotype.Service;
 
 import ie.schrodingerscode.skillswap.auth.domain.UserRepository;
 
+/**
+ * The real {@link UserChecker}, it looks the ID up in {@link UserRepository}.
+ */
 @Service
 public class UserCheckerService implements UserChecker {
 

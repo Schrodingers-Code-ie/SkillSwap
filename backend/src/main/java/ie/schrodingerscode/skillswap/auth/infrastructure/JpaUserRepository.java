@@ -8,9 +8,15 @@ import ie.schrodingerscode.skillswap.auth.domain.Email;
 import ie.schrodingerscode.skillswap.auth.domain.User;
 import ie.schrodingerscode.skillswap.auth.domain.UserRepository;
 
+/**
+ * The real {@link UserRepository}, it stores users in the {@code users} table through {@link UserJpa}.
+ *
+ * <p>Spring Data works with {@link UserEntity}, but the rest of the app works with the domain
+ * {@link User}. This class translates between the two, so JPA code stays in this package.
+ */
 @Repository
 public class JpaUserRepository implements UserRepository {
-    private final UserJpa userJpa; // What will TALK TO DATABASE, but it requires UserEntity, not User returned by UserRepository
+    private final UserJpa userJpa;
 
     public JpaUserRepository(UserJpa userJpa) {
         this.userJpa = userJpa;
@@ -18,7 +24,7 @@ public class JpaUserRepository implements UserRepository {
 
     @Override
     public boolean existsByEmail(Email email) {
-        return userJpa.existsByEmail(email.value()); // userJpa is used everywhere for these because we're asking the DATABASE is this user exists
+        return userJpa.existsByEmail(email.value());
     }
 
     @Override
@@ -28,9 +34,7 @@ public class JpaUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findById(long id) {
-        Optional<UserEntity> userEntity = userJpa.findById(id); // UserJpa returns UserEntity, because that's what it works with
-        // But we need User, not UserEntity, so JpaUserRepository (this class) translates it:
-        return userEntity.map(this::toDomain);
+        return userJpa.findById(id).map(this::toDomain);
     }
 
     @Override
@@ -39,13 +43,13 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
-    public User save(User user) { // THIS ONE is used inside RegisterUser, and it returns User
-        UserEntity converted = toEntity(user); // Database only works with UserEntity, so converting from User to UserEntity
-        UserEntity saved = userJpa.save(converted); // Saving to database - actually runs INSERT INTO users ... (this code is generated automatically by Spring from JpaRepository<UserEntity, Long>)
-        return toDomain(saved); // Convert UserEntity BACK to User and return, because this function save() is STILL used inside RegisterUser, and RegisterUser expects User to be returned
+    public User save(User user) {
+        // Returns the saved copy because the database fills in the new ID
+        UserEntity saved = userJpa.save(toEntity(user));
+        return toDomain(saved);
     }
 
-    private UserEntity toEntity(User user) { // Converts User to UserEntity, used in the save() method above
+    private UserEntity toEntity(User user) {
         UserEntity e = new UserEntity();
         e.setId(user.getId());
         e.setEmail(user.getEmail().value());
@@ -55,8 +59,7 @@ public class JpaUserRepository implements UserRepository {
         return e;
     }
 
-    private User toDomain(UserEntity e) { // Just converts UserEntity back to User, used in save() method above
-        // This method restore() sits inside User class
+    private User toDomain(UserEntity e) {
         return User.restore(e.getId(), new Email(e.getEmail()), e.getUsername(), e.getPasswordHash(), e.getCreatedAt());
     }
 
