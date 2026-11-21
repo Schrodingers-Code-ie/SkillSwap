@@ -40,7 +40,7 @@ public class FindMatches implements SharedSkills {
      *
      * @param meId                   ID of the current user
      * @return                       matches sorted from highest to lowest score (empty list if there are none)
-     * @throws UserNotFoundException if no user exists with the given ID
+     * @throws UserNotFoundException if the user has no profile created
      */
     public List<Match> forUser(long meId) {
         // Find the user that requested suggestions

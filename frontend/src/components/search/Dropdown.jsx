@@ -3,12 +3,17 @@ import arrow from '../../assets/dropdown_arrow.svg';
 
 const OPTIONS = ['Best match', 'Worst match'];
 
+/**
+ * Dropdown for sorting the matching suggestions returned by the backend. Has two options:
+ * best matches (shown from best to worst) and worst matches (from worst to best). Sorting happens
+ * based on the matching score returned with the matching person.
+ */
 export default function Dropdown({ setSortingOption }) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [selected, setSelected] = useState(OPTIONS[0]); // Displaying currently selected sort option
 	const dropdownRef = useRef(null);
 
-	// Being able to close the dropwown on Escape or by clicking outside of it
+	// Being able to close the dropdown on Escape or by clicking outside of it
 	useEffect(() => {
 		if (!isOpen) return;
 		function handleClick(e) {

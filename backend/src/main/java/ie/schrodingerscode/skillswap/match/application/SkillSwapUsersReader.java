@@ -15,7 +15,7 @@ public interface SkillSwapUsersReader {
      * Finds one user by ID.
      *
      * @param id the user's ID
-     * @return   the user, or an empty Optional if the user doesn't exist
+     * @return   the user, or an empty Optional if the user has no profile created
      */
     Optional<SkillSwapUser> findById(long id);
 

@@ -29,6 +29,9 @@ function useMediaQuery(query) {
 	);
 }
 
+/**
+ * Renders "Search" page with filters, match suggestions and side profile for each clicked person.
+ */
 export default function Matches() {
 	const [matches, setMatches] = useState([]);
 	const [error, setError] = useState(null);

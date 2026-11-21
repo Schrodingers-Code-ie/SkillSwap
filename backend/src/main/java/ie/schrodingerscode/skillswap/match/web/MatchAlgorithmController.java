@@ -13,7 +13,7 @@ import ie.schrodingerscode.skillswap.match.web.dto.MatchResponse;
 /**
  * REST controller for retrieving matches for the current user.
  * Translates the HTTP request into a call to the FindMatches application service
- * and converts the resulting domain objects  Match) into MatchResponse DTOs.
+ * and converts the resulting domain objects Match into MatchResponse DTOs.
  */
 @RestController
 @RequestMapping("/api")
