@@ -10,6 +10,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Stores profiles in the profiles, user_teach_skills and user_learn_skills tables through JPA.
+ * Package-private, so the rest of the app only sees ProfileRepository.
+ */
 @Repository
 class JpaProfileRepository implements ProfileRepository {
 

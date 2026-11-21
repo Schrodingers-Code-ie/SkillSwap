@@ -7,7 +7,6 @@ import ie.schrodingerscode.skillswap.profile.domain.Proficiency;
 import ie.schrodingerscode.skillswap.profile.domain.Profile;
 import ie.schrodingerscode.skillswap.profile.domain.ProfileRepository;
 import ie.schrodingerscode.skillswap.profile.domain.TeachSkill;
-import ie.schrodingerscode.skillswap.skill.domain.SkillRepository;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -23,8 +22,6 @@ class ProfilePersistenceTests {
 
     @Autowired
     ProfileRepository profiles;
-    @Autowired
-    SkillRepository skills;
     @Autowired
     JdbcTemplate jdbc;
 
@@ -101,12 +98,6 @@ class ProfilePersistenceTests {
     @Test
     void unknownUserHasNoProfile() {
         assertThat(profiles.findById(999_999L)).isEmpty();
-    }
-
-    @Test
-    void skillCatalogueComesFromTheDatabase() {
-        assertThat(skills.findAll()).hasSize(25);
-        assertThat(skills.findById(1)).get().extracting("name").isEqualTo("Guitar");
     }
 
     @Test

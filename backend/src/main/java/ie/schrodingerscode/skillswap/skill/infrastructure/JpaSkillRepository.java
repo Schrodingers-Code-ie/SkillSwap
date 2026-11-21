@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Reads the skills table through JPA. Package-private, so the rest of the app only sees SkillRepository.
+ */
 @Repository
 class JpaSkillRepository implements SkillRepository {
 

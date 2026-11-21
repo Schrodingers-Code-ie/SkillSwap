@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 
 import ie.schrodingerscode.skillswap.profile.domain.ProfileRepository;
 
+/**
+ * The real DisplayNames, it asks the profile repository. Other features only depend on the
+ * DisplayNames interface, so they can't reach anything else in profile.
+ */
 @Service
 public class DisplayNameService implements DisplayNames {
 

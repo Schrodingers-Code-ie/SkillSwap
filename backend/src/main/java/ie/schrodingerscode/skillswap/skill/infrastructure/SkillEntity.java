@@ -6,6 +6,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * JPA mapping of a row in skills. There are no setters because the app never changes skills.
+ */
 @Entity
 @Table(name = "skills")
 class SkillEntity {
