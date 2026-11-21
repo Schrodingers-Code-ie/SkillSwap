@@ -50,7 +50,7 @@ export default function Profile() {
 	}
 
 	return (
-		<section className="mx-3 my-1 h-[calc(100vh-72px-24px)] min-sm:mx-10 min-sm:my-5 min-sm:h-[calc(100vh-72px-54px)] rounded-container-card bg-card-bg p-10 shadow-container overflow-y-auto">
+		<section className="mx-3 my-1 h-[calc(100dvh-72px-24px)] min-sm:mx-10 min-sm:my-5 min-sm:h-[calc(100dvh-72px-54px)] rounded-container-card bg-card-bg p-10 shadow-container overflow-y-auto">
 			<div className="text-center">
 				<ProfileCircle
 					name={profile.displayName}
