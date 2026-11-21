@@ -2,11 +2,18 @@ package ie.schrodingerscode.skillswap.match.domain;
 
 import java.util.Set;
 
-// This is the ACTUAL CARD we get back if it's a match - we get:
-// 1. The ID and name of this person
-// 2. How well he/she match with us (matchingScore)
-// 3. Skills HE/SHE can teach US (so skills that satisfy something in our "learn" set) (if any)
-// 4. Skills WE can teach HIM/HER (so skills that satisfy something in our "teach" set) (if any)
+/**
+ * Holds a user who is a match for the current user, meaning they have at least one overlapping skill
+ * in at least one direction (skillsTheyCanTeachMe or skillsICanTeachThem).
+ *
+ * @param matchPersonId            the other user's ID
+ * @param matchPersonName          the other user's display name
+ * @param matchPersonUsername      the other user's username
+ * @param matchingScore            total number of overlapping skills in both directions, matches are sorted by this score
+ * @param skillsTheyCanTeachMe     skills the other user can teach the current user
+ * @param skillsICanTeachThem      skills the current user can teach the other user
+ * @param unmatchedSkillsTheyTeach skills the other user teaches that the current user doesn't want to learn
+ */
 public record Match(long matchPersonId, String matchPersonName, String matchPersonUsername, int matchingScore,
         Set<String> skillsTheyCanTeachMe,
         Set<String> skillsICanTeachThem, Set<String> unmatchedSkillsTheyTeach) {
