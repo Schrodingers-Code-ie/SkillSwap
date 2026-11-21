@@ -45,7 +45,7 @@ export default function SkillForm({ catalogue, takenIds, withLevel, onAdd }) {
 			setQuery('');
 			setLevel(null);
 		} catch {
-			//shows the error message
+			// SkillsModal shows the error. The typed skill stays, so the user can try again
 		} finally {
 			setBusy(false);
 		}

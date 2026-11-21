@@ -12,7 +12,7 @@ import ProfileCircle from '../components/ui/Profile';
 // skills in the SkillsModal popup, which also opens on its own until setup is done.
 export default function Profile() {
 	const { user, profile, error, loading, reload, setupOpen } = useProfile();
-	const [editing, setEditing] = useState(false);
+	const [editingSkills, setEditingSkills] = useState(false);
 	const [actionError, setActionError] = useState('');
 	const [removing, setRemoving] = useState(false);
 	const [editingDetails, setEditingDetails] = useState(false);
@@ -78,7 +78,7 @@ export default function Profile() {
 							</h1>
 							<button
 								type="button"
-								onClick={() => setEditingDetails(true)}
+								onClick={() => setEditingSkills(true)}
 								aria-label="Edit name and bio"
 								className="mt-2 h-7 cursor-pointer rounded-input bg-light-button-bg px-5 text-[13px] text-light-button-text transition hover:shadow-light-hover active:bg-light-button-pressed-bg sm:absolute sm:left-full sm:top-0.5 sm:ml-14 sm:mt-0"
 							>
@@ -147,8 +147,8 @@ export default function Profile() {
 				)}
 			</div>
 
-			{(setupOpen || editing) && (
-				<SkillsModal onClose={() => setEditing(false)} />
+			{(setupOpen || editingSkills) && (
+				<SkillsModal onClose={() => setEditingSkills(false)} />
 			)}
 		</section>
 	);
