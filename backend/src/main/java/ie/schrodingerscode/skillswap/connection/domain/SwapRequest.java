@@ -95,6 +95,11 @@ public class SwapRequest {
         }
     }
 
+    /**
+     * Shared check for accept and decline, only the receiver gets past it.
+     *
+     * @throws NotRequestReceiverException if the request wasn't sent to this user
+     */
     private void checkIsReceiver(long userId) {
         if (userId != receiverId) {
             throw new NotRequestReceiverException();
