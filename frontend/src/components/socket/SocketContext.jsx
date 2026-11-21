@@ -3,13 +3,14 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { getCsrfToken } from '../../api/client';
 import { SocketContext } from './socket-context';
 
-// One STOMP connection per tab for the logged-in part of the app (it lives in AppLayout).
+// Renders nothing itself: provides one STOMP connection per tab for the logged-in part of the app
+// (it wraps the pages in AppLayout).
 // Opens on mount (after login), closes on unmount (logout), and reconnects by itself.
 // Components use useSocket(): { connected, subscribe(destination, callback) }.
 // subscribe returns an unsubscribe function, so return it from useEffect.
 export function SocketProvider({ children }) {
 	const clientRef = useRef(null);
-	// everything components asked to listen to, so it can be subscribed again after a reconnect
+	// Everything components asked to listen to, so it can be subscribed again after a reconnect
 	const wantedRef = useRef(new Map());
 	const [connected, setConnected] = useState(false);
 
@@ -20,20 +21,19 @@ export function SocketProvider({ children }) {
 			reconnectDelay: 3000,
 			heartbeatIncoming: 10000,
 			heartbeatOutgoing: 10000,
+			// Read the CSRF token on every (re)connect, the backend checks it on CONNECT
 			beforeConnect: () => {
 				client.connectHeaders = {
 					'X-XSRF-TOKEN': getCsrfToken() ?? '',
 				};
 			},
 			onConnect: () => {
-				console.info('[socket] connected');
 				setConnected(true);
 				for (const w of wantedRef.current.values()) {
 					w.stompSub = client.subscribe(w.destination, w.handler);
 				}
 			},
 			onWebSocketClose: () => {
-				console.info('[socket] disconnected');
 				setConnected(false);
 			},
 			onStompError: (frame) => {
@@ -47,6 +47,8 @@ export function SocketProvider({ children }) {
 		};
 	}, []);
 
+	// Listens to destination now if connected, and again after every reconnect.
+	// callback gets the parsed JSON body. Returns a function that stops listening
 	const subscribe = useCallback((destination, callback) => {
 		const key = Symbol(destination);
 		const w = {

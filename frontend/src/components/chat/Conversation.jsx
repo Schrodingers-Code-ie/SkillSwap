@@ -9,7 +9,9 @@ import arrowUpIcon from '../../assets/arrow-up.svg';
 const POLL_MS = 3000; // time between polls
 const MAX_LENGTH = 2000; // same limit as MessageText on the backend
 
-// Middle column of the Chat page
+// The middle column of the Chat page: the messages with one friend, grouped by day, and the box
+// to send a new one. Loads the history when opened, then adds messages pushed over the WebSocket
+// (or polls every POLL_MS while the socket is down).
 // friend: the open friend's chat entry ({ userId, displayName, lastMessage })
 // onSend: called with the saved message after a successful send, so the Chat page
 //         can move this friend to the top of the list straight away
@@ -45,11 +47,11 @@ export default function Conversation({
 
 	const firstName = friend.displayName.split(' ')[0];
 	const text = draft.trim();
-	const canSend = text !== '' && !sending; // text exist and no message is still sending
+	const canSend = text !== '' && !sending; // there is text and no message is still sending
 	const notice = sendError ?? error;
 
-	// Polling, only while the socket is down. When it (re)connects, load once to catch up
-	// Stops when the user leaves the page or switches friend
+	// Loads the history when opened and when the socket (re)connects, to catch up.
+	// Polls only while the socket is down. Stops when the user leaves the page or switches friend
 	useEffect(() => {
 		let cancelled = false;
 		async function load() {
@@ -214,13 +216,15 @@ export default function Conversation({
 	);
 }
 
-// Adds new messages to the list without losing the ones we already have
+// Adds new messages to the list without losing the ones we already have.
+// Each id appears once, sorted by id, which is the order the messages were saved in
 function mergeById(current, incoming) {
 	const byId = new Map(current.map((message) => [message.id, message]));
 	incoming.forEach((message) => byId.set(message.id, message));
 	return [...byId.values()].sort((a, b) => a.id - b.id);
 }
 
+// The same string for two times on the same local day, used to show a day label when the day changes
 function dayKey(iso) {
 	return new Date(iso).toDateString();
 }

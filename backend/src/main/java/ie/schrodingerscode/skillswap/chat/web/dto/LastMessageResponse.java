@@ -5,7 +5,7 @@ import java.time.Instant;
 import ie.schrodingerscode.skillswap.chat.domain.Message;
 
 /**
- * The last message of a chat, as shown in the chat list (GET /api/chats).
+ * The last message of a chat, as shown in the chat list ({@code GET /api/chats}).
  * Has no receiverId: in the chat list the receiver is always either me or the connection,
  * and senderId already tells the frontend which one sent it.
  *
@@ -17,8 +17,10 @@ import ie.schrodingerscode.skillswap.chat.domain.Message;
 public record LastMessageResponse(long id, long senderId, String text, Instant sentAt) {
 
     /**
+     * Converts a domain message into the chat list preview shape.
+     *
      * @param message the domain message
-     * @return the DTO
+     * @return the response record
      */
     public static LastMessageResponse from(Message message) {
         return new LastMessageResponse(message.id(), message.senderId(), message.text().value(), message.sentAt());
