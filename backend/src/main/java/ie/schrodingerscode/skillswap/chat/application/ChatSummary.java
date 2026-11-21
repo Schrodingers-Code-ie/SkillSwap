@@ -4,7 +4,7 @@ import ie.schrodingerscode.skillswap.chat.domain.Message;
 
 /**
  * One entry in the chat list: a connection and the last message with them.
- * This is what ListChats returns; the web layer turns it into JSON.
+ * This is what {@link ListChats} returns; the web layer turns it into JSON.
  *
  * @param userId      id of the connection (the other person)
  * @param displayName their display name, or null if they have no profile yet
@@ -12,6 +12,9 @@ import ie.schrodingerscode.skillswap.chat.domain.Message;
  */
 public record ChatSummary(long userId, String displayName, Message lastMessage) {
 
+    /**
+     * @return true if the two users have exchanged at least one message
+     */
     public boolean hasMessages() {
         return lastMessage != null;
     }
