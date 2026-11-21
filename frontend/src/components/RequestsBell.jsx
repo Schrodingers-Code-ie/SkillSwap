@@ -54,6 +54,7 @@ export default function RequestsBell() {
 		};
 	}, [isOpen]);
 
+	// Opens or closes the dropdown
 	function toggle() {
 		if (!isOpen) load(); // fresh list every time the dropdown opens
 		setIsOpen((open) => !open);
@@ -171,6 +172,7 @@ export default function RequestsBell() {
 	);
 }
 
+// The bell icon itself, an inline svg
 function BellIcon() {
 	return (
 		<svg

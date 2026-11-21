@@ -60,6 +60,12 @@ public class SwapRequestController {
         return toResponse(request, namesFor(List.of(request)));
     }
 
+    /**
+     * POST /api/requests, sends a swap request.
+     *
+     * @param body has the receiverId
+     * @return the new request, with 201
+     */
     @PostMapping("/requests")
     @ResponseStatus(HttpStatus.CREATED)
     public SwapRequestResponse send(@Valid @RequestBody SendRequestBody body) {
@@ -67,24 +73,45 @@ public class SwapRequestController {
         return toResponse(request);
     }
 
+    /**
+     * POST /api/requests/{id}/accept, the receiver accepts it.
+     *
+     * @param id the request id
+     * @return the accepted request
+     */
     @PostMapping("/requests/{id}/accept")
     public SwapRequestResponse accept(@PathVariable("id") long id) {
         SwapRequest request = service.accept(id, currentUser.getId());
         return toResponse(request);
     }
 
+    /**
+     * POST /api/requests/{id}/decline, gives 204.
+     *
+     * @param id the request id
+     */
     @PostMapping("/requests/{id}/decline")
     @ResponseStatus(HttpStatus.NO_CONTENT) //declined requests are deleted, so there is nothing to send back
     public void decline(@PathVariable("id") long id) {
         service.decline(id, currentUser.getId());
     }
 
+    /**
+     * DELETE /api/requests/{id}, the sender cancels it, gives 204.
+     *
+     * @param id the request id
+     */
     @DeleteMapping("/requests/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT) //cancelled requests are deleted, so there is nothing to send back
     public void cancel(@PathVariable("id") long id) {
         service.cancel(id, currentUser.getId());
     }
 
+    /**
+     * GET /api/requests, my pending requests split into incoming and outgoing.
+     *
+     * @return incoming and outgoing lists
+     */
     @GetMapping("/requests")
     public PendingRequestsResponse pending() {
         long me = currentUser.getId();
@@ -103,6 +130,11 @@ public class SwapRequestController {
         return new PendingRequestsResponse(incoming, outgoing);
     }
 
+    /**
+     * GET /api/connections, my friends with their names and the skills we can swap.
+     *
+     * @return one entry per friend
+     */
     @GetMapping("/connections")
     public List<ConnectionResponse> connections() {
         List<SkillOverlap> friends = service.friendsWithSkills(currentUser.getId());

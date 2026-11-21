@@ -11,6 +11,7 @@ export default function PersonCard({
 	onSelect,
 	action,
 }) {
+	// "Ann Smith" -> "AS" for the avatar circle
 	function getInitials(name) {
 		return name
 			.split(' ')

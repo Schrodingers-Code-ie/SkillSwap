@@ -58,6 +58,7 @@ export default function Friends() {
 		const id = selectedUserId;
 		requested.current.add(id);
 
+		// Gets the full profile for the side panel
 		async function loadProfile() {
 			try {
 				const profile = await api.get(`/users/${id}/profile`);
@@ -73,6 +74,7 @@ export default function Friends() {
 		loadProfile();
 	}, [selectedUserId]);
 
+	// Clicking a friend card shows their profile
 	function handleSelect(friendId) {
 		setSelectedId(friendId);
 		setPanelOpen(true); // Opens the floating window below md, no effect at md and above
