@@ -31,7 +31,11 @@ public class SwapRequest {
         this.createdAt = createdAt;
     }
 
-    //the only way to make a new request, so a request to yourself can never exist
+    /**
+     * The only way to make a new request, so a request to yourself can never exist.
+     *
+     * @throws SelfRequestException if someone tries to send one to themselves
+     */
     public static SwapRequest create(long senderId, long receiverId) {
         if (senderId == receiverId) {
             throw new SelfRequestException();
@@ -39,12 +43,20 @@ public class SwapRequest {
         return new SwapRequest(null, senderId, receiverId, RequestStatus.PENDING, Instant.now());
     }
 
-    //rebuilds a request that was already saved, used by the repositories when loading
+    /**
+     * Rebuilds a request that was already saved, used by the repositories when loading.
+     */
     public static SwapRequest restore(long id, long senderId, long receiverId, RequestStatus status,
             Instant createdAt) {
         return new SwapRequest(id, senderId, receiverId, status, createdAt);
     }
 
+    /**
+     * The receiver accepts, so the two users are now connected.
+     *
+     * @throws NotRequestReceiverException if anyone other than the receiver tries it
+     * @throws InvalidRequestStateException if it was accepted before
+     */
     public void accept(long userId) {
         checkIsReceiver(userId); //check this first, so a stranger doesn't find out the request's status
         if (status != RequestStatus.PENDING) {
@@ -53,7 +65,12 @@ public class SwapRequest {
         status = RequestStatus.ACCEPTED;
     }
 
-    //the service deletes the request after this, we only check that declining is allowed
+    /**
+     * The service deletes the request after this, we only check that declining is allowed.
+     *
+     * @throws NotRequestReceiverException if it's not their request to decline
+     * @throws InvalidRequestStateException if it's already accepted, so there's nothing to decline
+     */
     public void decline(long userId) {
         checkIsReceiver(userId);
         if (status != RequestStatus.PENDING) {
@@ -62,7 +79,12 @@ public class SwapRequest {
         }
     }
 
-    //the sender takes back a request they sent. The service deletes it after this, like decline
+    /**
+     * The sender takes back a request they sent. The service deletes it after this, like decline.
+     *
+     * @throws NotRequestSenderException if they didn't send it
+     * @throws InvalidRequestStateException if the other person already accepted it
+     */
     public void cancel(long userId) {
         if (userId != senderId) {
             throw new NotRequestSenderException();
@@ -73,6 +95,11 @@ public class SwapRequest {
         }
     }
 
+    /**
+     * Shared check for accept and decline, only the receiver gets past it.
+     *
+     * @throws NotRequestReceiverException if the request wasn't sent to this user
+     */
     private void checkIsReceiver(long userId) {
         if (userId != receiverId) {
             throw new NotRequestReceiverException();
@@ -87,7 +114,9 @@ public class SwapRequest {
         return userId == senderId || userId == receiverId;
     }
 
-    //for a connection, gives the other person (e.g. user 1 asks, gets user 2 back)
+    /**
+     * For a connection, gives the other person (e.g. user 1 asks, gets user 2 back).
+     */
     public long otherUser(long userId) {
         return userId == senderId ? receiverId : senderId;
     }
