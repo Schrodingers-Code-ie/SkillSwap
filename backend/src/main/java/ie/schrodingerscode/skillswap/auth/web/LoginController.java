@@ -21,8 +21,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 /**
- * Logs a user in and keeps them logged in with a session cookie.
- * Logout is handled by spring security, see SecurityConfig.
+ * {@code POST /api/auth/login}: logs a user in and keeps them logged in with a session cookie.
+ *
+ * <p>{@link LoginUser} checks the email and password, then this controller saves the user ID in the
+ * HTTP session. The browser gets a JSESSIONID cookie and sends it with every request after that.
+ * Logout is handled by Spring Security, see SecurityConfig.
  */
 @RestController
 @RequestMapping("/api/auth")
@@ -36,6 +39,15 @@ public class LoginController {
         this.loginUser = loginUser;
     }
 
+    /**
+     * Checks the details and starts a session for the user.
+     *
+     * @param request the email and password from the JSON body
+     * @param httpRequest used to change the session ID and store the login in the session
+     * @param httpResponse passed to Spring Security when it saves the session
+     * @return the logged-in user's ID, email and username
+     * @throws ie.schrodingerscode.skillswap.common.exception.UnauthorizedException if the email or password is wrong (401)
+     */
     @PostMapping("/login")
     public UserResponse login(@Valid @RequestBody LoginRequest request,
             HttpServletRequest httpRequest, HttpServletResponse httpResponse) {

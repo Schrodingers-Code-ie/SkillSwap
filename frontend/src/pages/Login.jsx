@@ -8,6 +8,8 @@ import Input from '../components/ui/Input.jsx';
 const WRONG_LOGIN =
 	'The email or password is incorrect. Check them and try again.';
 
+// The sign in form on /login: email, password with a Show/Hide button, and an error box.
+// On success it goes back to the page in ?redirectTo, or the default page.
 export default function Login() {
 	const [form, setForm] = useState({ email: '', password: '' });
 	const [error, setError] = useState(null);

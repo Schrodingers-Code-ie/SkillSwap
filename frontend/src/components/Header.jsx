@@ -10,6 +10,8 @@ const TABS = [
 	{ to: '/friends', label: 'Friends' },
 ];
 
+// The bar at the top of every logged-in page: the Search, Chat and Friends tabs,
+// the requests bell and the account menu.
 export default function Header() {
 	// The user that protectedLoader loaded (see router.jsx)
 	const user = useRouteLoaderData('protected');

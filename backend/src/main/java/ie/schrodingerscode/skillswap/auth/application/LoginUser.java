@@ -9,6 +9,13 @@ import ie.schrodingerscode.skillswap.auth.domain.UserRepository;
 import ie.schrodingerscode.skillswap.auth.domain.exception.InvalidEmailException;
 import ie.schrodingerscode.skillswap.common.exception.UnauthorizedException;
 
+/**
+ * Use case: check an email and password and return the matching user.
+ *
+ * <p>This class only checks the details. Starting the session (the cookie) is done by
+ * {@code LoginController}. Every kind of failure gives the same "Wrong email or password" message, so
+ * nobody can use the login form to find out which emails have an account.
+ */
 @Service
 public class LoginUser {
     private final UserRepository userRepository;
@@ -21,6 +28,15 @@ public class LoginUser {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Finds the user by email and checks the password against the stored bcrypt hash.
+     *
+     * @param rawEmail the email as typed, it is trimmed and lower-cased first
+     * @param rawPassword the plain password as typed
+     * @return the logged-in user
+     * @throws UnauthorizedException if the email is badly formatted, has no account, or the password
+     *         is wrong (401, same message for all three)
+     */
     public User login(String rawEmail, String rawPassword) {
         Email email;
         try {

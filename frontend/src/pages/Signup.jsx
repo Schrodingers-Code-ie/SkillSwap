@@ -66,6 +66,9 @@ function errorFromBackend(err, username) {
 	return { form: message };
 }
 
+// The sign up form on /signup: full name, username, date of birth, email and password
+// with a live checklist of the password rules. After registering it logs the user in
+// and opens their profile.
 export default function Signup() {
 	const [form, setForm] = useState({
 		displayName: '',
