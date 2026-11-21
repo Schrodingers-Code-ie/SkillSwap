@@ -12,6 +12,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * JPA mapping of one row in the {@code messages} table (created by the V3 migration).
+ *
+ * <p>Only used inside this package; {@link JpaMessageRepository} turns it into a domain {@link Message}
+ * and back. The text column is {@code TEXT}: the 2000-character limit is enforced by
+ * {@link MessageText}, not by the database.
+ */
 @Entity
 @Table(name = "messages")
 public class MessageEntity {
@@ -32,9 +39,15 @@ public class MessageEntity {
     @Column(name = "sent_at", nullable = false)
     private Instant sentAt;
 
+    /** Needed by JPA. */
     protected MessageEntity() {
     }
 
+    /**
+     * Builds an entity from a domain message that is not saved yet (the id is left for the database).
+     * {@code sentAt} is cut to microseconds, because Postgres stores timestamps with microsecond
+     * precision, so the saved message equals the one loaded back later.
+     */
     static MessageEntity from(Message m) {
         MessageEntity e = new MessageEntity();
         e.senderId = m.senderId();
@@ -44,6 +57,7 @@ public class MessageEntity {
         return e;
     }
 
+    /** Turns this row back into a domain message. */
     Message toDomain() {
         return new Message(id, senderId, receiverId, new MessageText(text), sentAt);
     }
