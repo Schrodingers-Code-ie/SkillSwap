@@ -97,13 +97,23 @@ export default function Friends() {
 		return () => window.removeEventListener('keydown', onKeyDown);
 	}, [floating, selectedUserId, closePanel]);
 
+	// Lock page scrolling while the floating window is open
+	useEffect(() => {
+		if (!floating || selectedUserId === null) return;
+		const previous = document.body.style.overflow;
+		document.body.style.overflow = 'hidden';
+		return () => {
+			document.body.style.overflow = previous;
+		};
+	}, [floating, selectedUserId]);
+
 	const baseClasses =
 		'flex-col overflow-y-auto rounded-card border border-container-border bg-linear-to-b from-(--raw-light-pink) to-card-bg to-40% px-7 pt-9 pb-10 shadow-container';
 
 	// Different styles for different resolutions
 	const layoutClasses = floating
-		? 'fixed z-50 flex top-20 bottom-4 left-4 right-4 min-[480px]:inset-0 min-[480px]:m-auto min-[480px]:w-md min-[480px]:h-[calc(100vh-72px-64px)]'
-		: 'sticky top-8 flex h-[calc(100vh-72px-64px)] max-w-md w-full shrink-0 self-start';
+		? 'fixed z-50 flex top-20 bottom-4 left-4 right-4 min-[480px]:inset-0 min-[480px]:m-auto min-[480px]:w-md min-[480px]:h-[calc(100dvh-72px-64px)]'
+		: 'sticky top-8 flex h-[calc(100dvh-72px-64px)] max-w-md w-full shrink-0 self-start';
 
 	return (
 		<div className="friends-page-container px-5 min-md:px-12 py-4 min-md:py-8 flex justify-center">

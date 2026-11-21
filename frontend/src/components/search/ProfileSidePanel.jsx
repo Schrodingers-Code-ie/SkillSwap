@@ -56,6 +56,16 @@ export default function ProfileSidePanel({
 		return () => window.removeEventListener('keydown', onKeyDown);
 	}, [floating, personId, onClose]);
 
+	// Lock page scrolling while the floating window is open
+	useEffect(() => {
+		if (!floating || personId === null) return;
+		const previous = document.body.style.overflow;
+		document.body.style.overflow = 'hidden';
+		return () => {
+			document.body.style.overflow = previous;
+		};
+	}, [floating, personId]);
+
 	// Floating mode with nobody selected means the window is closed
 	if (floating && personId === null) return null;
 
@@ -70,8 +80,8 @@ export default function ProfileSidePanel({
 
 	// Different styles for different resolutions
 	const layoutClasses = floating
-		? 'fixed z-50 flex top-20 bottom-4 left-4 right-4 md:inset-0 md:m-auto md:w-130 md:max-w-[calc(100vw-2rem)] md:h-[min(860px,calc(100vh-4rem))]'
-		: 'hidden min-xl:flex sticky top-8 h-[calc(100vh-72px-64px)] max-w-md w-full shrink-0 self-start';
+		? 'fixed z-50 flex top-20 bottom-4 left-4 right-4 md:inset-0 md:m-auto md:w-130 md:max-w-[calc(100vw-2rem)] md:h-[min(860px,calc(100dvh-4rem))]'
+		: 'hidden min-xl:flex sticky top-8 h-[calc(100dvh-72px-64px)] max-w-md w-full shrink-0 self-start';
 
 	return (
 		<>

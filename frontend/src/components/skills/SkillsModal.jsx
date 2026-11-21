@@ -43,6 +43,15 @@ export default function SkillsModal({ onClose }) {
 		return () => document.removeEventListener('keydown', onKey);
 	}, [closable, onClose]);
 
+	// Lock page scrolling while the modal is open
+	useEffect(() => {
+		const previous = document.body.style.overflow;
+		document.body.style.overflow = 'hidden';
+		return () => {
+			document.body.style.overflow = previous;
+		};
+	}, []);
+
 	const teaching = step === 1;
 	const items = teaching ? profile.teachSkills : profile.learnSkills;
 	const takenIds = new Set(items.map((s) => s.skillId));
