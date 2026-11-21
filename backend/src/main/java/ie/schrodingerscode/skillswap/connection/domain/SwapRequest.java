@@ -33,6 +33,8 @@ public class SwapRequest {
 
     /**
      * The only way to make a new request, so a request to yourself can never exist.
+     *
+     * @throws SelfRequestException if someone tries to send one to themselves
      */
     public static SwapRequest create(long senderId, long receiverId) {
         if (senderId == receiverId) {
@@ -51,6 +53,9 @@ public class SwapRequest {
 
     /**
      * The receiver accepts, so the two users are now connected.
+     *
+     * @throws NotRequestReceiverException if anyone other than the receiver tries it
+     * @throws InvalidRequestStateException if it was accepted before
      */
     public void accept(long userId) {
         checkIsReceiver(userId); //check this first, so a stranger doesn't find out the request's status
@@ -62,6 +67,9 @@ public class SwapRequest {
 
     /**
      * The service deletes the request after this, we only check that declining is allowed.
+     *
+     * @throws NotRequestReceiverException if it's not their request to decline
+     * @throws InvalidRequestStateException if it's already accepted, so there's nothing to decline
      */
     public void decline(long userId) {
         checkIsReceiver(userId);
@@ -73,6 +81,9 @@ public class SwapRequest {
 
     /**
      * The sender takes back a request they sent. The service deletes it after this, like decline.
+     *
+     * @throws NotRequestSenderException if they didn't send it
+     * @throws InvalidRequestStateException if the other person already accepted it
      */
     public void cancel(long userId) {
         if (userId != senderId) {
