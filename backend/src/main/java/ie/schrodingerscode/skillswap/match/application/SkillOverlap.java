@@ -11,5 +11,5 @@ import java.util.List;
  * @param skillsICanTeachThem  skills the current user can teach the other user
  */
 public record SkillOverlap(long userId, String username, List<String> skillsTheyCanTeachMe,
-                List<String> skillsICanTeachThem) {
+        List<String> skillsICanTeachThem) {
 }
