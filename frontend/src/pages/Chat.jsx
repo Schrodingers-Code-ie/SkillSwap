@@ -21,12 +21,21 @@ function withFriendOnTop(chats, friendId, message) {
 	return [{ ...friend, lastMessage: message }, ...others];
 }
 
+// GET /api/chats sends displayName: null for a connection without a profile.
+// Every component below needs a string, so give those a fallback name
+function withNames(chats) {
+	return chats.map((chat) => ({
+		...chat,
+		displayName: chat.displayName ?? 'Unknown user',
+	}));
+}
+
 // Figma: Chat page. Friend list on the left, messages in the middle, profile on the right
 export default function Chat() {
 	// initialChats: from GET /api/chats in chatLoader, already sorted newest first
 	const { myProfile, chats: initialChats } = useLoaderData();
 	// The list on screen. Starts with what the loader fetched, then each poll replaces it
-	const [chats, setChats] = useState(initialChats);
+	const [chats, setChats] = useState(withNames(initialChats));
 
 	// /chat?user=5 (Chat button on the Friends page) opens the chat with friend 5.
 	// A missing, non-number, or unknown id falls back to the first chat
@@ -61,7 +70,7 @@ export default function Chat() {
 			try {
 				const fresh = await api.get('/chats');
 				if (cancelled) return; // page closed while waiting: ignore the late answer
-				setChats(fresh);
+				setChats(withNames(fresh));
 				// If nothing was selected (list was empty), open the first chat that appears
 				setSelectedId((current) => current ?? fresh[0]?.userId ?? null);
 			} catch {
