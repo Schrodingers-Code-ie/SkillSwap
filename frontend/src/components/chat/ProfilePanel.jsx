@@ -2,7 +2,8 @@ import Profile from '../ui/Profile';
 import SkillBubble from '../ui/SkillBubble';
 import BlockButton from './BlockButton';
 
-// Right column of the Chat page
+// The right column of the Chat page: the open friend's name and avatar, the skills you
+// can swap with them, and the Block button.
 // friend: the open friend's chat entry, used for the name (available straight away)
 // profile: the friend's loaded profile with skills; undefined while loading, { failed: true } on error
 // myProfile: the logged-in user's profile
@@ -53,7 +54,7 @@ export default function ProfilePanel({
 	);
 }
 
-// The skills both users can swap. Only rendered once the friend's profile has loaded.
+// The skills both users can swap, or a hint when there are none. Only rendered once the friend's profile has loaded
 function SkillMatches({ profile, myProfile, firstName }) {
 	const myLearnIds = new Set(
 		myProfile.learnSkills.map((skill) => skill.skillId),
@@ -93,6 +94,7 @@ function SkillMatches({ profile, myProfile, firstName }) {
 	);
 }
 
+// One titled group of skill bubbles. Renders nothing when the group is empty
 function SkillSection({ title, skills, color }) {
 	if (skills.length === 0) return null;
 
