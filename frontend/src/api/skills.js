@@ -1,3 +1,4 @@
+// Calls to the profile and skills endpoints (ProfileController, SkillController).
 import { api } from './client';
 
 export const getSkills = () => api.get('/skills');

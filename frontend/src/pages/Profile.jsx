@@ -7,6 +7,9 @@ import SkillsModal from '../components/skills/SkillsModal';
 import { useProfile } from '../components/skills/profile-context';
 import ProfileCircle from '../components/ui/Profile';
 
+// The Profile page: your name, @username and bio, and the lists of skills you
+// teach and want to learn. Name and bio are edited in place (EditDetailsForm),
+// skills in the SkillsModal popup, which also opens on its own until setup is done.
 export default function Profile() {
 	const { user, profile, error, loading, reload, setupOpen } = useProfile();
 	const [editing, setEditing] = useState(false);

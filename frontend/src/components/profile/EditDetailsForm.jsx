@@ -7,7 +7,8 @@ import Input from '../ui/Input';
 const MAX_NAME = 100;
 const MAX_BIO = 500;
 
-// onSaved runs after the backend has saved, e.g. to reload the profile and close the form
+// The form that replaces the name and bio on the Profile page while you edit them,
+// with character counters and Save / Cancel. Esc cancels.
 export default function EditDetailsForm({ profile, onSaved, onCancel }) {
 	const id = useId();
 	const [name, setName] = useState(profile.displayName);

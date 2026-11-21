@@ -6,6 +6,9 @@ import { ProfileContext } from './profile-context';
 const isMissing = (p) =>
 	p.teachSkills.length === 0 || p.learnSkills.length === 0;
 
+// Renders nothing itself: loads the logged-in user's profile once and shares it
+// with every page through useProfile(). If a skill list is empty it opens the
+// setup popup, which stays open until the user presses Finish setup.
 export function ProfileProvider({ children }) {
 	const user = useRouteLoaderData('protected');
 	const [profile, setProfile] = useState(null);

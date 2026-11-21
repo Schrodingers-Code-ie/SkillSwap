@@ -6,6 +6,8 @@ const BORDERS = {
 	profile: 'border-profile-card-border',
 };
 
+// One skill as a row: its name, the level badge for teach skills and a remove
+// button. Used in the popup and on the Profile page (variant picks the border).
 export default function SkillCard({
 	name,
 	proficiency,
