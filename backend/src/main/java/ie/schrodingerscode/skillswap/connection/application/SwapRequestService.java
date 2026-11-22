@@ -14,8 +14,12 @@ import ie.schrodingerscode.skillswap.connection.domain.UserPair;
 import ie.schrodingerscode.skillswap.connection.domain.ConnectionCreated;
 import ie.schrodingerscode.skillswap.connection.domain.exception.BlockedRequestException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.DuplicateRequestException;
+import ie.schrodingerscode.skillswap.connection.domain.exception.InvalidRequestStateException;
+import ie.schrodingerscode.skillswap.connection.domain.exception.NotRequestReceiverException;
+import ie.schrodingerscode.skillswap.connection.domain.exception.NotRequestSenderException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.ReceiverNotFoundException;
 import ie.schrodingerscode.skillswap.connection.domain.exception.RequestNotFoundException;
+import ie.schrodingerscode.skillswap.connection.domain.exception.SelfRequestException;
 import ie.schrodingerscode.skillswap.match.application.SharedSkills;
 import ie.schrodingerscode.skillswap.match.application.SkillOverlap;
 
@@ -41,8 +45,19 @@ public class SwapRequestService implements ConnectionChecker, ConnectionLister, 
         this.events = events;
     }
 
-    //synchronized so two requests sent at the same moment can't both pass the duplicate check
-    //(the unique index in the database is a backstop for this too)
+    /**
+     * Sends a new pending request.
+     * Synchronized so two requests sent at the same moment can't both pass the duplicate check
+     * (the unique index in the database is a backstop for this too).
+     *
+     * @param senderId the logged in user
+     * @param receiverId who the request goes to
+     * @return the saved request, with its id
+     * @throws ReceiverNotFoundException if the receiver doesn't exist
+     * @throws BlockedRequestException if one of them blocked the other
+     * @throws DuplicateRequestException if there is already a request between them
+     * @throws SelfRequestException if sending to yourself
+     */
     public synchronized SwapRequest send(long senderId, long receiverId) {
         //otherwise the foreign key in the database rejects it and the API gives a 500
         if (!users.exists(receiverId)) {
@@ -58,6 +73,16 @@ public class SwapRequestService implements ConnectionChecker, ConnectionLister, 
         return repository.save(SwapRequest.create(senderId, receiverId));
     }
 
+    /**
+     * Accepts a request and publishes ConnectionCreated, so both users get the new friend live.
+     *
+     * @param requestId the request to accept
+     * @param userId the logged in user, has to be the receiver
+     * @return the accepted request
+     * @throws RequestNotFoundException if there is no request with this id
+     * @throws NotRequestReceiverException if the user isn't the receiver
+     * @throws InvalidRequestStateException if it's already accepted
+     */
     @Transactional
     public SwapRequest accept(long requestId, long userId) {
         SwapRequest request = findRequest(requestId);
@@ -67,26 +92,54 @@ public class SwapRequestService implements ConnectionChecker, ConnectionLister, 
         return saved;
     }
 
+    /**
+     * Declines a request, it gets deleted so the sender can send again later.
+     *
+     * @param requestId the request to decline
+     * @param userId the logged in user, has to be the receiver
+     * @throws RequestNotFoundException if there is no request with this id
+     * @throws NotRequestReceiverException if the user isn't the receiver
+     * @throws InvalidRequestStateException if it's not pending
+     */
     public void decline(long requestId, long userId) {
         SwapRequest request = findRequest(requestId);
         request.decline(userId);
         repository.delete(request);
     }
 
+    /**
+     * Takes back a request I sent, it gets deleted.
+     *
+     * @param requestId the request to cancel
+     * @param userId the logged in user, has to be the sender
+     * @throws RequestNotFoundException if there is no request with this id
+     * @throws NotRequestSenderException if the user isn't the sender
+     * @throws InvalidRequestStateException if it's not pending
+     */
     public void cancel(long requestId, long userId) {
         SwapRequest request = findRequest(requestId);
         request.cancel(userId);
         repository.delete(request);
     }
 
-    //pending requests I sent or received
+    /**
+     * Pending requests I sent or received.
+     *
+     * @param userId the logged in user
+     * @return incoming and outgoing pending requests together
+     */
     public List<SwapRequest> pendingRequests(long userId) {
         return repository.findAllInvolving(userId).stream()
                 .filter(SwapRequest::isPending)
                 .toList();
     }
 
-    //accepted requests, i.e. the people I'm connected with
+    /**
+     * Accepted requests, i.e. the people I'm connected with.
+     *
+     * @param userId the logged in user
+     * @return the accepted requests
+     */
     public List<SwapRequest> connections(long userId) {
         return repository.findAllInvolving(userId).stream()
                 .filter(SwapRequest::isAccepted)
@@ -112,7 +165,12 @@ public class SwapRequestService implements ConnectionChecker, ConnectionLister, 
         repository.findByPair(UserPair.of(userA, userB)).ifPresent(repository::delete);
     }
 
-    //friends with the skills we can swap
+    /**
+     * Friends with the skills we can swap.
+     *
+     * @param userId the logged in user
+     * @return one entry per friend, with their username and the skills on both sides
+     */
     public List<SkillOverlap> friendsWithSkills(long userId) {
         return sharedSkills.between(userId, connectionIdsOf(userId));
     }

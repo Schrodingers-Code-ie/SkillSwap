@@ -3,6 +3,10 @@ import FilterCheckbox from './FilterCheckbox.jsx';
 import cross_icon from '../../assets/cross_icon.svg';
 import filters_icon from '../../assets/filters_icon.svg';
 
+/**
+ * Renders the filters side panel (on big screens) or inside the hidden button. Ticked boxes
+ * are used for filtering the matching suggestions returned by the backend.
+ */
 export default function Filters({
 	learnSkills,
 	teachSkills,

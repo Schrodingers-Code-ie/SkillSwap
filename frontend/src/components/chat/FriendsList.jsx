@@ -3,9 +3,10 @@ import Profile from '../ui/Profile';
 import searchIcon from '../../assets/search.svg';
 import { previewTimeLabel } from '../../utils/time.js';
 
-// Left column of the Chat page
-// friends: chat entries from GET /api/chats, already sorted (newest message first, then friends without messages by name).
-// 			Each one: { userId, displayName, lastMessage }
+// The left column of the Chat page: the Chat title, a search box that filters friends by name,
+// and one row per friend with the last message and its time.
+// friends: chat entries from GET /api/chats, already sorted (newest message first, then friends
+//          without messages by name). Each one: { userId, displayName, lastMessage }, where
 //          lastMessage is { id, senderId, text, sentAt } or null when you've never messaged
 // selectedId: userId of the open chat, decides which row gets the highlight
 // onSelect: called with a userId when a friend is clicked
@@ -31,7 +32,7 @@ export default function FriendsList({
 				</p>
 			</div>
 
-			{/* Figma: from Navigation section Search Bar */}
+			{/* Search bar, same style as the one in the navigation */}
 			<label className="mt-3 flex shrink-0 h-[42px] items-center gap-2.5 rounded-full border border-transparent bg-nav-bg px-4 transition-colors focus-within:border-active-input-border">
 				<img src={searchIcon} alt="" className="size-4 shrink-0" />
 				<input
@@ -87,7 +88,7 @@ export default function FriendsList({
 											<span className="min-w-0 flex-1 truncate text-xs text-subtitle">
 												{friend.lastMessage.text}
 											</span>
-											{/* Empty for now; the unread-counts ticket puts the badge here */}
+											{/* Fixed empty slot (for an unread badge), so every preview is cut at the same place */}
 											<span
 												aria-hidden="true"
 												className="w-5 shrink-0"

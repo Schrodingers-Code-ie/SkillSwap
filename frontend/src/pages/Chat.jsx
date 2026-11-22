@@ -10,9 +10,9 @@ import Conversation from '../components/chat/Conversation';
 import ProfilePanel from '../components/chat/ProfilePanel';
 import { useSocket } from '../components/socket/socket-context';
 
-const POLL_MS = 5000; // how often the chat list is refreshed
+const POLL_MS = 5000; // how often the chat list is refreshed while the socket is down
 
-// The list with this friend moved to the top and message as their preview.
+// Returns the list with this friend moved to the top and message as their preview.
 // Unchanged if the friend isn't in the list, or already has this message (or a newer one) as preview
 function withFriendOnTop(chats, friendId, message) {
 	const friend = chats.find((chat) => chat.userId === friendId);
@@ -30,7 +30,9 @@ function withNames(chats) {
 	}));
 }
 
-// Figma: Chat page. Friend list on the left, messages in the middle, profile on the right
+// The Chat page on /chat: the friend list on the left, the open conversation in the middle
+// and the friend's profile with the skills you can swap on the right.
+// New messages and new connections arrive over the WebSocket; while it is down, the list is polled.
 export default function Chat() {
 	// initialChats: from GET /api/chats in chatLoader, already sorted newest first
 	const { myProfile, chats: initialChats } = useLoaderData();
@@ -159,7 +161,7 @@ export default function Chat() {
 
 			{/* Messages with the selected friend in the middle */}
 			{selected ? (
-				// A different key defines different component, so no reusing it, thus previous conversation's polling stops
+				// A new key per friend mounts a fresh Conversation, so the previous chat's messages and polling are dropped
 				<Conversation
 					key={selected.userId}
 					friend={selected}

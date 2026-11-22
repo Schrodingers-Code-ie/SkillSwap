@@ -1,5 +1,9 @@
 import checkbox_tick from '../../assets/checkbox_tick.svg';
 
+/**
+ * A component for the checkbox in Filters section. Renders the checkbox, label for the filter
+ * and the onChange method on the checkbox to toggle it.
+ */
 export default function FilterCheckbox({ label, checked, onChange }) {
 	return (
 		<label className="skill-checkbox flex items-center gap-3 my-4">

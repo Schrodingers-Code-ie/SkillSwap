@@ -10,8 +10,8 @@ import ie.schrodingerscode.skillswap.chat.application.ListChats;
 import ie.schrodingerscode.skillswap.chat.web.dto.ChatSummaryResponse;
 
 /**
- * REST controller for the chat list: every connection with the last message in that conversation.
- * Sorting and filtering happen in ListChats; this class only translates.
+ * REST endpoint for the chat list: every connection with the last message in that conversation.
+ * Sorting and filtering happen in {@link ListChats}; this class only translates to JSON.
  */
 @RestController
 public class ChatListController {
@@ -21,7 +21,7 @@ public class ChatListController {
 
     /**
      * @param currentUser gives the id of the logged-in user
-     * @param listChats   service that builds the chat list
+     * @param listChats   use case that builds the chat list
      */
     public ChatListController(CurrentUser currentUser, ListChats listChats) {
         this.currentUser = currentUser;
@@ -29,10 +29,10 @@ public class ChatListController {
     }
 
     /**
-     * Returns the logged-in user's chats: chats with messages first (newest first),
-     * then connections without messages (by display name).
+     * {@code GET /api/chats}: the logged-in user's chats. Chats with messages come first (newest
+     * first), then connections without messages (by display name).
      *
-     * @return one entry per connection
+     * @return one entry per connection; an empty list if the user has no connections
      */
     @GetMapping("/api/chats")
     public List<ChatSummaryResponse> list() {

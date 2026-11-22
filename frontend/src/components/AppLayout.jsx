@@ -12,7 +12,7 @@ export default function AppLayout() {
 	return (
 		<ProfileProvider>
 			<SocketProvider>
-				<div className="min-h-screen bg-page-bg">
+				<div className="min-h-dvh bg-page-bg">
 					{/* Header stays visible on all authenticated pages */}
 					<Header />
 
