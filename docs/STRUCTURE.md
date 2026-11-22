@@ -8,9 +8,10 @@ All backend code lives in `backend/src/main/java/ie/schrodingerscode/skillswap/`
 ## Feature packages
 
 | Package    | Bounded context                                          | Story |
-|------------|----------------------------------------------------------|-------|
+| ---------- | -------------------------------------------------------- | ----- |
 | auth       | Identity: accounts, registration, login, current user    | S1    |
 | profile    | Profiles, teach and learn skills, skill catalogue        | S2    |
+| skill      | Skill catalogue                                          | S2    |
 | match      | Finding and ranking matches                              | S3    |
 | connection | Swap requests and connections                            | S4    |
 | chat       | Messaging                                                | S5    |
@@ -23,12 +24,12 @@ All backend code lives in `backend/src/main/java/ie/schrodingerscode/skillswap/`
 
 Every feature has the same four sub-packages:
 
-| Layer            | What goes here                                                                 |
-|------------------|--------------------------------------------------------------------------------|
+| Layer            | What goes here                                                                               |
+| ---------------- | -------------------------------------------------------------------------------------------- |
 | `domain`         | Aggregates, entities, value objects, repository interfaces; exceptions in `domain/exception` |
-| `application`    | Use-case services: load an aggregate, call its method, save it                 |
-| `infrastructure` | Repository implementations (in-memory now, JPA later), JPA entities            |
-| `web`            | Controllers; request and response DTOs in `web/dto`                            |
+| `application`    | Use-case services: load an aggregate, call its method, save it                               |
+| `infrastructure` | Repository implementations (JPA), JPA entities                                               |
+| `web`            | Controllers; request and response DTOs in `web/dto`                                          |
 
 Exceptions and DTOs get their own sub-package (`domain/exception`, `web/dto`), because
 they pile up quickly. That keeps `domain` showing the model and `web` showing the endpoints.
@@ -64,10 +65,7 @@ auth/
 3. **Business rules live on the aggregate.** For example, `swapRequest.accept(userId)`
    refuses an invalid transition itself. Services coordinate; they do not hold the rules.
 4. **Repository interfaces live in `domain`, implementations in `infrastructure`.**
-   This is what lets us swap the in-memory repository for a JPA one in Sprint 2
-   without changing `domain` or `application`. When you add the JPA version, delete
-   the in-memory one in the same PR: if both exist, Spring finds two beans for the
-   same interface and the app does not start.
+   This keeps domain and application free of JPA, so the storage can change without touching them. There is one implementation per interface: if two beans implement the same interface, Spring finds two beans and the app does not start.
 5. **Controllers only translate.** They turn the request into a call to an
    application service and the result into a response DTO. No `if` statements
    about business rules.
@@ -89,10 +87,10 @@ auth/
 
 There are two kinds of checks, and they go in different places:
 
-| Kind of check                              | Example                                   | Where                                 |
-|--------------------------------------------|-------------------------------------------|---------------------------------------|
-| Shape of the request                       | field is present, text is not blank       | annotations on the request DTO in `web/dto`|
-| Business rule                              | user is 18+, no duplicate skills          | aggregate or value object in `domain` |
+| Kind of check        | Example                             | Where                                       |
+| -------------------- | ----------------------------------- | ------------------------------------------- |
+| Shape of the request | field is present, text is not blank | annotations on the request DTO in `web/dto` |
+| Business rule        | user is 18+, no duplicate skills    | aggregate or value object in `domain`       |
 
 Shape checks use annotations such as `@NotNull`, `@NotBlank` and `@Size` on the
 request DTO, plus `@Valid` on the controller parameter. If one fails, the API
@@ -114,7 +112,7 @@ To return an error, do not edit `GlobalExceptionHandler`. Instead, create a subc
 of the base exceptions in `common.exception`, and put it in your feature's `domain/exception` package:
 
 | Base exception        | Use when                                  | HTTP |
-|-----------------------|-------------------------------------------|------|
+| --------------------- | ----------------------------------------- | ---- |
 | `ValidationException` | the input breaks a business rule          | 400  |
 | `NotFoundException`   | the requested item does not exist         | 404  |
 | `ConflictException`   | the request clashes with existing data    | 409  |
@@ -195,12 +193,12 @@ when the app starts.
 
 Test each layer in the cheapest way that works:
 
-| Layer            | How to test                                              | Spring? |
-|------------------|----------------------------------------------------------|---------|
-| `domain`         | Plain JUnit: create objects, call methods, check results | No      |
-| `application`    | Plain JUnit with the in-memory repository                | No      |
-| `web`            | `@WebMvcTest` for the controller, application service mocked | Partly  |
-| `infrastructure` | `@SpringBootTest` with `@Import(TestcontainersConfiguration.class)`, against real Postgres | Yes |
+| Layer            | How to test                                                                                | Spring? |
+| ---------------- | ------------------------------------------------------------------------------------------ | ------- |
+| `domain`         | Plain JUnit: create objects, call methods, check results                                   | No      |
+| `application`    | Plain JUnit with the in-memory repository                                                  | No      |
+| `web`            | `@WebMvcTest` for the controller, application service mocked                               | Partly  |
+| `infrastructure` | `@SpringBootTest` with `@Import(TestcontainersConfiguration.class)`, against real Postgres | Yes     |
 
 Most tests should be domain and application tests. They run in milliseconds and
 test the rules that matter. Name test classes after the class they test, e.g.
