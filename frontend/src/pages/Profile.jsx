@@ -102,7 +102,7 @@ export default function Profile() {
 				)}
 				<button
 					type="button"
-					onClick={() => setEditing(true)}
+					onClick={() => setEditingSkills(true)}
 					className="mt-6 h-7 cursor-pointer rounded-input bg-light-button-bg px-5 text-[13px] text-light-button-text transition hover:shadow-light-hover active:bg-light-button-pressed-bg"
 				>
 					Edit your skills

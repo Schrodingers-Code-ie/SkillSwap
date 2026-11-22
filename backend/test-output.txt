@@ -1,0 +1,731 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------< ie.schrodingerscode:backend >---------------------
+[INFO] Building  0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-clean-plugin/3.5.0/maven-clean-plugin-3.5.0.pom
+Progress (1): 797 BProgress (1): 848 BProgress (1): 2.3 kBProgress (1): 5.1 kBProgress (1): 5.7 kB                    Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-clean-plugin/3.5.0/maven-clean-plugin-3.5.0.pom (5.7 kB at 17 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-plugins/44/maven-plugins-44.pom
+Progress (1): 771 BProgress (1): 829 BProgress (1): 2.4 kBProgress (1): 5.1 kBProgress (1): 7.0 kBProgress (1): 8.4 kB                    Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-plugins/44/maven-plugins-44.pom (8.4 kB at 214 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-parent/44/maven-parent-44.pom
+Progress (1): 806 BProgress (1): 854 BProgress (1): 2.2 kBProgress (1): 5.7 kBProgress (1): 8.3 kBProgress (1): 13 kB Progress (1): 18 kBProgress (1): 21 kBProgress (1): 25 kBProgress (1): 27 kBProgress (1): 28 kBProgress (1): 32 kBProgress (1): 36 kBProgress (1): 38 kBProgress (1): 41 kBProgress (1): 44 kBProgress (1): 46 kBProgress (1): 52 kBProgress (1): 52 kB                   Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-parent/44/maven-parent-44.pom (52 kB at 985 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/apache/34/apache-34.pom
+Progress (1): 737 BProgress (1): 2.0 kBProgress (1): 3.2 kBProgress (1): 4.9 kBProgress (1): 8.2 kBProgress (1): 12 kB Progress (1): 17 kBProgress (1): 20 kBProgress (1): 22 kBProgress (1): 24 kB                   Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/apache/34/apache-34.pom (24 kB at 475 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/junit/junit-bom/5.12.1/junit-bom-5.12.1.pom
+Progress (1): 921 BProgress (1): 999 BProgress (1): 3.9 kBProgress (1): 5.6 kB                    Downloaded from central: https://repo.maven.apache.org/maven2/org/junit/junit-bom/5.12.1/junit-bom-5.12.1.pom (5.6 kB at 149 kB/s)
+[INFO] 
+[INFO] --- clean:3.5.0:clean (default-clean) @ backend ---
+[INFO] Deleting /workspaces/SkillSwap/backend/target
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ backend ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] Copying 6 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.15.0:compile (default-compile) @ backend ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 149 source files with javac [debug parameters release 21] to target/classes
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ backend ---
+[INFO] skip non existing resourceDirectory /workspaces/SkillSwap/backend/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ backend ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 51 source files with javac [debug parameters release 21] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ backend ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running ie.schrodingerscode.skillswap.auth.application.LoginUserTests
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.647 s -- in ie.schrodingerscode.skillswap.auth.application.LoginUserTests
+[INFO] Running ie.schrodingerscode.skillswap.auth.application.RegisterUserTests
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.734 s -- in ie.schrodingerscode.skillswap.auth.application.RegisterUserTests
+[INFO] Running ie.schrodingerscode.skillswap.auth.application.UserCheckerServiceTests
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.018 s -- in ie.schrodingerscode.skillswap.auth.application.UserCheckerServiceTests
+[INFO] Running ie.schrodingerscode.skillswap.auth.domain.EmailTests
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s -- in ie.schrodingerscode.skillswap.auth.domain.EmailTests
+[INFO] Running ie.schrodingerscode.skillswap.auth.domain.UserTests
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s -- in ie.schrodingerscode.skillswap.auth.domain.UserTests
+[INFO] Running ie.schrodingerscode.skillswap.auth.infrastructure.JpaUserRepositoryTests
+03:16:24.638 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.auth.infrastructure.JpaUserRepositoryTests]: JpaUserRepositoryTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+03:16:25.530 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.auth.infrastructure.JpaUserRepositoryTests
+03:16:25.884 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.auth.infrastructure.JpaUserRepositoryTests]: JpaUserRepositoryTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+03:16:25.907 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.auth.infrastructure.JpaUserRepositoryTests
+03:16:26.209 [main] INFO org.springframework.boot.devtools.restart.RestartApplicationListener -- Restart disabled due to context in which it is running
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-11-22T03:16:27.396Z  INFO 7367 --- [backend] [           main] i.s.s.a.i.JpaUserRepositoryTests         : Starting JpaUserRepositoryTests using Java 21.0.12.1 with PID 7367 (started by vscode in /workspaces/SkillSwap/backend)
+2026-11-22T03:16:27.398Z  INFO 7367 --- [backend] [           main] i.s.s.a.i.JpaUserRepositoryTests         : The following 1 profile is active: "dev"
+2026-11-22T03:16:32.201Z  INFO 7367 --- [backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-11-22T03:16:33.210Z  INFO 7367 --- [backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 982 ms. Found 6 JPA repository interfaces.
+2026-11-22T03:16:34.422Z  INFO 7367 --- [backend] [           main] org.testcontainers.images.PullPolicy     : Image pull policy will be performed by: DefaultPullPolicy()
+2026-11-22T03:16:34.433Z  INFO 7367 --- [backend] [           main] o.t.utility.ImageNameSubstitutor         : Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+2026-11-22T03:16:34.491Z  INFO 7367 --- [backend] [           main] org.testcontainers.DockerClientFactory   : Testcontainers version: 2.0.5
+2026-11-22T03:16:35.308Z  INFO 7367 --- [backend] [           main] o.t.d.DockerClientProviderStrategy       : Loaded org.testcontainers.dockerclient.UnixSocketClientProviderStrategy from ~/.testcontainers.properties, will try it first
+2026-11-22T03:16:36.807Z  INFO 7367 --- [backend] [           main] o.t.d.DockerClientProviderStrategy       : Found Docker environment with local Unix socket (unix:///var/run/docker.sock)
+2026-11-22T03:16:36.809Z  INFO 7367 --- [backend] [           main] org.testcontainers.DockerClientFactory   : Docker host IP address is host.docker.internal
+2026-11-22T03:16:36.847Z  INFO 7367 --- [backend] [           main] org.testcontainers.DockerClientFactory   : Connected to docker: 
+  Server Version: 29.9.2
+  API Version: 1.56
+  Operating System: Docker Desktop
+  Total Memory: 15855 MB
+  Labels: 
+    com.docker.desktop.address=npipe://\\.\pipe\docker_cli
+2026-11-22T03:16:36.987Z  INFO 7367 --- [backend] [           main] tc.testcontainers/ryuk:0.14.0            : Creating container for image: testcontainers/ryuk:0.14.0
+2026-11-22T03:16:37.703Z  INFO 7367 --- [backend] [           main] tc.testcontainers/ryuk:0.14.0            : Container testcontainers/ryuk:0.14.0 is starting: 9beb5365ccb107f4e8f741fd79e2c274a1e78a0848902089d861e3a54d172755
+2026-11-22T03:16:38.324Z  INFO 7367 --- [backend] [           main] tc.testcontainers/ryuk:0.14.0            : Container testcontainers/ryuk:0.14.0 started in PT1.336551796S
+2026-11-22T03:16:38.334Z  INFO 7367 --- [backend] [           main] o.t.utility.RyukResourceReaper           : Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+2026-11-22T03:16:38.334Z  INFO 7367 --- [backend] [           main] org.testcontainers.DockerClientFactory   : Checking the system...
+2026-11-22T03:16:38.336Z  INFO 7367 --- [backend] [           main] org.testcontainers.DockerClientFactory   : ✔︎ Docker server version should be at least 1.6.0
+2026-11-22T03:16:38.337Z  INFO 7367 --- [backend] [           main] tc.postgres:17-alpine                    : Creating container for image: postgres:17-alpine
+2026-11-22T03:16:38.424Z  INFO 7367 --- [backend] [           main] tc.postgres:17-alpine                    : Container postgres:17-alpine is starting: 962ee2db4ecb5a68d8b4795ecdd21813d11077146e7ffe8f5e644fee122792b9
+2026-11-22T03:16:39.753Z  INFO 7367 --- [backend] [           main] tc.postgres:17-alpine                    : Container postgres:17-alpine started in PT1.416067608S
+2026-11-22T03:16:39.753Z  INFO 7367 --- [backend] [           main] tc.postgres:17-alpine                    : Container is started (JDBC URL: jdbc:postgresql://host.docker.internal:63526/test?loggerLevel=OFF)
+2026-11-22T03:16:41.252Z  INFO 7367 --- [backend] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://host.docker.internal:63526/test?loggerLevel=OFF (PostgreSQL 17.11)
+2026-11-22T03:16:41.568Z  INFO 7367 --- [backend] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-11-22T03:16:41.581Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 6 migrations (execution time 00:00.135s)
+2026-11-22T03:16:41.613Z  INFO 7367 --- [backend] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-11-22T03:16:41.710Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-11-22T03:16:41.734Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - create users table"
+2026-11-22T03:16:41.825Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - create skill tables"
+2026-11-22T03:16:41.900Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - create messages table"
+2026-11-22T03:16:41.979Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "4 - create profile tables"
+2026-11-22T03:16:42.046Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "7 - create swap requests table"
+2026-11-22T03:16:42.108Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "8 - create blocks table"
+2026-11-22T03:16:42.136Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 6 migrations to schema "public", now at version v8 (execution time 00:00.103s)
+2026-11-22T03:16:42.891Z  INFO 7367 --- [backend] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-11-22T03:16:43.191Z  INFO 7367 --- [backend] [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.5.Final
+2026-11-22T03:16:45.641Z  INFO 7367 --- [backend] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-11-22T03:16:45.789Z  INFO 7367 --- [backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-11-22T03:16:45.847Z  INFO 7367 --- [backend] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@75128cf
+2026-11-22T03:16:45.854Z  INFO 7367 --- [backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-11-22T03:16:46.114Z  INFO 7367 --- [backend] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://host.docker.internal:63526/test?loggerLevel=OFF]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.11
+	Default catalog/schema: test/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-11-22T03:16:51.348Z  INFO 7367 --- [backend] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-11-22T03:16:51.518Z  INFO 7367 --- [backend] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-11-22T03:16:51.725Z  INFO 7367 --- [backend] [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-11-22T03:16:55.755Z  WARN 7367 --- [backend] [           main] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 8e7fcb01-3936-4c8b-b143-2abeb5a3e9b2
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-11-22T03:16:55.788Z  INFO 7367 --- [backend] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-11-22T03:16:57.429Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-11-22T03:16:57.430Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@14efd31b]]
+2026-11-22T03:16:57.433Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2026-11-22T03:16:57.442Z  INFO 7367 --- [backend] [           main] i.s.s.a.i.JpaUserRepositoryTests         : Started JpaUserRepositoryTests in 31.292 seconds (process running for 37.65)
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/home/vscode/.m2/repository/net/bytebuddy/byte-buddy-agent/1.18.11/byte-buddy-agent-1.18.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 34.84 s -- in ie.schrodingerscode.skillswap.auth.infrastructure.JpaUserRepositoryTests
+[INFO] Running ie.schrodingerscode.skillswap.auth.MeControllerTests
+2026-11-22T03:16:59.242Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.auth.MeControllerTests]: MeControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:16:59.785Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.auth.MeControllerTests
+2026-11-22T03:16:59.797Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.auth.MeControllerTests]: MeControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:16:59.881Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.auth.MeControllerTests
+2026-11-22T03:16:59.895Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2026-11-22T03:16:59.895Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@14efd31b]]
+2026-11-22T03:16:59.895Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2026-11-22T03:16:59.899Z  INFO 7367 --- [backend] [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-11-22T03:17:00.035Z  INFO 7367 --- [backend] [           main] i.s.skillswap.auth.MeControllerTests     : Starting MeControllerTests using Java 21.0.12.1 with PID 7367 (started by vscode in /workspaces/SkillSwap/backend)
+2026-11-22T03:17:00.035Z  INFO 7367 --- [backend] [           main] i.s.skillswap.auth.MeControllerTests     : The following 1 profile is active: "dev"
+2026-11-22T03:17:03.207Z  WARN 7367 --- [backend] [           main] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 5223472e-21d5-4dab-a79b-2fb4786db61e
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-11-22T03:17:03.359Z  INFO 7367 --- [backend] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:17:03.359Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:17:03.362Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 3 ms
+2026-11-22T03:17:03.410Z  INFO 7367 --- [backend] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-11-22T03:17:03.549Z  INFO 7367 --- [backend] [           main] i.s.skillswap.auth.MeControllerTests     : Started MeControllerTests in 3.65 seconds (process running for 43.757)
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.178 s -- in ie.schrodingerscode.skillswap.auth.MeControllerTests
+[INFO] Running ie.schrodingerscode.skillswap.auth.web.LoginFlowTests
+2026-11-22T03:17:04.427Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.auth.web.LoginFlowTests]: LoginFlowTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:04.946Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.auth.web.LoginFlowTests
+2026-11-22T03:17:04.957Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.auth.web.LoginFlowTests]: LoginFlowTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:04.982Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.auth.web.LoginFlowTests
+2026-11-22T03:17:04.992Z  INFO 7367 --- [backend] [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-11-22T03:17:05.121Z  INFO 7367 --- [backend] [           main] i.s.skillswap.auth.web.LoginFlowTests    : Starting LoginFlowTests using Java 21.0.12.1 with PID 7367 (started by vscode in /workspaces/SkillSwap/backend)
+2026-11-22T03:17:05.122Z  INFO 7367 --- [backend] [           main] i.s.skillswap.auth.web.LoginFlowTests    : The following 1 profile is active: "dev"
+2026-11-22T03:17:07.709Z  INFO 7367 --- [backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-11-22T03:17:08.501Z  INFO 7367 --- [backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 788 ms. Found 6 JPA repository interfaces.
+2026-11-22T03:17:08.611Z  INFO 7367 --- [backend] [           main] tc.postgres:17-alpine                    : Creating container for image: postgres:17-alpine
+2026-11-22T03:17:08.712Z  INFO 7367 --- [backend] [           main] tc.postgres:17-alpine                    : Container postgres:17-alpine is starting: b7bc16a7e7766208a5238130c99e7eb32c5d987ce35b99a764df36305b175001
+2026-11-22T03:17:10.098Z  INFO 7367 --- [backend] [           main] tc.postgres:17-alpine                    : Container postgres:17-alpine started in PT1.487216181S
+2026-11-22T03:17:10.098Z  INFO 7367 --- [backend] [           main] tc.postgres:17-alpine                    : Container is started (JDBC URL: jdbc:postgresql://host.docker.internal:63548/test?loggerLevel=OFF)
+2026-11-22T03:17:10.324Z  INFO 7367 --- [backend] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://host.docker.internal:63548/test?loggerLevel=OFF (PostgreSQL 17.11)
+2026-11-22T03:17:10.450Z  INFO 7367 --- [backend] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-11-22T03:17:10.452Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 6 migrations (execution time 00:00.065s)
+2026-11-22T03:17:10.469Z  INFO 7367 --- [backend] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-11-22T03:17:10.520Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-11-22T03:17:10.537Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - create users table"
+2026-11-22T03:17:10.598Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - create skill tables"
+2026-11-22T03:17:10.655Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - create messages table"
+2026-11-22T03:17:10.712Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "4 - create profile tables"
+2026-11-22T03:17:10.776Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "7 - create swap requests table"
+2026-11-22T03:17:10.845Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "8 - create blocks table"
+2026-11-22T03:17:10.877Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 6 migrations to schema "public", now at version v8 (execution time 00:00.087s)
+2026-11-22T03:17:11.277Z  INFO 7367 --- [backend] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-11-22T03:17:11.584Z  INFO 7367 --- [backend] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-11-22T03:17:11.592Z  INFO 7367 --- [backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-11-22T03:17:11.606Z  INFO 7367 --- [backend] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@5c273b3e
+2026-11-22T03:17:11.607Z  INFO 7367 --- [backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-11-22T03:17:11.616Z  INFO 7367 --- [backend] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://host.docker.internal:63548/test?loggerLevel=OFF]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.11
+	Default catalog/schema: test/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-11-22T03:17:12.395Z  INFO 7367 --- [backend] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-11-22T03:17:12.440Z  INFO 7367 --- [backend] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-11-22T03:17:13.019Z  WARN 7367 --- [backend] [           main] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 89e1f678-ec8b-49a6-8a80-e133cf0ea4dc
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-11-22T03:17:13.021Z  INFO 7367 --- [backend] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-11-22T03:17:13.243Z  INFO 7367 --- [backend] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:17:13.243Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:17:13.245Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 2 ms
+2026-11-22T03:17:13.273Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-11-22T03:17:13.274Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@2b4bfe73]]
+2026-11-22T03:17:13.274Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2026-11-22T03:17:13.277Z  INFO 7367 --- [backend] [           main] i.s.skillswap.auth.web.LoginFlowTests    : Started LoginFlowTests in 8.285 seconds (process running for 53.485)
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.09 s -- in ie.schrodingerscode.skillswap.auth.web.LoginFlowTests
+[INFO] Running ie.schrodingerscode.skillswap.auth.web.RegisterControllerTests
+2026-11-22T03:17:14.522Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.auth.web.RegisterControllerTests]: RegisterControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:14.593Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.auth.web.RegisterControllerTests
+2026-11-22T03:17:14.605Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.auth.web.RegisterControllerTests]: RegisterControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:14.669Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.auth.web.RegisterControllerTests
+2026-11-22T03:17:14.685Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2026-11-22T03:17:14.685Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@2b4bfe73]]
+2026-11-22T03:17:14.685Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2026-11-22T03:17:14.688Z  INFO 7367 --- [backend] [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-11-22T03:17:14.788Z  INFO 7367 --- [backend] [           main] i.s.s.auth.web.RegisterControllerTests   : Starting RegisterControllerTests using Java 21.0.12.1 with PID 7367 (started by vscode in /workspaces/SkillSwap/backend)
+2026-11-22T03:17:14.788Z  INFO 7367 --- [backend] [           main] i.s.s.auth.web.RegisterControllerTests   : The following 1 profile is active: "dev"
+2026-11-22T03:17:17.474Z  WARN 7367 --- [backend] [           main] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: ab1bef4e-2028-4835-a287-b9d262270a62
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-11-22T03:17:17.481Z  INFO 7367 --- [backend] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:17:17.481Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:17:17.483Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 2 ms
+2026-11-22T03:17:17.508Z  INFO 7367 --- [backend] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-11-22T03:17:17.571Z  INFO 7367 --- [backend] [           main] i.s.s.auth.web.RegisterControllerTests   : Started RegisterControllerTests in 2.882 seconds (process running for 57.781)
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.107 s -- in ie.schrodingerscode.skillswap.auth.web.RegisterControllerTests
+[INFO] Running ie.schrodingerscode.skillswap.BackendApplicationTests
+2026-11-22T03:17:18.627Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.BackendApplicationTests]: BackendApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:19.058Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.BackendApplicationTests
+2026-11-22T03:17:19.069Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.BackendApplicationTests]: BackendApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:19.100Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.BackendApplicationTests
+2026-11-22T03:17:19.112Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-11-22T03:17:19.113Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@14efd31b]]
+2026-11-22T03:17:19.113Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.513 s -- in ie.schrodingerscode.skillswap.BackendApplicationTests
+[INFO] Running ie.schrodingerscode.skillswap.block.application.BlockServiceTests
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.081 s -- in ie.schrodingerscode.skillswap.block.application.BlockServiceTests
+[INFO] Running ie.schrodingerscode.skillswap.block.infrastructure.JpaBlockRepositoryTests
+2026-11-22T03:17:19.228Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.block.infrastructure.JpaBlockRepositoryTests]: JpaBlockRepositoryTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:19.852Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.block.infrastructure.JpaBlockRepositoryTests
+2026-11-22T03:17:19.864Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.block.infrastructure.JpaBlockRepositoryTests]: JpaBlockRepositoryTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:19.889Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.block.infrastructure.JpaBlockRepositoryTests
+2026-11-22T03:17:19.968Z  WARN 7367 --- [backend] [           main] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 0, SQLState: 23505
+2026-11-22T03:17:19.969Z  WARN 7367 --- [backend] [           main] org.hibernate.orm.jdbc.error             : ERROR: duplicate key value violates unique constraint "blocks_blocker_id_blocked_id_key"
+  Detail: Key (blocker_id, blocked_id)=(4, 5) already exists.
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.886 s -- in ie.schrodingerscode.skillswap.block.infrastructure.JpaBlockRepositoryTests
+[INFO] Running ie.schrodingerscode.skillswap.block.web.BlockControllerTests
+2026-11-22T03:17:20.112Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.block.web.BlockControllerTests]: BlockControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:20.679Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.block.web.BlockControllerTests
+2026-11-22T03:17:20.693Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.block.web.BlockControllerTests]: BlockControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:20.763Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.block.web.BlockControllerTests
+2026-11-22T03:17:20.778Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2026-11-22T03:17:20.778Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@14efd31b]]
+2026-11-22T03:17:20.778Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2026-11-22T03:17:20.781Z  INFO 7367 --- [backend] [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-11-22T03:17:20.947Z  INFO 7367 --- [backend] [           main] i.s.s.block.web.BlockControllerTests     : Starting BlockControllerTests using Java 21.0.12.1 with PID 7367 (started by vscode in /workspaces/SkillSwap/backend)
+2026-11-22T03:17:20.947Z  INFO 7367 --- [backend] [           main] i.s.s.block.web.BlockControllerTests     : The following 1 profile is active: "dev"
+2026-11-22T03:17:24.025Z  WARN 7367 --- [backend] [           main] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 76cce567-4709-4902-8d2c-ba1117412e64
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-11-22T03:17:24.029Z  INFO 7367 --- [backend] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:17:24.029Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:17:24.031Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 2 ms
+2026-11-22T03:17:24.060Z  INFO 7367 --- [backend] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-11-22T03:17:24.089Z  INFO 7367 --- [backend] [           main] i.s.s.block.web.BlockControllerTests     : Started BlockControllerTests in 3.307 seconds (process running for 64.299)
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.218 s -- in ie.schrodingerscode.skillswap.block.web.BlockControllerTests
+[INFO] Running ie.schrodingerscode.skillswap.chat.application.GetMessageHistoryTests
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.039 s -- in ie.schrodingerscode.skillswap.chat.application.GetMessageHistoryTests
+[INFO] Running ie.schrodingerscode.skillswap.chat.application.ListChatsTests
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.027 s -- in ie.schrodingerscode.skillswap.chat.application.ListChatsTests
+[INFO] Running ie.schrodingerscode.skillswap.chat.application.SendMessageTests
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.026 s -- in ie.schrodingerscode.skillswap.chat.application.SendMessageTests
+[INFO] Running ie.schrodingerscode.skillswap.chat.domain.MessageTests
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 s -- in ie.schrodingerscode.skillswap.chat.domain.MessageTests
+[INFO] Running ie.schrodingerscode.skillswap.chat.domain.MessageTextTests
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s -- in ie.schrodingerscode.skillswap.chat.domain.MessageTextTests
+[INFO] Running ie.schrodingerscode.skillswap.chat.infrastructure.JpaMessageRepositoryTests
+2026-11-22T03:17:24.462Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.chat.infrastructure.JpaMessageRepositoryTests]: JpaMessageRepositoryTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:25.175Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.chat.infrastructure.JpaMessageRepositoryTests
+2026-11-22T03:17:25.190Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.chat.infrastructure.JpaMessageRepositoryTests]: JpaMessageRepositoryTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:25.223Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.chat.infrastructure.JpaMessageRepositoryTests
+2026-11-22T03:17:25.229Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-11-22T03:17:25.229Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@14efd31b]]
+2026-11-22T03:17:25.229Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.195 s -- in ie.schrodingerscode.skillswap.chat.infrastructure.JpaMessageRepositoryTests
+[INFO] Running ie.schrodingerscode.skillswap.chat.infrastructure.PushMessageOnSendTests
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.158 s -- in ie.schrodingerscode.skillswap.chat.infrastructure.PushMessageOnSendTests
+[INFO] Running ie.schrodingerscode.skillswap.chat.web.ChatControllerTests
+2026-11-22T03:17:25.817Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.chat.web.ChatControllerTests]: ChatControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:26.397Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.chat.web.ChatControllerTests
+2026-11-22T03:17:26.411Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.chat.web.ChatControllerTests]: ChatControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:26.484Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.chat.web.ChatControllerTests
+2026-11-22T03:17:26.496Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2026-11-22T03:17:26.496Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@14efd31b]]
+2026-11-22T03:17:26.496Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2026-11-22T03:17:26.500Z  INFO 7367 --- [backend] [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-11-22T03:17:26.625Z  INFO 7367 --- [backend] [           main] i.s.s.chat.web.ChatControllerTests       : Starting ChatControllerTests using Java 21.0.12.1 with PID 7367 (started by vscode in /workspaces/SkillSwap/backend)
+2026-11-22T03:17:26.625Z  INFO 7367 --- [backend] [           main] i.s.s.chat.web.ChatControllerTests       : The following 1 profile is active: "dev"
+2026-11-22T03:17:29.391Z  WARN 7367 --- [backend] [           main] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: f1211f7c-ed08-4829-85f4-bd54951956ff
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-11-22T03:17:29.394Z  INFO 7367 --- [backend] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:17:29.394Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:17:29.395Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-11-22T03:17:29.415Z  INFO 7367 --- [backend] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-11-22T03:17:29.442Z  INFO 7367 --- [backend] [           main] i.s.s.chat.web.ChatControllerTests       : Started ChatControllerTests in 2.943 seconds (process running for 69.653)
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.357 s -- in ie.schrodingerscode.skillswap.chat.web.ChatControllerTests
+[INFO] Running ie.schrodingerscode.skillswap.chat.web.ChatListControllerTests
+2026-11-22T03:17:30.171Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.chat.web.ChatListControllerTests]: ChatListControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:30.242Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.chat.web.ChatListControllerTests
+2026-11-22T03:17:30.255Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.chat.web.ChatListControllerTests]: ChatListControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:30.315Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.chat.web.ChatListControllerTests
+2026-11-22T03:17:30.327Z  INFO 7367 --- [backend] [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-11-22T03:17:30.413Z  INFO 7367 --- [backend] [           main] i.s.s.chat.web.ChatListControllerTests   : Starting ChatListControllerTests using Java 21.0.12.1 with PID 7367 (started by vscode in /workspaces/SkillSwap/backend)
+2026-11-22T03:17:30.413Z  INFO 7367 --- [backend] [           main] i.s.s.chat.web.ChatListControllerTests   : The following 1 profile is active: "dev"
+2026-11-22T03:17:32.767Z  WARN 7367 --- [backend] [           main] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 93ba63f7-5f09-49ad-a212-a1268c70a44b
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-11-22T03:17:32.769Z  INFO 7367 --- [backend] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:17:32.769Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:17:32.769Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-11-22T03:17:32.783Z  INFO 7367 --- [backend] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-11-22T03:17:32.801Z  INFO 7367 --- [backend] [           main] i.s.s.chat.web.ChatListControllerTests   : Started ChatListControllerTests in 2.474 seconds (process running for 73.012)
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.888 s -- in ie.schrodingerscode.skillswap.chat.web.ChatListControllerTests
+[INFO] Running ie.schrodingerscode.skillswap.common.exception.GlobalExceptionHandlerTests
+2026-11-22T03:17:33.060Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.common.exception.GlobalExceptionHandlerTests]: GlobalExceptionHandlerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:33.525Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.common.exception.GlobalExceptionHandlerTests
+2026-11-22T03:17:33.536Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.common.exception.GlobalExceptionHandlerTests]: GlobalExceptionHandlerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:33.591Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.common.exception.GlobalExceptionHandlerTests
+2026-11-22T03:17:33.603Z  INFO 7367 --- [backend] [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-11-22T03:17:33.691Z  INFO 7367 --- [backend] [           main] i.s.s.c.e.GlobalExceptionHandlerTests    : Starting GlobalExceptionHandlerTests using Java 21.0.12.1 with PID 7367 (started by vscode in /workspaces/SkillSwap/backend)
+2026-11-22T03:17:33.691Z  INFO 7367 --- [backend] [           main] i.s.s.c.e.GlobalExceptionHandlerTests    : The following 1 profile is active: "dev"
+2026-11-22T03:17:36.144Z  WARN 7367 --- [backend] [           main] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 7e59755a-276c-41a3-a1f6-60d46d4a29b8
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-11-22T03:17:36.148Z  INFO 7367 --- [backend] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:17:36.148Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:17:36.150Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 2 ms
+2026-11-22T03:17:36.173Z  INFO 7367 --- [backend] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-11-22T03:17:36.196Z  INFO 7367 --- [backend] [           main] i.s.s.c.e.GlobalExceptionHandlerTests    : Started GlobalExceptionHandlerTests in 2.592 seconds (process running for 76.406)
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.546 s -- in ie.schrodingerscode.skillswap.common.exception.GlobalExceptionHandlerTests
+[INFO] Running ie.schrodingerscode.skillswap.config.WebSocketConnectionTests
+2026-11-22T03:17:36.631Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.config.WebSocketConnectionTests]: WebSocketConnectionTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:37.409Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.config.WebSocketConnectionTests
+2026-11-22T03:17:37.423Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.config.WebSocketConnectionTests]: WebSocketConnectionTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:37.453Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.config.WebSocketConnectionTests
+2026-11-22T03:17:37.523Z  INFO 7367 --- [backend] [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-11-22T03:17:37.638Z  INFO 7367 --- [backend] [           main] i.s.s.config.WebSocketConnectionTests    : Starting WebSocketConnectionTests using Java 21.0.12.1 with PID 7367 (started by vscode in /workspaces/SkillSwap/backend)
+2026-11-22T03:17:37.639Z  INFO 7367 --- [backend] [           main] i.s.s.config.WebSocketConnectionTests    : The following 1 profile is active: "dev"
+2026-11-22T03:17:40.351Z  INFO 7367 --- [backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-11-22T03:17:41.282Z  INFO 7367 --- [backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 925 ms. Found 6 JPA repository interfaces.
+2026-11-22T03:17:41.655Z  INFO 7367 --- [backend] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 0 (http)
+2026-11-22T03:17:41.695Z  INFO 7367 --- [backend] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-11-22T03:17:41.696Z  INFO 7367 --- [backend] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-11-22T03:17:41.860Z  INFO 7367 --- [backend] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 4217 ms
+2026-11-22T03:17:42.032Z  INFO 7367 --- [backend] [           main] tc.postgres:17-alpine                    : Creating container for image: postgres:17-alpine
+2026-11-22T03:17:42.159Z  INFO 7367 --- [backend] [           main] tc.postgres:17-alpine                    : Container postgres:17-alpine is starting: 2276e1253dd13969f5b9d949e6c902a2d5a80dc5d4113b5c0d8d6a268889ef87
+2026-11-22T03:17:43.447Z  INFO 7367 --- [backend] [           main] tc.postgres:17-alpine                    : Container postgres:17-alpine started in PT1.414363367S
+2026-11-22T03:17:43.447Z  INFO 7367 --- [backend] [           main] tc.postgres:17-alpine                    : Container is started (JDBC URL: jdbc:postgresql://host.docker.internal:62941/test?loggerLevel=OFF)
+2026-11-22T03:17:43.611Z  INFO 7367 --- [backend] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://host.docker.internal:62941/test?loggerLevel=OFF (PostgreSQL 17.11)
+2026-11-22T03:17:43.732Z  INFO 7367 --- [backend] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-11-22T03:17:43.733Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 6 migrations (execution time 00:00.065s)
+2026-11-22T03:17:43.746Z  INFO 7367 --- [backend] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-11-22T03:17:43.784Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-11-22T03:17:43.797Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - create users table"
+2026-11-22T03:17:43.851Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - create skill tables"
+2026-11-22T03:17:43.905Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - create messages table"
+2026-11-22T03:17:43.957Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "4 - create profile tables"
+2026-11-22T03:17:44.010Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "7 - create swap requests table"
+2026-11-22T03:17:44.071Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "8 - create blocks table"
+2026-11-22T03:17:44.096Z  INFO 7367 --- [backend] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 6 migrations to schema "public", now at version v8 (execution time 00:00.080s)
+2026-11-22T03:17:44.471Z  INFO 7367 --- [backend] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-11-22T03:17:44.733Z  INFO 7367 --- [backend] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-11-22T03:17:44.741Z  INFO 7367 --- [backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
+2026-11-22T03:17:44.758Z  INFO 7367 --- [backend] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Added connection org.postgresql.jdbc.PgConnection@4e841181
+2026-11-22T03:17:44.759Z  INFO 7367 --- [backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
+2026-11-22T03:17:44.772Z  INFO 7367 --- [backend] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://host.docker.internal:62941/test?loggerLevel=OFF]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.11
+	Default catalog/schema: test/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-11-22T03:17:45.572Z  INFO 7367 --- [backend] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-11-22T03:17:45.619Z  INFO 7367 --- [backend] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-11-22T03:17:46.186Z  WARN 7367 --- [backend] [           main] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: f197c980-3fe2-407f-99df-5ae99cbcdc08
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-11-22T03:17:46.187Z  INFO 7367 --- [backend] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-11-22T03:17:46.337Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-11-22T03:17:46.337Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@4eaff6bb]]
+2026-11-22T03:17:46.340Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2026-11-22T03:17:46.370Z  INFO 7367 --- [backend] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 46037 (http) with context path '/'
+2026-11-22T03:17:46.374Z  INFO 7367 --- [backend] [           main] i.s.s.config.WebSocketConnectionTests    : Started WebSocketConnectionTests in 8.85 seconds (process running for 86.586)
+2026-11-22T03:17:46.647Z  INFO 7367 --- [backend] [o-auto-1-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-11-22T03:17:46.647Z  INFO 7367 --- [backend] [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-11-22T03:17:46.649Z  INFO 7367 --- [backend] [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.83 s -- in ie.schrodingerscode.skillswap.config.WebSocketConnectionTests
+[INFO] Running ie.schrodingerscode.skillswap.connection.application.SwapRequestServiceTests
+[INFO] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.026 s -- in ie.schrodingerscode.skillswap.connection.application.SwapRequestServiceTests
+[INFO] Running ie.schrodingerscode.skillswap.connection.domain.SwapRequestTests
+[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in ie.schrodingerscode.skillswap.connection.domain.SwapRequestTests
+[INFO] Running ie.schrodingerscode.skillswap.connection.infrastructure.JpaSwapRequestRepositoryTests
+2026-11-22T03:17:47.506Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.connection.infrastructure.JpaSwapRequestRepositoryTests]: JpaSwapRequestRepositoryTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:48.066Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.connection.infrastructure.JpaSwapRequestRepositoryTests
+2026-11-22T03:17:48.077Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.connection.infrastructure.JpaSwapRequestRepositoryTests]: JpaSwapRequestRepositoryTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:48.098Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.connection.infrastructure.JpaSwapRequestRepositoryTests
+2026-11-22T03:17:48.101Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2026-11-22T03:17:48.101Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@4eaff6bb]]
+2026-11-22T03:17:48.101Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2026-11-22T03:17:48.102Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-11-22T03:17:48.102Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@14efd31b]]
+2026-11-22T03:17:48.102Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2026-11-22T03:17:48.117Z  WARN 7367 --- [backend] [           main] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 0, SQLState: 23505
+2026-11-22T03:17:48.117Z  WARN 7367 --- [backend] [           main] org.hibernate.orm.jdbc.error             : ERROR: duplicate key value violates unique constraint "swap_requests_user_pair_unique"
+  Detail: Key (LEAST(sender_id, receiver_id), GREATEST(sender_id, receiver_id))=(38, 39) already exists.
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.803 s -- in ie.schrodingerscode.skillswap.connection.infrastructure.JpaSwapRequestRepositoryTests
+[INFO] Running ie.schrodingerscode.skillswap.connection.infrastructure.PushConnectionOnCreateTests
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.018 s -- in ie.schrodingerscode.skillswap.connection.infrastructure.PushConnectionOnCreateTests
+[INFO] Running ie.schrodingerscode.skillswap.connection.web.ConnectionsWithSkillsTests
+2026-11-22T03:17:48.329Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.connection.web.ConnectionsWithSkillsTests]: ConnectionsWithSkillsTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:48.814Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.connection.web.ConnectionsWithSkillsTests
+2026-11-22T03:17:48.824Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.connection.web.ConnectionsWithSkillsTests]: ConnectionsWithSkillsTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:48.845Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.connection.web.ConnectionsWithSkillsTests
+2026-11-22T03:17:48.848Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2026-11-22T03:17:48.848Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@14efd31b]]
+2026-11-22T03:17:48.848Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2026-11-22T03:17:48.848Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-11-22T03:17:48.848Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@2b4bfe73]]
+2026-11-22T03:17:48.849Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.780 s -- in ie.schrodingerscode.skillswap.connection.web.ConnectionsWithSkillsTests
+[INFO] Running ie.schrodingerscode.skillswap.connection.web.SwapRequestControllerTests
+2026-11-22T03:17:50.107Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.connection.web.SwapRequestControllerTests]: SwapRequestControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:50.172Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.connection.web.SwapRequestControllerTests
+2026-11-22T03:17:50.185Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.connection.web.SwapRequestControllerTests]: SwapRequestControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:50.246Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.connection.web.SwapRequestControllerTests
+2026-11-22T03:17:50.256Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2026-11-22T03:17:50.257Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@2b4bfe73]]
+2026-11-22T03:17:50.257Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2026-11-22T03:17:50.259Z  INFO 7367 --- [backend] [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.1)
+
+2026-11-22T03:17:50.346Z  INFO 7367 --- [backend] [           main] i.s.s.c.web.SwapRequestControllerTests   : Starting SwapRequestControllerTests using Java 21.0.12.1 with PID 7367 (started by vscode in /workspaces/SkillSwap/backend)
+2026-11-22T03:17:50.347Z  INFO 7367 --- [backend] [           main] i.s.s.c.web.SwapRequestControllerTests   : The following 1 profile is active: "dev"
+2026-11-22T03:17:52.739Z  WARN 7367 --- [backend] [           main] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 06396054-5672-4315-84e0-4a04c0c4f9e2
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-11-22T03:17:52.740Z  INFO 7367 --- [backend] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:17:52.741Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:17:52.741Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-11-22T03:17:52.753Z  INFO 7367 --- [backend] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-11-22T03:17:52.782Z  INFO 7367 --- [backend] [           main] i.s.s.c.web.SwapRequestControllerTests   : Started SwapRequestControllerTests in 2.523 seconds (process running for 92.994)
+[INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.158 s -- in ie.schrodingerscode.skillswap.connection.web.SwapRequestControllerTests
+[INFO] Running ie.schrodingerscode.skillswap.DatabaseMigrationTests
+2026-11-22T03:17:54.263Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.DatabaseMigrationTests]: DatabaseMigrationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:54.291Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.DatabaseMigrationTests
+2026-11-22T03:17:54.300Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.DatabaseMigrationTests]: DatabaseMigrationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:54.328Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.DatabaseMigrationTests
+2026-11-22T03:17:54.335Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-11-22T03:17:54.336Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@14efd31b]]
+2026-11-22T03:17:54.336Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.097 s -- in ie.schrodingerscode.skillswap.DatabaseMigrationTests
+[INFO] Running ie.schrodingerscode.skillswap.health.HealthControllerTests
+2026-11-22T03:17:54.369Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.health.HealthControllerTests]: HealthControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:54.763Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.health.HealthControllerTests
+2026-11-22T03:17:54.771Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.health.HealthControllerTests]: HealthControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:54.792Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.health.HealthControllerTests
+2026-11-22T03:17:54.795Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2026-11-22T03:17:54.795Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@14efd31b]]
+2026-11-22T03:17:54.795Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2026-11-22T03:17:54.795Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-11-22T03:17:54.795Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@2b4bfe73]]
+2026-11-22T03:17:54.796Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.448 s -- in ie.schrodingerscode.skillswap.health.HealthControllerTests
+[INFO] Running ie.schrodingerscode.skillswap.match.application.FindMatchesTests
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in ie.schrodingerscode.skillswap.match.application.FindMatchesTests
+[INFO] Running ie.schrodingerscode.skillswap.match.domain.MatchScorerTests
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in ie.schrodingerscode.skillswap.match.domain.MatchScorerTests
+[INFO] Running ie.schrodingerscode.skillswap.match.infrastructure.JdbcUsersReaderTests
+2026-11-22T03:17:54.845Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.match.infrastructure.JdbcUsersReaderTests]: JdbcUsersReaderTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:55.358Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.match.infrastructure.JdbcUsersReaderTests
+2026-11-22T03:17:55.371Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.match.infrastructure.JdbcUsersReaderTests]: JdbcUsersReaderTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:17:55.393Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.match.infrastructure.JdbcUsersReaderTests
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.073 s -- in ie.schrodingerscode.skillswap.match.infrastructure.JdbcUsersReaderTests
+[INFO] Running ie.schrodingerscode.skillswap.profile.application.CreateProfileOnRegistrationTests
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in ie.schrodingerscode.skillswap.profile.application.CreateProfileOnRegistrationTests
+[INFO] Running ie.schrodingerscode.skillswap.profile.application.ProfileSkillServiceTests
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.031 s -- in ie.schrodingerscode.skillswap.profile.application.ProfileSkillServiceTests
+[INFO] Running ie.schrodingerscode.skillswap.profile.domain.ProfileTests
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.027 s -- in ie.schrodingerscode.skillswap.profile.domain.ProfileTests
+[INFO] Running ie.schrodingerscode.skillswap.profile.infrastructure.ProfilePersistenceTests
+2026-11-22T03:17:59.993Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.profile.infrastructure.ProfilePersistenceTests]: ProfilePersistenceTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:18:00.594Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.profile.infrastructure.ProfilePersistenceTests
+2026-11-22T03:18:00.608Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.profile.infrastructure.ProfilePersistenceTests]: ProfilePersistenceTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:18:00.633Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.profile.infrastructure.ProfilePersistenceTests
+2026-11-22T03:18:00.639Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2026-11-22T03:18:00.639Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@2b4bfe73]]
+2026-11-22T03:18:00.639Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2026-11-22T03:18:00.640Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-11-22T03:18:00.640Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@14efd31b]]
+2026-11-22T03:18:00.640Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2026-11-22T03:18:00.645Z  INFO 7367 --- [backend] [MessageBroker-4] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 8, active threads = 1, queued tasks = 1, completed tasks = 6]
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.880 s -- in ie.schrodingerscode.skillswap.profile.infrastructure.ProfilePersistenceTests
+[INFO] Running ie.schrodingerscode.skillswap.profile.RegistrationCreatesProfileTests
+2026-11-22T03:18:00.868Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.profile.RegistrationCreatesProfileTests]: RegistrationCreatesProfileTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:18:01.378Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.profile.RegistrationCreatesProfileTests
+2026-11-22T03:18:01.390Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.profile.RegistrationCreatesProfileTests]: RegistrationCreatesProfileTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:18:01.415Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.profile.RegistrationCreatesProfileTests
+2026-11-22T03:18:01.420Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2026-11-22T03:18:01.420Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@14efd31b]]
+2026-11-22T03:18:01.420Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2026-11-22T03:18:01.421Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-11-22T03:18:01.421Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@2b4bfe73]]
+2026-11-22T03:18:01.422Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.751 s -- in ie.schrodingerscode.skillswap.profile.RegistrationCreatesProfileTests
+[INFO] Running ie.schrodingerscode.skillswap.profile.web.ProfileControllerTests
+2026-11-22T03:18:01.642Z  INFO 7367 --- [backend] [           main] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:18:01.642Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:18:01.643Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-11-22T03:18:01.673Z  INFO 7367 --- [backend] [           main] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:18:01.673Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:18:01.674Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-11-22T03:18:01.695Z  INFO 7367 --- [backend] [           main] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:18:01.695Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:18:01.695Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-11-22T03:18:01.716Z  INFO 7367 --- [backend] [           main] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:18:01.716Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:18:01.716Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-11-22T03:18:01.736Z  INFO 7367 --- [backend] [           main] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:18:01.736Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:18:01.736Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-11-22T03:18:01.752Z  INFO 7367 --- [backend] [           main] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:18:01.752Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:18:01.753Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-11-22T03:18:01.773Z  INFO 7367 --- [backend] [           main] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:18:01.774Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:18:01.774Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-11-22T03:18:01.795Z  INFO 7367 --- [backend] [           main] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:18:01.795Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:18:01.795Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-11-22T03:18:01.816Z  INFO 7367 --- [backend] [           main] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:18:01.817Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:18:01.817Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-11-22T03:18:01.842Z  INFO 7367 --- [backend] [           main] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:18:01.843Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:18:01.843Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-11-22T03:18:01.869Z  INFO 7367 --- [backend] [           main] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:18:01.869Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:18:01.870Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-11-22T03:18:01.896Z  INFO 7367 --- [backend] [           main] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:18:01.896Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:18:01.896Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-11-22T03:18:01.916Z  INFO 7367 --- [backend] [           main] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:18:01.916Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:18:01.916Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-11-22T03:18:01.936Z  INFO 7367 --- [backend] [           main] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:18:01.936Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:18:01.936Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-11-22T03:18:01.953Z  INFO 7367 --- [backend] [           main] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:18:01.953Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:18:01.953Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.348 s -- in ie.schrodingerscode.skillswap.profile.web.ProfileControllerTests
+[INFO] Running ie.schrodingerscode.skillswap.skill.application.ListSkillsServiceTests
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in ie.schrodingerscode.skillswap.skill.application.ListSkillsServiceTests
+[INFO] Running ie.schrodingerscode.skillswap.skill.infrastructure.JpaSkillRepositoryTests
+2026-11-22T03:18:01.981Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.skill.infrastructure.JpaSkillRepositoryTests]: JpaSkillRepositoryTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:18:02.445Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.skill.infrastructure.JpaSkillRepositoryTests
+2026-11-22T03:18:02.456Z  INFO 7367 --- [backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ie.schrodingerscode.skillswap.skill.infrastructure.JpaSkillRepositoryTests]: JpaSkillRepositoryTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-22T03:18:02.477Z  INFO 7367 --- [backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ie.schrodingerscode.skillswap.BackendApplication for test class ie.schrodingerscode.skillswap.skill.infrastructure.JpaSkillRepositoryTests
+2026-11-22T03:18:02.479Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2026-11-22T03:18:02.479Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@2b4bfe73]]
+2026-11-22T03:18:02.479Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2026-11-22T03:18:02.480Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-11-22T03:18:02.480Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@14efd31b]]
+2026-11-22T03:18:02.480Z  INFO 7367 --- [backend] [           main] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.546 s -- in ie.schrodingerscode.skillswap.skill.infrastructure.JpaSkillRepositoryTests
+[INFO] Running ie.schrodingerscode.skillswap.skill.web.SkillControllerTests
+2026-11-22T03:18:02.528Z  INFO 7367 --- [backend] [           main] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:18:02.528Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:18:02.529Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-11-22T03:18:02.547Z  INFO 7367 --- [backend] [           main] o.s.mock.web.MockServletContext          : Initializing Spring TestDispatcherServlet ''
+2026-11-22T03:18:02.547Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T03:18:02.547Z  INFO 7367 --- [backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 s -- in ie.schrodingerscode.skillswap.skill.web.SkillControllerTests
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 257, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  02:30 min
+[INFO] Finished at: 2026-11-22T03:18:04Z
+[INFO] ------------------------------------------------------------------------
