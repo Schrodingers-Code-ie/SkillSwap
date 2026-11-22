@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { api } from '../../api/client.js';
 import cross_icon from '../../assets/cross_icon.svg';
 
-// "Block" button at the bottom of the Chat profile panel.
+// The "Block" button at the bottom of the Chat profile panel, with an error line under it if blocking fails.
 // Works like "Cancel?" on RequestButton: first click asks "Block?", second click blocks
 // onBlocked: called after blocking, so the Chat page can remove them from the list
 export default function BlockButton({ userId, onBlocked }) {

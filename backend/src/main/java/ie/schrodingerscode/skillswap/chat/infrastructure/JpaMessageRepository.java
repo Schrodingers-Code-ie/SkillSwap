@@ -7,6 +7,13 @@ import org.springframework.stereotype.Repository;
 import ie.schrodingerscode.skillswap.chat.domain.Message;
 import ie.schrodingerscode.skillswap.chat.domain.MessageRepository;
 
+/**
+ * The real {@link MessageRepository}, it stores messages in the {@code messages} table through
+ * {@link MessageJpaRepository}.
+ *
+ * <p>Spring Data works with {@link MessageEntity}, but the rest of the app works with the domain
+ * {@link Message}. This class translates between the two, so JPA code stays in this package.
+ */
 @Repository
 public class JpaMessageRepository implements MessageRepository {
 

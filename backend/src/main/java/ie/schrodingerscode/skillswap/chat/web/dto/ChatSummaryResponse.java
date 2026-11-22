@@ -3,7 +3,7 @@ package ie.schrodingerscode.skillswap.chat.web.dto;
 import ie.schrodingerscode.skillswap.chat.application.ChatSummary;
 
 /**
- * One entry of the chat list returned by GET /api/chats.
+ * One entry of the chat list returned by {@code GET /api/chats}.
  *
  * @param userId      id of the connection
  * @param displayName their display name (null if they have no profile yet)
@@ -12,8 +12,10 @@ import ie.schrodingerscode.skillswap.chat.application.ChatSummary;
 public record ChatSummaryResponse(long userId, String displayName, LastMessageResponse lastMessage) {
 
     /**
+     * Converts a chat list entry from the use case into the JSON shape.
+     *
      * @param chat the chat summary
-     * @return the DTO
+     * @return the response record
      */
     public static ChatSummaryResponse from(ChatSummary chat) {
         LastMessageResponse last = chat.hasMessages() ? LastMessageResponse.from(chat.lastMessage()) : null;
