@@ -1,4 +1,4 @@
-package ie.schrodingerscode.skillswap.chat.infrastructure;
+package ie.schrodingerscode.skillswap.chat.web;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;

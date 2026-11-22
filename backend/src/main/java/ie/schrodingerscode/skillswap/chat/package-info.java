@@ -9,9 +9,9 @@
  *       the {@code MessageRepository} interface. No Spring or database code here.</li>
  *   <li>{@code application}: the use cases ({@code SendMessage}, {@code GetMessageHistory},
  *       {@code ListChats}) that the controllers call.</li>
- *   <li>{@code infrastructure}: the JPA code that saves messages to the {@code messages} table, and
+ *   <li>{@code infrastructure}: the JPA code that saves messages to the {@code messages} table.</li>
+ *   <li>{@code web}: the REST controllers, the JSON request and response records, and
  *       {@code PushMessageOnSend}, which pushes each saved message over WebSocket.</li>
- *   <li>{@code web}: the REST controllers and the JSON request and response records.</li>
  * </ul>
  *
  * <p>Only users who are connected can message each other or read each other's history. That check
