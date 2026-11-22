@@ -93,7 +93,7 @@ public class SwapRequestService implements ConnectionChecker, ConnectionLister, 
     }
 
     /**
-     * Declines a request, it gets deleted so the sender can send again later.
+     * Declines a request. It gets deleted, so the sender can send a new one later.
      *
      * @param requestId the request to decline
      * @param userId the logged in user, has to be the receiver
@@ -108,7 +108,7 @@ public class SwapRequestService implements ConnectionChecker, ConnectionLister, 
     }
 
     /**
-     * Takes back a request I sent, it gets deleted.
+     * Takes back a request I sent. It gets deleted, like a declined one.
      *
      * @param requestId the request to cancel
      * @param userId the logged in user, has to be the sender

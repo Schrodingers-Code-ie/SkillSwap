@@ -26,7 +26,7 @@ function useMediaQuery(query) {
 	);
 }
 
-// no Figma frame, it uses the Search page cards and panel
+// There is no Figma frame for this page, so it reuses the Search page cards and panel
 export default function Friends() {
 	const { myProfile, friends } = useLoaderData();
 

@@ -5,7 +5,7 @@ import java.util.List;
 import ie.schrodingerscode.skillswap.match.application.SkillOverlap;
 
 /**
- * One friend, names are null if there's no profile.
+ * One friend on the Friends page. The display name is null if they have no profile.
  *
  * @param userId the friend's id
  * @param displayName their display name

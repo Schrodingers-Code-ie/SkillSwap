@@ -52,7 +52,7 @@ export async function chatLoader() {
 }
 
 export async function friendsLoader() {
-	// Runs before the Friends page renders, the page reads it with useLoaderData().
+	// Runs before the Friends page renders. The page reads the result with useLoaderData().
 	// If a request fails, the error goes to the route's ErrorBoundary.
 	const [me, friends] = await Promise.all([
 		api.get('/auth/me'),

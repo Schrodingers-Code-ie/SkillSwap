@@ -64,7 +64,7 @@ public class SwapRequestController {
      * POST /api/requests, sends a swap request.
      *
      * @param body has the receiverId
-     * @return the new request, with 201
+     * @return the new request, returned with status 201
      */
     @PostMapping("/requests")
     @ResponseStatus(HttpStatus.CREATED)
@@ -74,7 +74,7 @@ public class SwapRequestController {
     }
 
     /**
-     * POST /api/requests/{id}/accept, the receiver accepts it.
+     * POST /api/requests/{id}/accept, accepts a request sent to me.
      *
      * @param id the request id
      * @return the accepted request
@@ -86,7 +86,7 @@ public class SwapRequestController {
     }
 
     /**
-     * POST /api/requests/{id}/decline, gives 204.
+     * POST /api/requests/{id}/decline, declines a request sent to me and returns 204.
      *
      * @param id the request id
      */
@@ -97,7 +97,7 @@ public class SwapRequestController {
     }
 
     /**
-     * DELETE /api/requests/{id}, the sender cancels it, gives 204.
+     * DELETE /api/requests/{id}, cancels a request I sent and returns 204.
      *
      * @param id the request id
      */

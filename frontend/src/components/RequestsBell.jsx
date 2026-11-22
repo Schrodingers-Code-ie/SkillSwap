@@ -40,9 +40,11 @@ export default function RequestsBell() {
 	// Close the dropdown when clicking outside it or pressing Escape (same as AccountMenu)
 	useEffect(() => {
 		if (!isOpen) return;
+		// A click anywhere outside the bell and its dropdown closes it
 		function handleClick(e) {
 			if (!menuRef.current.contains(e.target)) setIsOpen(false);
 		}
+		// Pressing Escape closes it too
 		function handleKey(e) {
 			if (e.key === 'Escape') setIsOpen(false);
 		}

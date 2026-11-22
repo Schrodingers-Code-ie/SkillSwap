@@ -44,7 +44,7 @@ public class SwapRequest {
     }
 
     /**
-     * Rebuilds a request that was already saved, used by the repositories when loading.
+     * Rebuilds a request that was already saved. The repositories use it when loading from the database.
      */
     public static SwapRequest restore(long id, long senderId, long receiverId, RequestStatus status,
             Instant createdAt) {
@@ -55,7 +55,7 @@ public class SwapRequest {
      * The receiver accepts, so the two users are now connected.
      *
      * @throws NotRequestReceiverException if anyone other than the receiver tries it
-     * @throws InvalidRequestStateException if it was accepted before
+     * @throws InvalidRequestStateException if it's already accepted
      */
     public void accept(long userId) {
         checkIsReceiver(userId); //check this first, so a stranger doesn't find out the request's status
@@ -66,7 +66,7 @@ public class SwapRequest {
     }
 
     /**
-     * The service deletes the request after this, we only check that declining is allowed.
+     * Checks that declining is allowed. The service deletes the request after this.
      *
      * @throws NotRequestReceiverException if it's not their request to decline
      * @throws InvalidRequestStateException if it's already accepted, so there's nothing to decline
@@ -80,7 +80,7 @@ public class SwapRequest {
     }
 
     /**
-     * The sender takes back a request they sent. The service deletes it after this, like decline.
+     * The sender takes back a request they sent. The service deletes it after this, same as with decline.
      *
      * @throws NotRequestSenderException if they didn't send it
      * @throws InvalidRequestStateException if the other person already accepted it
@@ -96,7 +96,7 @@ public class SwapRequest {
     }
 
     /**
-     * Shared check for accept and decline, only the receiver gets past it.
+     * Shared check for accept and decline: only the receiver gets past it.
      *
      * @throws NotRequestReceiverException if the request wasn't sent to this user
      */
@@ -115,7 +115,7 @@ public class SwapRequest {
     }
 
     /**
-     * For a connection, gives the other person (e.g. user 1 asks, gets user 2 back).
+     * Gives the other person in this request, e.g. user 1 asks and gets user 2 back.
      */
     public long otherUser(long userId) {
         return userId == senderId ? receiverId : senderId;

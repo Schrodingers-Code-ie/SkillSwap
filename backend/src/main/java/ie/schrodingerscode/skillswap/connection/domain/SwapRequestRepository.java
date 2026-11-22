@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface SwapRequestRepository {
 
     /**
-     * Returns the saved request, a new one comes back with the id Postgres gave it.
+     * Saves a request. A new one comes back with the id Postgres gave it.
      */
     SwapRequest save(SwapRequest request);
 

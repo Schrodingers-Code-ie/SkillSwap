@@ -24,7 +24,7 @@ export default function RequestButton({
 	// "Sent" comes from requestId, so the card and the panel always show the same thing
 	const status = !requestId ? 'idle' : confirming ? 'cancel' : 'sent';
 
-	// Add sends the request, Sent asks to confirm, Cancel? takes it back
+	// Add sends the request. Clicking Sent turns it into Cancel?, and clicking that takes the request back
 	async function handleButtonClick() {
 		if (busy) return; // A request is already running, so clicks can't be spammed
 
