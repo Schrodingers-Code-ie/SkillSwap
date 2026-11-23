@@ -74,7 +74,7 @@ export default function ProfileSidePanel({
 	const isCurrent = loaded.id === personId;
 	const profile = isCurrent ? loaded.profile : null;
 
-	// Skills I want to learn, to tag their teach skills with "You want this"
+	// Skills I want to learn, so their matching teach skills get the "You want this" tag
 	const myLearnIds = new Set(myLearnSkills.map((skill) => skill.skillId));
 
 	const baseClasses =

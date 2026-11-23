@@ -11,7 +11,7 @@ import ie.schrodingerscode.skillswap.connection.domain.UserPair;
 
 /**
  * Stores swap requests in Postgres (the swap_requests table).
- * Turns SwapRequest into SwapRequestEntity and back, so the domain and service don't change.
+ * Turns SwapRequest into SwapRequestEntity and back, so the domain and service never see JPA.
  */
 @Repository
 public class JpaSwapRequestRepository implements SwapRequestRepository {

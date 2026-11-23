@@ -2,8 +2,8 @@ package ie.schrodingerscode.skillswap.connection.domain;
 
 /**
  * Two users, stored with the smaller ID first.
- * So UserPair.of(1, 2) and UserPair.of(2, 1) are equal, which makes
- * "a request already exists between these two people, in either direction" one check.
+ * So UserPair.of(1, 2) and UserPair.of(2, 1) are equal, and checking for a request between
+ * two people takes one lookup, whichever of them sent it.
  *
  * @param first the smaller id
  * @param second the bigger id

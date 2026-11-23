@@ -1,7 +1,7 @@
 import SkillBubble from './SkillBubble.jsx';
 
-// card from the Search page, Friends uses it too
-// action = Add or Chat button
+// The person card from the Search page, Friends uses it too
+// action is the card's button: Add on Search, Chat on Friends
 export default function PersonCard({
 	name,
 	username,
@@ -48,14 +48,14 @@ export default function PersonCard({
 							{skill}
 						</SkillBubble>
 					))}
-					{/* If there's more than 2 bubbles, indicate it but don't show all of them */}
+					{/* If there are more than 2 bubbles, show +N instead of all of them */}
 					{skillsTheyCanTeachMe.length > 2 && (
 						<SkillBubble color="green">
 							+{skillsTheyCanTeachMe.length - 2}
 						</SkillBubble>
 					)}
 
-					{/* Showing the divider only if both sides have bubbles - otherwise don't show it */}
+					{/* Only show the divider when both sides have bubbles */}
 					{skillsTheyCanTeachMe.length > 0 &&
 						skillsICanTeachThem.length > 0 && (
 							<span className="mx-1 h-4 w-px bg-border" />

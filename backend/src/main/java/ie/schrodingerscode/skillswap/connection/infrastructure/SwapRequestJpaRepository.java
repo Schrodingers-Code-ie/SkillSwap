@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 /**
- * Spring Data writes the SQL for these methods. Only JpaSwapRequestRepository uses it,
- * the rest of the app goes through SwapRequestRepository.
+ * Spring Data runs these for us: findByUsers has its own query, the other one is built from the
+ * method name. Only JpaSwapRequestRepository uses it, the rest of the app goes through SwapRequestRepository.
  */
 public interface SwapRequestJpaRepository extends JpaRepository<SwapRequestEntity, Long> {
 
