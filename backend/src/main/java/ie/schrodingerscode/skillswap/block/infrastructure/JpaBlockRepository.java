@@ -8,8 +8,10 @@ import ie.schrodingerscode.skillswap.block.domain.Block;
 import ie.schrodingerscode.skillswap.block.domain.BlockRepository;
 
 /**
- * Stores blocks in Postgres (the blocks table).
- * Turns Block into BlockEntity and back, so the domain and service don't change.
+ * The real {@link BlockRepository}, it stores blocks in Postgres (the {@code blocks} table).
+ *
+ * <p>Turns {@link Block} into {@link BlockEntity} and back, so the domain and service don't
+ * know about JPA.
  */
 @Repository
 public class JpaBlockRepository implements BlockRepository {

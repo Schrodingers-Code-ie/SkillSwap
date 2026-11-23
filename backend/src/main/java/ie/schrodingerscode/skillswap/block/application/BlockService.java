@@ -12,7 +12,10 @@ import ie.schrodingerscode.skillswap.block.domain.exception.BlockedUserNotFoundE
 import ie.schrodingerscode.skillswap.connection.application.ConnectionRemover;
 
 /**
- * Block and unblock.
+ * Block and unblock use cases, called by {@code BlockController}.
+ *
+ * <p>Uses {@link UserChecker} from auth to check the other user exists, and {@link ConnectionRemover}
+ * from connection to delete any request between the two when one blocks the other.
  */
 @Service
 public class BlockService {
@@ -27,7 +30,18 @@ public class BlockService {
         this.connections = connections;
     }
 
-    //one transaction, so if saving the block fails the deleted request comes back too
+    /**
+     * Blocks a user and removes any pending request or connection between the two.
+     *
+     * <p>Runs in one transaction, so if saving the block fails the deleted request comes back too.
+     *
+     * @param blockerId the logged-in user who clicked "Block"
+     * @param blockedId the user being blocked
+     * @return the saved block with its ID
+     * @throws ie.schrodingerscode.skillswap.block.domain.exception.SelfBlockException if both IDs are the same (400)
+     * @throws BlockedUserNotFoundException if there is no user with {@code blockedId} (404)
+     * @throws AlreadyBlockedException if this user is already blocked (409)
+     */
     @Transactional
     public Block block(long blockerId, long blockedId) {
         Block block = Block.create(blockerId, blockedId); //refuses blocking yourself first
@@ -43,7 +57,16 @@ public class BlockService {
         return repository.save(block);
     }
 
-    //only finds a block I placed, so a blocked user can't remove the block on themselves
+    /**
+     * Removes a block the logged-in user placed.
+     *
+     * <p>It only finds a block placed by {@code blockerId}, so a blocked user can't remove the block on
+     * themselves. Unblocking does not bring back the deleted request or connection.
+     *
+     * @param blockerId the logged-in user who placed the block
+     * @param blockedId the user to unblock
+     * @throws BlockNotFoundException if {@code blockerId} has not blocked {@code blockedId} (404)
+     */
     public void unblock(long blockerId, long blockedId) {
         Block block = repository.find(blockerId, blockedId).orElseThrow(BlockNotFoundException::new);
         repository.delete(block);
