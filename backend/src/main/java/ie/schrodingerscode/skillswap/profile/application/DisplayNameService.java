@@ -16,6 +16,11 @@ public class DisplayNameService implements DisplayNames {
 
     private final ProfileRepository profiles;
 
+    /**
+     * Spring passes in the profile repository.
+     *
+     * @param profiles where the names are read from
+     */
     public DisplayNameService(ProfileRepository profiles) {
         this.profiles = profiles;
     }

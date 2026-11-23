@@ -1,5 +1,4 @@
 // Figma: from Icons Avatar/Profile circle
-// TODO: add different circle colours
 
 const SIZES = {
 	sm: 'size-[38px] text-[13px]',

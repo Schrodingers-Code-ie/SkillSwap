@@ -15,6 +15,11 @@ public class ListSkillsService {
 
     private final SkillRepository skills;
 
+    /**
+     * Spring passes in the skill repository.
+     *
+     * @param skills where the catalogue is read from
+     */
     public ListSkillsService(SkillRepository skills) {
         this.skills = skills;
     }

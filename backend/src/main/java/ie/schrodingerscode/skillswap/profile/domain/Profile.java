@@ -16,10 +16,11 @@ import ie.schrodingerscode.skillswap.profile.domain.exception.SkillNotInListExce
  * It guarantees that the name is never blank and fits the column, that a skill is at most once on each list
  * and that every teach skill has a real level. The same skill can be on both lists.
  */
-
 public class Profile {
 
-    public static final int MAX_NAME_LENGTH = 100; // matches profiles.full_name VARCHAR(100)
+    /** Longest allowed name, the same as the profiles.full_name column (VARCHAR(100)). */
+    public static final int MAX_NAME_LENGTH = 100;
+    /** Longest allowed bio. */
     public static final int MAX_BIO_LENGTH = 500;
 
     private final long userId;
@@ -28,6 +29,14 @@ public class Profile {
     private final List<TeachSkill> teachSkills = new ArrayList<>();
     private final Set<Long> learnSkillIds = new LinkedHashSet<>();
 
+    /**
+     * A profile with no skills yet. The name isn't checked here: this is used when a profile is
+     * created at sign-up and when loading one from the database, where the data is already valid.
+     *
+     * @param userId the same id as the user in auth
+     * @param displayName the name shown on the profile
+     * @param bio the bio, or null for none
+     */
     public Profile(long userId, String displayName, String bio) {
         this.userId = userId;
         this.displayName = displayName;
@@ -37,6 +46,11 @@ public class Profile {
     /**
      * Changes the name and bio. The name is required and trimmed, a blank bio is stored as no bio.
      * Nothing changes if one of them is invalid.
+     *
+     * @param displayName the new name, gets trimmed
+     * @param bio the new bio, null or blank removes it
+     * @throws InvalidProfileDetailsException if the name is blank or longer than 100 characters,
+     *         or the bio is longer than 500
      */
     public void updateDetails(String displayName, String bio) {
         if (displayName == null || displayName.isBlank()) {
@@ -56,6 +70,11 @@ public class Profile {
 
     /**
      * Adds a skill to the teach list. The level is required and can't be NONE.
+     *
+     * @param skillId a skill from the catalogue
+     * @param proficiency the user's level, BEGINNER, INTERMEDIATE or ADVANCED
+     * @throws ProficiencyRequiredException if the level is missing or NONE
+     * @throws DuplicateSkillException if the skill is already on the teach list
      */
     public void addTeachSkill(long skillId, Proficiency proficiency) {
         if (proficiency == null || proficiency == Proficiency.NONE) {
@@ -66,16 +85,24 @@ public class Profile {
         }
         teachSkills.add(new TeachSkill(skillId, proficiency));
     }
+
     /**
      * Adds a skill to the learn list. No level is needed.
+     *
+     * @param skillId a skill from the catalogue
+     * @throws DuplicateSkillException if the skill is already on the learn list
      */
     public void addLearnSkill(long skillId) {
         if (!learnSkillIds.add(skillId)) {
             throw new DuplicateSkillException("Skill " + skillId + " is already in the learn list");
         }
     }
+
     /**
-     * Removes a skill from the teach list, it has to be on it.
+     * Removes a skill from the teach list.
+     *
+     * @param skillId the skill to remove
+     * @throws SkillNotInListException if it isn't on the teach list
      */
     public void removeTeachSkill(long skillId) {
         boolean removed = teachSkills.removeIf(t -> t.skillId() == skillId);
@@ -83,8 +110,12 @@ public class Profile {
             throw new SkillNotInListException("Skill " + skillId + " is not in the teach list");
         }
     }
+
     /**
-     * Removes a skill from the learn list, it has to be on it.
+     * Removes a skill from the learn list.
+     *
+     * @param skillId the skill to remove
+     * @throws SkillNotInListException if it isn't on the learn list
      */
     public void removeLearnSkill(long skillId) {
         if (!learnSkillIds.remove(skillId)) {

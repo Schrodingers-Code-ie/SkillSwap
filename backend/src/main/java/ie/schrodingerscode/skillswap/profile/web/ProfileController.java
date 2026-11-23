@@ -32,6 +32,14 @@ public class ProfileController {
     private final UpdateProfileService updateProfile;
     private final CurrentUser currentUser;
 
+    /**
+     * Spring passes in one service per use case, plus the logged-in user.
+     *
+     * @param getProfile loads a profile with skill names
+     * @param profileSkills adds and removes skills
+     * @param updateProfile changes the name and bio
+     * @param currentUser gives the id of the logged-in user
+     */
     public ProfileController(GetProfileService getProfile, ProfileSkillService profileSkills,
             UpdateProfileService updateProfile, CurrentUser currentUser) {
         this.getProfile = getProfile;

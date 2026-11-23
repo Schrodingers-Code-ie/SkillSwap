@@ -16,6 +16,11 @@ public class CreateProfileOnRegistration {
 
     private final ProfileRepository profiles;
 
+    /**
+     * Spring passes in the profile repository.
+     *
+     * @param profiles where the new profile is saved
+     */
     public CreateProfileOnRegistration(ProfileRepository profiles) {
         this.profiles = profiles;
     }

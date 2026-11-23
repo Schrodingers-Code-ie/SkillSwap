@@ -78,7 +78,7 @@ export default function Profile() {
 							</h1>
 							<button
 								type="button"
-								onClick={() => setEditingSkills(true)}
+								onClick={() => setEditingDetails(true)}
 								aria-label="Edit name and bio"
 								className="mt-2 h-7 cursor-pointer rounded-input bg-light-button-bg px-5 text-[13px] text-light-button-text transition hover:shadow-light-hover active:bg-light-button-pressed-bg sm:absolute sm:left-full sm:top-0.5 sm:ml-14 sm:mt-0"
 							>

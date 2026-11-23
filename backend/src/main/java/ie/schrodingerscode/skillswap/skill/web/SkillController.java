@@ -17,6 +17,11 @@ public class SkillController {
 
     private final ListSkillsService listSkills;
 
+    /**
+     * Spring passes in the service.
+     *
+     * @param listSkills loads the catalogue
+     */
     public SkillController(ListSkillsService listSkills) {
         this.listSkills = listSkills;
     }

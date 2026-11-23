@@ -20,11 +20,22 @@ class JpaSkillRepository implements SkillRepository {
         this.jpa = jpa;
     }
 
+    /**
+     * Loads every row of the skills table.
+     *
+     * @return all skills, sorted by id
+     */
     @Override
     public List<Skill> findAll() {
         return jpa.findAll(Sort.by("id")).stream().map(SkillEntity::toDomain).toList();
     }
 
+    /**
+     * Loads one skill by its id.
+     *
+     * @param id the skill to look for
+     * @return the skill, or empty if there's no row with this id
+     */
     @Override
     public Optional<Skill> findById(long id) {
         return jpa.findById(id).map(SkillEntity::toDomain);

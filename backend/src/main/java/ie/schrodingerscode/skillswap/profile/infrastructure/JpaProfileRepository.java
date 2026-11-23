@@ -19,16 +19,33 @@ class JpaProfileRepository implements ProfileRepository {
 
     private final ProfileJpaRepository jpa;
 
+    /**
+     * Spring passes in the generated Spring Data repository.
+     *
+     * @param jpa reads and writes the profiles table
+     */
     JpaProfileRepository(ProfileJpaRepository jpa) {
         this.jpa = jpa;
     }
 
+    /**
+     * Loads the profile row and its two skill tables.
+     *
+     * @param userId the user whose profile to load
+     * @return the profile, or empty if there's no row for this user
+     */
     @Override
     @Transactional(readOnly = true)
     public Optional<Profile> findById(long userId) {
         return jpa.findById(userId).map(ProfileEntity::toDomain);
     }
 
+    /**
+     * Loads the existing row first, so JPA updates it instead of inserting a second one,
+     * then replaces both skill lists with the ones in the profile.
+     *
+     * @param profile the profile to store
+     */
     @Override
     @Transactional
     public void save(Profile profile) {
@@ -38,6 +55,12 @@ class JpaProfileRepository implements ProfileRepository {
         jpa.save(entity);
     }
 
+    /**
+     * Loads only the id and name columns, so the skill tables aren't read at all.
+     *
+     * @param userIds the users to look up
+     * @return user id to display name. Ids without a profile are left out
+     */
     @Override
     @Transactional(readOnly = true)
     public Map<Long, String> displayNamesOf(Collection<Long> userIds) {

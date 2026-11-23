@@ -20,6 +20,11 @@ class SkillEntity {
     protected SkillEntity() {
     }
 
+    /**
+     * Turns this database row into the domain record the rest of the app uses.
+     *
+     * @return the same id and name as a {@link Skill}
+     */
     Skill toDomain() {
         return new Skill(id, name);
     }
