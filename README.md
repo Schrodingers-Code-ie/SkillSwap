@@ -1,18 +1,19 @@
 # SkillSwap
 
-SkillSwap is a web app for swapping skills. You list what you can teach and what you want to learn, SkillSwap suggests people whose skills complement yours, and you can send them a swap request. A built-in chat allows you to message your connections and plan study sessions together. You can also block users you don't want to hear from.
+SkillSwap is a web app for swapping skills. You list what you can teach and what you want to learn, SkillSwap suggests people whose skills complement yours, and you can send them a swap request. A built-in live chat allows you to message your connections and plan study sessions together. You can also block users you don't want to hear from.
 
 Built by Schrödinger's Code.
 
 ## Stack
 
-| Part       | Technology                                           |
-| ---------- | ---------------------------------------------------- |
-| Backend    | Java 21, Spring Boot, Maven (`backend/`)             |
-| Database   | PostgreSQL, schema managed by Flyway                 |
-| Frontend   | React, Vite, npm (`frontend/`)                       |
-| Tests      | JUnit, `@WebMvcTest`, Testcontainers (real Postgres) |
-| Deployment | One Docker image on GHCR, auto-updated by Watchtower |
+| Part         | Technology                                                                         |
+| ------------ | ---------------------------------------------------------------------------------- |
+| Backend      | Java 21, Spring Boot, Maven (`backend/`)                                           |
+| Database     | PostgreSQL, schema managed by Flyway                                               |
+| Frontend     | React, Vite, npm (`frontend/`)                                                     |
+| Tests        | JUnit, `@WebMvcTest`, Testcontainers (real Postgres)                               |
+| Deployment   | One Docker image on GHCR, auto-updated by Watchtower                               |
+| Live updates | WebSocket (STOMP): Spring WebSocket on the backend, @stomp/stompjs in the frontend |
 
 The backend uses package-by-feature with Clean Architecture layers inside each feature. See [Backend Structure](docs/STRUCTURE.md) for where files go.
 
@@ -30,10 +31,17 @@ The backend uses package-by-feature with Clean Architecture layers inside each f
 - **Codespaces:** Code → Codespaces → Create codespace on main
 - **Locally:** install Docker Desktop and VS Code with the Dev Containers extension, open the repo, then "Reopen in Container"
 
-Postgres starts automatically and the `dev` profile is already set. In the container's terminal:
+Postgres starts automatically and the `dev` profile is already set.
+
+In the container's first terminal run the backend:
 
 ```
 cd backend && ./mvnw spring-boot:run     # http://localhost:8080
+```
+
+Open another terminal alongside the first one and run the frontend:
+
+```
 cd frontend && npm install && npm run dev  # http://localhost:5173
 ```
 
@@ -91,11 +99,17 @@ Any test class with `@SpringBootTest` needs `@Import(TestcontainersConfiguration
 
 CI runs these on every pull request, so run them locally first:
 
+In one terminal:
+
 ```
 cd backend
 ./mvnw verify                 # tests
 ./mvnw spotless:check         # Java formatting (fix with ./mvnw spotless:apply)
+```
 
+In another terminal alongside the first one:
+
+```
 cd frontend
 npm run lint
 npm run build
@@ -162,3 +176,9 @@ If it shows a version below 21, point `JAVA_HOME` at Java 21 or newer:
 The backend started without the `dev` profile, so it doesn't know where the database is. Check the second line of the startup log. It should say `The following 1 profile is active: "dev"`. If it says `No active profile set`, start it with the command from [Option B](#option-b-docker-compose).
 
 In a test, the same error means the test class is missing `@Import(TestcontainersConfiguration.class)`.
+
+**Chat only updates every few seconds / console shows [socket] disconnected**
+
+The WebSocket isn't connecting, so the chat is polling. Open the app through the Vite dev server
+(http://localhost:5173), not on a different port, so /ws is proxied, and make sure you are logged in:
+the /ws handshake is rejected without a session.

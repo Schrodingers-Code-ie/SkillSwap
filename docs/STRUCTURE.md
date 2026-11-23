@@ -10,8 +10,8 @@ All backend code lives in `backend/src/main/java/ie/schrodingerscode/skillswap/`
 | Package    | Bounded context                                          | Story |
 | ---------- | -------------------------------------------------------- | ----- |
 | auth       | Identity: accounts, registration, login, current user    | S1    |
-| profile    | Profiles, teach and learn skills, skill catalogue        | S2    |
-| skill      | Skill catalogue                                          | S2    |
+| profile    | Profiles, editing profile details                        | S2    |
+| skill      | Skill catalogue, selecting teach and learn skills        | S2    |
 | match      | Finding and ranking matches                              | S3    |
 | connection | Swap requests and connections                            | S4    |
 | chat       | Messaging                                                | S5    |
@@ -65,7 +65,7 @@ auth/
 3. **Business rules live on the aggregate.** For example, `swapRequest.accept(userId)`
    refuses an invalid transition itself. Services coordinate; they do not hold the rules.
 4. **Repository interfaces live in `domain`, implementations in `infrastructure`.**
-   This keeps domain and application free of JPA, so the storage can change without touching them. There is one implementation per interface: if two beans implement the same interface, Spring finds two beans and the app does not start.
+   This keeps domain and application free of JPA, so the storage can change without touching them. There is one implementation per interface: if two beans implement the same interface, Spring finds two beans and the app does not start. In-memory/fake implementations used by application tests must not be beans, or Spring finds two beans and the app does not start.
 5. **Controllers only translate.** They turn the request into a call to an
    application service and the result into a response DTO. No `if` statements
    about business rules.
@@ -203,3 +203,15 @@ Test each layer in the cheapest way that works:
 Most tests should be domain and application tests. They run in milliseconds and
 test the rules that matter. Name test classes after the class they test, e.g.
 `EmailTests` for `Email`.
+
+## Live updates (WebSocket)
+
+The server uses a WebSocket to send updates to the browser, such as new messages.
+The browser still sends data with normal REST requests. Setup is in config/WebSocketConfig.
+
+To send a live update from a feature:
+
+In domain, add an event record (e.g. MessageSent). Publish it from the application service.
+In infrastructure, add a listener (e.g. PushMessageOnSend) that sends it to the user
+with SimpMessagingTemplate.
+This way domain and application have no WebSocket code.
