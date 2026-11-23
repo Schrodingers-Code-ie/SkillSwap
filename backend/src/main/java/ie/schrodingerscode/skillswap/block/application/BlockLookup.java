@@ -5,9 +5,11 @@ import org.springframework.stereotype.Service;
 import ie.schrodingerscode.skillswap.block.domain.BlockRepository;
 
 /**
- * Answers BlockChecker. Kept separate from BlockService on purpose:
- * BlockService needs connection (to delete the request), and connection needs BlockChecker.
- * If BlockService answered BlockChecker too, each would need the other first and Spring wouldn't start.
+ * The real {@link BlockChecker}, it asks the repository.
+ *
+ * <p>Kept separate from {@link BlockService} on purpose: BlockService needs connection (to delete the
+ * request), and connection needs BlockChecker. If BlockService answered BlockChecker too, each would
+ * need the other first and Spring wouldn't start.
  */
 @Service
 public class BlockLookup implements BlockChecker {

@@ -7,5 +7,12 @@ package ie.schrodingerscode.skillswap.block.application;
  */
 public interface BlockChecker {
 
+    /**
+     * Checks if there is a block between two users, whoever placed it.
+     *
+     * @param userA the ID of one user
+     * @param userB the ID of the other user
+     * @return true if A blocked B or B blocked A
+     */
     boolean isBlockedEitherWay(long userA, long userB);
 }
