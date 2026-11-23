@@ -6,6 +6,11 @@ import ie.schrodingerscode.skillswap.skill.domain.SkillRepository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * A small fixed skill catalogue for unit tests. The ids match the real seed data in V2,
+ * so tests can use the same ids as the app (1 Guitar, 5 Music Production, 11 Java, 12 Python).
+ */
+
 public class FakeSkillRepository implements SkillRepository {
 
     private final List<Skill> skills = List.of(

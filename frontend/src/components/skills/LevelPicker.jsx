@@ -1,5 +1,7 @@
 import { LEVELS } from './levels';
 
+// Three toggle buttons (Beginner, Intermediate, Advanced) for picking your level
+// on a teach skill. Only one can be pressed at a time.
 export default function LevelPicker({ value, onChange, labelId }) {
 	return (
 		<div

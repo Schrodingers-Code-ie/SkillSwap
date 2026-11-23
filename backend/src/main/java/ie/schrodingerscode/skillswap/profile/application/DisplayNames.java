@@ -10,6 +10,11 @@ import java.util.Map;
  */
 public interface DisplayNames {
 
-    // userId -> display name, all in one query. Ids without a profile are left out
+    /**
+     * Display names for a group of users, loaded in one query.
+     *
+     * @param userIds the users to look up
+     * @return user id to display name. Ids without a profile are left out
+     */
     Map<Long, String> displayNamesOf(Collection<Long> userIds);
 }

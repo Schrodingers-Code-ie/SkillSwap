@@ -9,6 +9,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * ProfileRepository kept in a map, so unit tests run without a database.
+ */
+
 public class FakeProfileRepository implements ProfileRepository {
 
     private final Map<Long, Profile> store = new HashMap<>();

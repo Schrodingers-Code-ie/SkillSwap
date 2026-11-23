@@ -15,8 +15,9 @@ import SkillForm from './SkillForm';
 const DARK_BUTTON =
 	'h-[39px] w-[144px] cursor-pointer rounded-full bg-dark-button-bg text-[15px] text-dark-button-text shadow-dark-button transition hover:shadow-dark-button-hover active:bg-dark-button-pressed-bg disabled:cursor-default disabled:opacity-40 disabled:shadow-none';
 
-//onClose is only used in edit mode
-//if skills are missing,the pop-up can't be closed
+// The two-step skills popup: step 1 is the teach list, step 2 the learn list.
+// In setup mode (a list is empty) it can't be closed, only finished or logged
+// out of. In edit mode onClose closes it.
 export default function SkillsModal({ onClose }) {
 	const { profile, reload, setupOpen, finishSetup, missingSkills } =
 		useProfile();

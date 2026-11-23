@@ -17,6 +17,11 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * JPA mapping of a row in profiles, plus its rows in the two skill tables.
+ * Kept apart from Profile so the domain has no JPA annotations.
+ * The column is called full_name, in the domain it's displayName.
+ */
 @Entity
 @Table(name = "profiles")
 class ProfileEntity {
@@ -64,6 +69,9 @@ class ProfileEntity {
         this.learnSkillIds.addAll(profile.getLearnSkillIds());
     }
 
+    /**
+     * One row in user_teach_skills.
+     */
     @Embeddable
     record TeachSkillRow(
             @Column(name = "skill_id") long skillId,

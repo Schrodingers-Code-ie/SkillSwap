@@ -1,6 +1,8 @@
 import { useId, useState } from 'react';
 import LevelPicker from './LevelPicker';
 
+// The 'add a skill' box in the popup: a search field with suggestions from the
+// catalogue, the level picker for teach skills, and the Add skill button.
 export default function SkillForm({ catalogue, takenIds, withLevel, onAdd }) {
 	const id = useId();
 	const [query, setQuery] = useState('');
@@ -43,7 +45,7 @@ export default function SkillForm({ catalogue, takenIds, withLevel, onAdd }) {
 			setQuery('');
 			setLevel(null);
 		} catch {
-			//shows the error message
+			// SkillsModal shows the error. The typed skill stays, so the user can try again
 		} finally {
 			setBusy(false);
 		}
